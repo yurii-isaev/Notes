@@ -1,0 +1,24 @@
+version: '3.5'
+
+services:
+  pg_notes:
+    image: postgres
+    container_name: pg_post_container
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-123456}
+      POSTGRES_DB: ${POSTGRES_DB:-post_service}
+      PGDATA: ${PGDATA:-/data/postgres}
+    ports:
+      - '${DB_PORT:-5432}:5432'
+    volumes:
+      - pg_notes:${PGDATA:-/data/postgres}
+    networks:
+      - pg_notes
+
+volumes:
+  pg_notes:
+
+networks:
+ pg_notes:

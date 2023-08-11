@@ -34,6 +34,15 @@ $ npm i -g @nestjs/cli
 $ nest new server -p npm
 ```
 
+## ORM config
+
+```bash
+$ npm i --save @nestjs/typeorm pg
+$ nest g lib providers
+$ nest g mo typeorm -p providers
+$ npm i --save @nestjs/config
+````
+
 ## Running the app
 
 ```bash
