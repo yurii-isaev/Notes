@@ -6,6 +6,7 @@
 # IDE
 /.idea
 .vs
+/.vs/
 
 # User-specific files
 *.rsuser
