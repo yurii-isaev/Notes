@@ -1,15 +1,17 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SalesCrm.Models;
 
 namespace SalesCrm.Controllers;
 
-public class HomeController : Controller
+public class AdminController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly ILogger<AdminController> _logger;
 
-    public HomeController(ILogger<HomeController> logger) => _logger = logger;
+    public AdminController(ILogger<AdminController> logger) => _logger = logger;
 
+    [Authorize(Roles = "Admin")]
     public ActionResult Index()
     {
         var isAdmin = User.IsInRole("Admin");
@@ -17,6 +19,7 @@ public class HomeController : Controller
         return View();
     }
 
+    [Authorize(Roles = "Admin")]
     public IActionResult Privacy()
     {
         return View();
