@@ -1,3 +1,14 @@
+CREATE DATABASE sales_db;
+
+DROP TABLE "AspNetRoleClaims";
+DROP TABLE "AspNetUserClaims";
+DROP TABLE "AspNetRoles" CASCADE;
+DROP TABLE "AspNetUserLogins";
+DROP TABLE "AspNetUserRoles";
+DROP TABLE "AspNetUsers" CASCADE;
+DROP TABLE "AspNetUserTokens";
+
+
 -- Creating an AspNetRoles table if it doesn't exist
 CREATE TABLE IF NOT EXISTS AspNetRoles
 (

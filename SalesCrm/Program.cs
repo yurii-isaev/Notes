@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SalesCrm.DataAccess;
+using SalesCrm.Domains.Identities;
 
 namespace SalesCrm;
 
@@ -16,13 +17,14 @@ public class Program
             .GetConnectionString("DefaultConnection") ?? throw
             new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-        builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
+        builder.Services.AddDbContext<AuthDbContext>(options => options.UseNpgsql(connectionString));
+        builder.Services.AddDbContext<NewsDbContext>(options => options.UseNpgsql(connectionString));
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
         builder.Services
-            .AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+            .AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
             .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>();
+            .AddEntityFrameworkStores<AuthDbContext>();
 
         builder.Services.AddControllersWithViews();
         #endregion

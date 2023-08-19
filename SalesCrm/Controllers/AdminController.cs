@@ -24,6 +24,12 @@ public class AdminController : Controller
     {
         return View();
     }
+    
+    public ActionResult Users()
+    {
+        var listUsers = new List<string>();
+        return View(listUsers);
+    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
