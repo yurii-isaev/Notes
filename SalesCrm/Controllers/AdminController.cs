@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SalesCrm.Models;
+using SalesCrm.Views.ViewModels;
 
 namespace SalesCrm.Controllers;
 
