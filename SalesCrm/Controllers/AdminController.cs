@@ -1,34 +1,42 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SalesCrm.Controllers.Contracts;
 using SalesCrm.Views.ViewModels;
 
 namespace SalesCrm.Controllers;
 
+[Authorize(Roles = "Admin")]
 public class AdminController : Controller
 {
-    private readonly ILogger<AdminController> _logger;
+    private readonly INewsService _newsService;
 
-    public AdminController(ILogger<AdminController> logger) => _logger = logger;
+    public AdminController(INewsService newsService)
+    {
+        _newsService = newsService;
+    }
 
-    [Authorize(Roles = "Admin")]
-    public ActionResult Index()
+    public IActionResult Index()
     {
         var isAdmin = User.IsInRole("Admin");
-        _logger.LogWarning(isAdmin.ToString());
         return View();
     }
 
-    [Authorize(Roles = "Admin")]
     public IActionResult Privacy()
     {
         return View();
     }
-    
-    public ActionResult Users()
+
+    public IActionResult Users()
     {
         var listUsers = new List<string>();
         return View(listUsers);
+    }
+
+    public async Task<IActionResult> News()
+    {
+        var newsList = await _newsService.GetNewsAsync();
+        return View(newsList);
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

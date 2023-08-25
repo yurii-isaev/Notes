@@ -9,7 +9,7 @@ public class AuthDbContext : IdentityDbContext
     public AuthDbContext(DbContextOptions<AuthDbContext> options) : base(options)
     {}
     
-    public DbSet<User> News => Set<User>();
+    // public DbSet<User> News => Set<User>();
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

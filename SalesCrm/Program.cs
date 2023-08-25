@@ -1,7 +1,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SalesCrm.Controllers.Contracts;
 using SalesCrm.DataAccess;
+using SalesCrm.DataAccess.Repositories;
+using SalesCrm.Domains.Entities;
 using SalesCrm.Domains.Identities;
+using SalesCrm.Services;
+using SalesCrm.Services.Contracts;
 
 namespace SalesCrm;
 
@@ -17,16 +22,18 @@ public class Program
             .GetConnectionString("DefaultConnection") ?? throw
             new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-        builder.Services.AddDbContext<AuthDbContext>(options => options.UseNpgsql(connectionString));
-        builder.Services.AddDbContext<NewsDbContext>(options => options.UseNpgsql(connectionString));
+        builder.Services.AddDbContext<AuthDbContext>(opts => opts.UseNpgsql(connectionString));
+        builder.Services.AddDbContext<NewsDbContext>(opts => opts.UseNpgsql(connectionString));
+        
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+        builder.Services.AddTransient<INewsService, NewsService>();
+        builder.Services.AddTransient<IDataRepository<News>, NewsRepository>();
+
         builder.Services
-            .AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
+            .AddDefaultIdentity<User>(opts => opts.SignIn.RequireConfirmedAccount = false)
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<AuthDbContext>();
-
-        builder.Services.AddControllersWithViews();
         #endregion
 
         #region Configure the HTTP request pipeline
@@ -42,7 +49,7 @@ public class Program
             app.UseHsts();
         }
 
-        // app.UseHttpsRedirection();
+        app.UseHttpsRedirection();
 
         app.UseStaticFiles();
 
