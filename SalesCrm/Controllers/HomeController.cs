@@ -12,6 +12,7 @@ public class HomeController : Controller
 
     public ActionResult Index()
     {
+        ViewBag.CurrentPage = "Home/Index";
         var isAdmin = User.IsInRole("Admin");
         _logger.LogWarning(isAdmin.ToString());
         return View();

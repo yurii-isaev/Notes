@@ -1,6 +1,32 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+
+/*.nav-item .nav-link.hower {*/
+/*  color: #727cf5; !* Цвет текста для активной вкладки *!*/
+/*  !* Дополнительные стили, если необходимо *!*/
+/*}*/
+
+.a:hover {
+  color: #727cf5; /* Цвет текста для активной вкладки */
+  /* Дополнительные стили, если необходимо */
+}
+
+/*.nav-item .nav-link.active {*/
+/*  color: blue; !* Цвет текста для активной вкладки *!*/
+/*  background-color: lightblue; !* Цвет фона для активной вкладки *!*/
+/*  !* Дополнительные стили, если необходимо *!*/
+/*}*/
+
+/*.nav-item {*/
+/*  color: black;*/
+/*}*/
+
+/*!* Цвет при клике (активации) *!*/
+/*.nav-item:active {*/
+/*  color: #727cf5;*/
+/*}*/
+
 a.navbar-brand {
   white-space: normal;
   text-align: center;
