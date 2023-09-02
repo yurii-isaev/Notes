@@ -5,4 +5,6 @@ namespace SalesCrm.Controllers.Contracts;
 public interface INewsService
 {
     Task<IEnumerable<News>> GetNewsAsync();
+    Task<News> CreateNewsAsync(News news);
+    
 }

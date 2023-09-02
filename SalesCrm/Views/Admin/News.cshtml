@@ -3,23 +3,28 @@
 }
 
 <div>
-    <h1 class="display-4">News</h1>
+    <h1 class="display-4 text-center">
+        Admin News Page
+    </h1>
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>@item.Title</td>
-            <td>@item.Text</td>
-            <td>@item.Date.ToString("yyyy.MM.dd HH:mm")</td>
-            <td>@item.AuthorId</td>
-            <td>@item.CreateDate.ToString("yyyy.MM.dd HH:mm")</td>
-            <td>@item.IsActive</td>
-            <td>
-                <a href="/admin/news/edit/@item.Id">edit</a>
-            </td>
-            <td>
-                <a href="/admin/news/delete/@item.Id">delete</a>
-            </td>
-        </tr>
-    }
+    <a href="/admin/news/createNews" role="button" class="btn btn-primary">Create news</a>
+    <br/>
+    <hr/>
+    <br/>
+
+    <h4 class="page-title" style="line-height:15px;">News</h4>
+    <br/>
+    <ul>
+        @foreach (var item in Model)
+        {
+            <li>
+                <span>@item.Title</span>
+                <span>@item.Text</span>
+                <span>@item.Date.ToString("yyyy.MM.dd HH:mm")</span>
+                <span>@item.AuthorId</span>
+                <span>@item.CreateDate.ToString("yyyy.MM.dd HH:mm")</span>
+                <span>@item.IsActive</span>
+            </li>
+        }
+    </ul>
 </div>
