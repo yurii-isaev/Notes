@@ -1,0 +1,34 @@
+@model SalesCrm.Domains.Entities.News
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Edit News";
+}
+
+<h1>Edit News</h1>
+<form method="post" action="">
+    <div class="mb-3">
+        <label for="" class="form-label">Title</label>
+        <input type="text" class="form-control" asp-for="Title">
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-label">Text</label>
+        <input type="text" class="form-control" asp-for="Text">
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-label">Publication date</label>
+        <input type="text" id="publicationDateInput" class="form-control date" asp-for="Date">
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-label">Is active</label>
+        <input type="checkbox" checked="checked" asp-for="IsActive">
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
+</form>
+
+@section Scripts {
+    <script type="text/javascript">
+        $('#publicationDateInput').datepicker({
+            format: 'dd/mm/yyyy'
+        })
+    </script>
+}

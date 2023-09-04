@@ -64,6 +64,24 @@ public class AdminController : Controller
 
         return Redirect("/admin/news");
     }
+    
+    [Route("/admin/news/edit/{id}")]
+    [HttpGet]
+    public async Task<IActionResult> EditNews(int id)
+    {
+        var news = await _newsService.GetOneNewsAsync(id);
+        return View(news);
+    }
+
+    [Route("/admin/news/edit/{id}")]
+    [HttpPost]
+    public async Task<IActionResult> Edit(News news)
+    {
+        news.Date = DateTime.SpecifyKind(news.Date, DateTimeKind.Utc);
+        await _newsService.UpdateNewsAsync(news);
+
+        return Redirect("/admin/news");
+    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

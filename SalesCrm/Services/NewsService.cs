@@ -19,7 +19,7 @@ public class NewsService : INewsService
     {
         try
         {
-            return await _repository.GetAsync();
+            return await _repository.GetNewsListAsync();
         }
         catch (Exception ex)
         {
@@ -46,5 +46,15 @@ public class NewsService : INewsService
             // Возвращаем null или другое значение в случае ошибки
             return null!;
         }
+    }
+
+    public async Task<News> GetOneNewsAsync(int id)
+    {
+        return await _repository.GetOneNewsAsync(id);
+    }
+
+    public async Task<News> UpdateNewsAsync(News news)
+    {
+        return await _repository.UpdateNewsAsync(news);
     }
 }
