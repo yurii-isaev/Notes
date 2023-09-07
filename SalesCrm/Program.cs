@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 using SalesCrm.Controllers.Contracts;
 using SalesCrm.DataAccess;
 using SalesCrm.DataAccess.Repositories;
@@ -34,6 +35,12 @@ public class Program
             .AddDefaultIdentity<User>(opts => opts.SignIn.RequireConfirmedAccount = false)
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<AuthDbContext>();
+        
+        builder.Services.AddMvc().AddNToastNotifyToastr(new ToastrOptions()
+        {
+            ProgressBar = true,
+            PositionClass = ToastPositions.TopRight
+        });
         #endregion
 
         #region Configure the HTTP request pipeline
@@ -62,6 +69,8 @@ public class Program
             pattern: "{controller=Home}/{action=Index}/{id?}"
         );
 
+        app.UseNToastNotify();
+        
         app.MapRazorPages();
 
         app.Run();

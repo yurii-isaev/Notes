@@ -4,9 +4,17 @@
     ViewData["Title"] = "Create New News";
 }
 
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb">
+    <button type="button" class="btn btn-secondary" onclick="goBack()"
+     style="margin-bottom:40px;">
+        < Back
+    </button>
+</nav>
+
 <h1>Create News</h1>
 
-<form method="post" action="">
+<form method="post" action="#">
     <div class="mb-3">
         <label for="" class="form-label">Title</label>
         <input type="text" class="form-control" asp-for="Title">
@@ -17,7 +25,7 @@
     </div>
     <div class="mb-3">
         <label for="" class="form-label">Publication date</label>
-        <input type="text" id="publicationDateInput" class="form-control date" asp-for="Date">
+        <input id="publicationDateInput" type="text" class="form-control date" asp-for="Date">
     </div>
     <div class="mb-3">
         <label for="" class="form-label">Is active</label>
@@ -27,9 +35,16 @@
 </form>
 
 @section Scripts {
+    
     <script type="text/javascript">
-        $('#publicationDateInput').datepicker({
-            format: 'dd/mm/yyyy'
-        })
+     $('#publicationDateInput').datepicker({
+          format: 'dd/mm/yyyy'
+     })
+    </script>
+
+    <script>
+    function goBack() {
+        window.history.back();
+    }
     </script>
 }

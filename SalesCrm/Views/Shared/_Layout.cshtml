@@ -15,6 +15,7 @@
     <!-- App css -->
     <link href="/assets/css/icons.min.css" rel="stylesheet" type="text/css"/>
     <link href="/assets/css/app.min.css" rel="stylesheet" type="text/css" id="light-style"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
 </head>
 
 <body class="loading" data-layout-config='{"leftSideBarTheme":"dark","layoutBoxed":false, "leftSidebarCondensed":false, "leftSidebarScrollable":false,"darkMode":false, "showRightSidebarOnStart": true}'>
@@ -26,7 +27,9 @@
         <a href="index.html" class="logo text-center logo-light">
             <span class="logo-lg">
                 <img src="/logo/logo.png" alt="" height="60" style="margin-top:10px">
-                <a style="text-align:center;display:block;color:azure;padding:15px">Sales-CRM</a>
+                <a style="text-align:center;display:block;color:azure;padding:15px">
+                    Sales-CRM
+                </a>
             </span>
         </a>
         <div class="h-100" id="leftside-menu-container" data-simplebar>
@@ -89,7 +92,7 @@
 
         <div class="content">
             <!-- Start Content-->
-            <div class="container-fluid" style="margin-top:50px">
+            <div class="container-fluid" style="margin-top:20px">
                 @RenderBody()
             </div>
         </div>
@@ -126,8 +129,12 @@
 <script src="/assets/js/vendor/apexcharts.min.js"></script>
 <script src="/assets/js/vendor/jquery-jvectormap-1.2.2.min.js"></script>
 <script src="/assets/js/vendor/jquery-jvectormap-world-mill-en.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <!-- third party js ends -->
 
+@await Component.InvokeAsync("NToastNotify")
 @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

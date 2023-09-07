@@ -47,4 +47,11 @@ public class NewsRepository : IDataRepository<News>
 
         return item;
     }
+
+    public async Task DeleteNewsAsync(int id)
+    {
+        var item = await _context.News.Where(x => x.Id == id).FirstOrDefaultAsync();
+        _context.News.Remove(item ?? throw new InvalidOperationException());
+        await _context.SaveChangesAsync();
+    }
 }

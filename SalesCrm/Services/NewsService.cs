@@ -1,3 +1,4 @@
+using NToastNotify;
 using SalesCrm.Controllers.Contracts;
 using SalesCrm.Domains.Entities;
 using SalesCrm.Services.Contracts;
@@ -8,11 +9,13 @@ public class NewsService : INewsService
 {
     private readonly IDataRepository<News> _repository;
     private readonly ILogger<NewsService> _logger;
+    private readonly IToastNotification _toast;
 
-    public NewsService(IDataRepository<News> repo, ILogger<NewsService> log)
+    public NewsService(IDataRepository<News> repo, ILogger<NewsService> log, IToastNotification toastNotification)
     {
         _repository = repo;
         _logger = log;
+        _toast = toastNotification;
     }
 
     public async Task<IEnumerable<News>> GetNewsAsync()
@@ -36,13 +39,15 @@ public class NewsService : INewsService
     {
         try
         {
+            _toast.AddSuccessToastMessage("News item successfully created !");
             return await _repository.CreateNewsAsync(news);
         }
         catch (Exception ex)
         {
             // Обработка исключения, например, вывод сообщения об ошибке
             _logger.LogError("An error occurred while creating a news item: " + ex.Message);
-
+            _toast.AddErrorToastMessage("Error creating news item");
+            
             // Возвращаем null или другое значение в случае ошибки
             return null!;
         }
@@ -55,6 +60,31 @@ public class NewsService : INewsService
 
     public async Task<News> UpdateNewsAsync(News news)
     {
-        return await _repository.UpdateNewsAsync(news);
+        try
+        {
+            _toast.AddSuccessToastMessage("News item successfully updated !");
+            return await _repository.UpdateNewsAsync(news);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("An error occurred while updating news: " + ex.Message);
+            _toast.AddErrorToastMessage("Error updating news item");
+            throw;
+        }
+    }
+
+    public async Task DeleteNewsAsync(int id)
+    {
+        try
+        {
+            await _repository.DeleteNewsAsync(id);
+            _toast.AddSuccessToastMessage("News item successfully deleted !");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("An error occurred while deleting news: " + ex.Message);
+            _toast.AddErrorToastMessage("Error deleting news item");
+            throw;
+        }
     }
 }

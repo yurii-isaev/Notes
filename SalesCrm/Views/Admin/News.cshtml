@@ -41,7 +41,10 @@
                     <a href="/admin/news/edit/@item.Id">edit</a>
                 </td>
                 <td>
-                    <a href="/admin/news/delete/@item.Id">delete</a>
+                    <a class="delete-link" href="/admin/news/delete/@item.Id"
+                       onclick="return confirm('Are you sure you want to delete this news item?')">
+                        delete
+                    </a>
                 </td>
             </tr>
         }

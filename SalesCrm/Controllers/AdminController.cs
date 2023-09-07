@@ -79,7 +79,14 @@ public class AdminController : Controller
     {
         news.Date = DateTime.SpecifyKind(news.Date, DateTimeKind.Utc);
         await _newsService.UpdateNewsAsync(news);
+        return Redirect("/admin/news");
+    }
 
+    [Route("/admin/news/delete/{id}")]
+    [HttpGet]
+    public async Task<IActionResult> DeleteNews(int id)
+    {
+        await _newsService.DeleteNewsAsync(id);
         return Redirect("/admin/news");
     }
 
