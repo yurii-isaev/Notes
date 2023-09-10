@@ -17,7 +17,7 @@
     <h4 class="page-title" style="line-height:15px;">News</h4>
     <br/>
 
-    <table cellpadding="10">
+    <table>
         <tr>
             <th>Title</th>
             <th>Text</th>
@@ -28,14 +28,15 @@
             <th></th>
             <th></th>
         </tr>
+        
         @foreach (var item in Model)
         {
             <tr>
                 <td>@item.Title</td>
                 <td>@item.Text</td>
-                <td>@item.Date.ToString("yyyy.MM.dd HH:mm")</td>
+                <td>@item.Date.ToString("yyyy")</td>
                 <td>@item.AuthorId</td>
-                <td>@item.CreateDate.ToString("yyyy.MM.dd HH:mm")</td>
+                <td>@item.CreateDate.ToString("dd.MM.yyyy HH:mm")</td>
                 <td>@item.IsActive</td>
                 <td>
                     <a href="/admin/news/edit/@item.Id">edit</a>
@@ -48,5 +49,15 @@
                 </td>
             </tr>
         }
+        
     </table>
 </div>
+
+<style>
+    table {
+      padding: 10px;
+    }
+    td, th {
+      padding: 10px;
+    }
+</style>

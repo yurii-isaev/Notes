@@ -1,7 +1,52 @@
 ﻿@{
-    ViewData["Title"] = "Users Page";
+    ViewData["Title"] = "Users";
 }
+<div>
+    <div class="text-center">
+        <h1 class="display-4">Users</h1>
+    </div>
 
-<div class="text-center">
-    <h1 class="display-4">Users</h1>
+    <br/>
+    <hr/>
+    <br/>
+
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>UserName</th>
+            <th>Created</th>
+            <th>Email</th>
+            <th>PhoneNumber</th>
+            <th>LockoutEnd</th>
+            <th></th>
+            <th></th>
+        </tr>
+        
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.UserName</td>
+                <td>@item.Created.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>@item.Email</td>
+                <td>@item.PhoneNumber</td>
+                <td>@item.LockoutEnd?.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>
+                    <a href="/admin/users/block/@item.Id">Block</a>
+                </td>
+                <td>
+                    <a href="/admin/users/unblock/@item.Id">Unblock</a>
+                </td>
+            </tr>
+        }
+    </table>
 </div>
+
+<style>
+    table {
+      padding: 10px;
+    }
+    td, th {
+      padding: 10px;
+    }
+</style>

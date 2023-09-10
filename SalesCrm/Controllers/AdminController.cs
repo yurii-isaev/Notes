@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SalesCrm.Controllers.Contracts;
 using SalesCrm.Domains.Entities;
+using SalesCrm.Services;
 using SalesCrm.Views.ViewModels;
 
 namespace SalesCrm.Controllers;
@@ -12,10 +13,12 @@ namespace SalesCrm.Controllers;
 public class AdminController : Controller
 {
     private readonly INewsService _newsService;
+    private readonly UserService _userService;
 
-    public AdminController(INewsService service)
+    public AdminController(INewsService newsService, UserService userService)
     {
-        _newsService = service;
+        _newsService = newsService;
+        _userService = userService;
     }
 
     public IActionResult Index()
@@ -29,10 +32,24 @@ public class AdminController : Controller
         return View();
     }
 
-    public IActionResult Users()
+    public async Task<IActionResult> Users()
     {
-        var listUsers = new List<string>();
-        return View(listUsers);
+        var userList = await _userService.GetUsersAsync();
+        return View(userList);
+    }
+
+    [Route("/admin/users/block/{id}")]
+    public async Task<IActionResult> BlockUsers(string id)
+    {
+        await _userService.BlockUsersAsync(id);
+        return Redirect("/admin/users");
+    }
+
+    [Route("/admin/users/unblock/{id}")]
+    public async Task<IActionResult> UnBlockUsers(string id)
+    {
+        await _userService.UnBlockUsersAsync(id);
+        return Redirect("/admin/users");
     }
 
     public async Task<IActionResult> News()
@@ -40,7 +57,7 @@ public class AdminController : Controller
         var newsList = await _newsService.GetNewsAsync();
         return View(newsList);
     }
-    
+
     [Route("/admin/news/createNews")]
     [HttpGet]
     public Task<IActionResult> CreateNews()
@@ -64,7 +81,7 @@ public class AdminController : Controller
 
         return Redirect("/admin/news");
     }
-    
+
     [Route("/admin/news/edit/{id}")]
     [HttpGet]
     public async Task<IActionResult> EditNews(int id)
