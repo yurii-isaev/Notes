@@ -1,0 +1,36 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model IdentityRole
+
+@{
+    ViewData["Title"] = "Add new roles";
+}
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb">
+    <a asp-action="Index" class="btn btn-secondary">< Back to list</a>
+    <br/>
+    <br/>
+</nav>
+
+<div class="row d-flex justify-content-start">
+    <div class="col-md-8">
+        <h4>Add new roles</h4>
+        <hr/>
+        <br/>
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control"/>
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+            </div>
+            <br/>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-success"/>
+                @* <a asp-action="Index" class="btn btn-outline-info">Back to list</a> *@
+            </div>
+        </form>
+    </div>
+</div>

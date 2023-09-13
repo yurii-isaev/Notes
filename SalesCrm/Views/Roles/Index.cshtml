@@ -1,0 +1,111 @@
+﻿@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityRole>
+@{
+    ViewData["Title"] = "Application Roles";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>View Roles</h1>
+        <hr/>
+    </div>
+</div>
+
+<div class="table-container">
+    <form id="filterForm" method="post" asp-action="index" asp-route-Fill="true">
+        <div class="row">
+
+            <div class="col-md-11 d-flex justify-content-end">
+                <p class="text-right">
+                    <a class="btn btn-primary" role="button" asp-action="CreateRole">
+                        Create role
+                    </a>
+                </p>
+            </div>
+
+            <div class="col-md-4">
+                <label for="keyword" class="form-label">Search keywords:</label>
+                <div class="input-group">
+                    <input value="@ViewBag.keyword" type="text" class="form-control"
+                           name="keyword" placeholder="Enter keywords...">
+                    <button class="btn btn-success" type="submit">
+                        Search
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(role => role.Id)</th>
+            <th>@Html.DisplayNameFor(role => role.Name)</th>
+            <th>@Html.DisplayNameFor(role => role.NormalizedName)</th>
+            <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(role => item.Id)</td>
+                <td>@Html.DisplayFor(role => item.Name)</td>
+                <td>@Html.DisplayFor(role => item.NormalizedName)</td>
+                <td>
+                    <a class="btn btn-outline-primary mb-1" asp-action="Edit" asp-route-id="@item.Id">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <a class="btn btn-outline-success mb-1" asp-action="Details" asp-route-id="@item.Id">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                    <a class="btn btn-outline-danger mb-1" asp-action="Delete" asp-route-id="@item.Id">
+                        <i class="bi bi-archive-fill"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+<style>
+    /* Add your custom styles here */
+    .table-container {
+        max-width: 1000px; /* Adjust the maximum width as needed */
+        margin: auto;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 12px;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    td {
+        max-width: 200px; /* Limit the maximum width of cells */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    a {
+        color: #007bff;
+        text-decoration: none;
+    }
+    
+    /*a:hover {*/
+    /*    text-decoration: underline;*/
+    /*}*/
+</style>
