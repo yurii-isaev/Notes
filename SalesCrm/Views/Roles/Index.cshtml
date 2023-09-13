@@ -41,7 +41,7 @@
         <tr>
             <th>@Html.DisplayNameFor(role => role.Id)</th>
             <th>@Html.DisplayNameFor(role => role.Name)</th>
-            <th>@Html.DisplayNameFor(role => role.NormalizedName)</th>
+            @* <th>@Html.DisplayNameFor(role => role.NormalizedName)</th> *@
             <th></th>
         </tr>
         </thead>
@@ -52,7 +52,7 @@
             <tr>
                 <td>@Html.DisplayFor(role => item.Id)</td>
                 <td>@Html.DisplayFor(role => item.Name)</td>
-                <td>@Html.DisplayFor(role => item.NormalizedName)</td>
+                @* <td>@Html.DisplayFor(role => item.NormalizedName)</td> *@
                 <td>
                     <a class="btn btn-outline-primary mb-1" asp-action="Edit" asp-route-id="@item.Id">
                         <i class="bi bi-pencil"></i>

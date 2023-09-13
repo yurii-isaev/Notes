@@ -1,38 +1,37 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SalesCrm.Services;
 
 namespace SalesCrm.Controllers;
 
 public class RolesController : Controller
 {
-    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly RoleService _roleService;
 
-    public RolesController(RoleManager<IdentityRole> roleManager)
+    public RolesController(RoleService roleService)
     {
-        _roleManager = roleManager;
+        _roleService = roleService;
     }
-
-    public IActionResult Index()
+    
+    [HttpGet]
+    public async Task<IActionResult> Index()
     {
-        var roles = _roleManager.Roles;
-        return View(roles);
+        var roleList = await _roleService.GetRolesAsync();
+        return View(roleList);
     }
     
     [HttpGet]
     [Route("/roles/createRole")]
-    public IActionResult CreateRole()
+    public Task<IActionResult> CreateRole()
     {
-        return View();
+        return Task.FromResult<IActionResult>(View());
     }
     
     [HttpPost]
     [Route("/roles/createRole")]
     public async Task<IActionResult> Create(IdentityRole role)
     {
-        if (role.Name != null && ! _roleManager.RoleExistsAsync(role.Name).GetAwaiter().GetResult())
-        {
-            _roleManager.CreateAsync(new IdentityRole(role.Name)).GetAwaiter().GetResult();
-        }
+        await _roleService.CreateRoleAsync(role);
         return Redirect("Index");
     }
 }
