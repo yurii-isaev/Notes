@@ -1,7 +1,7 @@
-﻿@using Microsoft.AspNetCore.Identity
-@model IdentityRole
+@model Microsoft.AspNetCore.Identity.IdentityRole
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-    ViewData["Title"] = "Add new roles";
+    ViewData["Title"] = "Edit Role";
 }
 
 <!-- Breadcrumb -->
@@ -13,10 +13,10 @@
 
 <div class="row d-flex justify-content-start">
     <div class="col-md-8">
-        <h4>Add new roles</h4>
+        <h4>Edit role</h4>
         <hr/>
         <br/>
-        <form asp-action="Create">
+        <form method="post" action="">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-row">
                 <div class="form-group col-md-6">
@@ -26,9 +26,7 @@
                 </div>
             </div>
             <br/>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-success"/>
-            </div>
+           <button type="submit" class="btn btn-primary">Update</button>
         </form>
     </div>
 </div>

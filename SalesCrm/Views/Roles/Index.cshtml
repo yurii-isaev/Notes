@@ -54,16 +54,19 @@
                 <td>@Html.DisplayFor(role => item.Name)</td>
                 @* <td>@Html.DisplayFor(role => item.NormalizedName)</td> *@
                 <td>
-                    <a class="btn btn-outline-primary mb-1" asp-action="Edit" asp-route-id="@item.Id">
-                        <i class="bi bi-pencil"></i>
-                    </a>
-                    <a class="btn btn-outline-success mb-1" asp-action="Details" asp-route-id="@item.Id">
-                        <i class="bi bi-eye"></i>
-                    </a>
-                    <a class="btn btn-outline-danger mb-1" asp-action="Delete" asp-route-id="@item.Id">
-                        <i class="bi bi-archive-fill"></i>
-                    </a>
+                    <a asp-action="EditRole" asp-route-id="@item.Id">edit</a>
+                    <a asp-action="DeleteRole" asp-route-id="@item.Id">delete</a>
                 </td>
+                
+                @* <td> *@
+                @*                     <a href="/admin/news/edit/@item.Id">edit</a> *@
+                @*                 </td> *@
+                @*                 <td> *@
+                @*                     <a class="delete-link" href="/admin/news/delete/@item.Id" *@
+                @*                        onclick="return confirm('Are you sure you want to delete this news item?')"> *@
+                @*                         delete *@
+                @*                     </a> *@
+                @*                 </td> *@
             </tr>
         }
         </tbody>
