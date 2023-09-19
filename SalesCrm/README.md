@@ -4,6 +4,7 @@
 # dotnet ef migrations add Initial
 # dotnet ef database update
 # dotnet ef migrations remove
+
 # dotnet ef migrations add Auth --context AuthDbContext --output-dir DataAccess/Migrations/AuthDb
 # dotnet ef database update --context AuthDbContext
 # dotnet ef migrations remove --context AuthDbContext
@@ -13,6 +14,10 @@
 ```
 # dotnet ef migrations add News --context NewsDbContext
 # dotnet ef database update --context NewsDbContext
+
+# dotnet ef migrations add Employee --context EmployeeDbContext --output-dir DataAccess/Migrations/EmployeeTables
+# dotnet ef database update --context EmployeeDbContext
+# dotnet ef migrations remove --context EmployeeDbContext -f
 ```
 
 ### Hot reload server

@@ -25,6 +25,7 @@ public class Program
 
         builder.Services.AddDbContext<AuthDbContext>(opts => opts.UseNpgsql(connectionString));
         builder.Services.AddDbContext<NewsDbContext>(opts => opts.UseNpgsql(connectionString));
+        builder.Services.AddDbContext<EmployeeDbContext>(opts => opts.UseNpgsql(connectionString));
         
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
