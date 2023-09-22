@@ -1,0 +1,50 @@
+@using SalesCrm.Domains
+@model SalesCrm.Views.ViewModels.CreateEmployeeViewModel
+@{
+    ViewData["Title"] = "Add new roles";
+}
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb">
+    <a asp-action="Index" class="btn btn-secondary">< Back to list</a>
+    <br/>
+    <br/>
+</nav>
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-body">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index">EmployeeList</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <a aria-current="page">New Employee</a>
+                    </li>
+                </ol>
+            </nav>
+            <hr/><br/>
+            <form method="post" enctype="multipart/form-data" asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" placeholder="Enter name"/>
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-success"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -32,8 +32,10 @@ public class Program
         builder.Services.AddTransient<INewsService, NewsService>();
         builder.Services.AddTransient<IDataRepository<News>, NewsRepository>();
         builder.Services.AddTransient<IUserRepository, UserRepository>();
+        builder.Services.AddTransient<IEmployeeRepository, EmployeeRepository>();
         builder.Services.AddTransient<UserService>();
         builder.Services.AddTransient<RoleService>();
+        builder.Services.AddTransient<EmployeeService>();
 
         builder.Services
             .AddDefaultIdentity<User>(opts => opts.SignIn.RequireConfirmedAccount = false)
