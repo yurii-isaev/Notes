@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using SalesCrm.Domains.Enums;
 
-namespace SalesCrm.Views.ViewModels;
+namespace SalesCrm.Controllers.ViewModels;
 
 public class CreateEmployeeViewModel
 {

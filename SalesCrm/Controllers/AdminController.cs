@@ -3,9 +3,9 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SalesCrm.Controllers.Contracts;
+using SalesCrm.Controllers.ViewModels;
 using SalesCrm.Domains.Entities;
 using SalesCrm.Services;
-using SalesCrm.Views.ViewModels;
 
 namespace SalesCrm.Controllers;
 

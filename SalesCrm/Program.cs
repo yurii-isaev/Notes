@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NToastNotify;
@@ -47,6 +48,8 @@ public class Program
             ProgressBar = true,
             PositionClass = ToastPositions.TopRight
         });
+        
+        builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
         #endregion
 
         #region Configure the HTTP request pipeline

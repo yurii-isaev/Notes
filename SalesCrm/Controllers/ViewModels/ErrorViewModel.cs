@@ -1,4 +1,4 @@
-namespace SalesCrm.Views.ViewModels
+namespace SalesCrm.Controllers.ViewModels
 {
     public class ErrorViewModel
     {

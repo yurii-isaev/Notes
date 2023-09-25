@@ -1,7 +1,8 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using SalesCrm.Controllers.ViewModels;
 using SalesCrm.Domains.Entities;
 using SalesCrm.Services;
-using SalesCrm.Views.ViewModels;
 
 namespace SalesCrm.Controllers;
 
@@ -9,11 +10,13 @@ public class EmployeeController : Controller
 {
     private readonly EmployeeService _employeeService;
     private readonly IWebHostEnvironment _environment;
+    private readonly IMapper _mapper;
 
-    public EmployeeController(EmployeeService service, IWebHostEnvironment environment)
+    public EmployeeController(EmployeeService service, IWebHostEnvironment environment, IMapper mapper)
     {
         _employeeService = service;
         _environment = environment;
+        _mapper = mapper;
     }
 
     public IActionResult Index()
@@ -36,24 +39,7 @@ public class EmployeeController : Controller
     {
         if (ModelState.IsValid)
         {
-            var employee = new Employee
-            {
-                Id = viewModel.Id,
-                Name = viewModel.Name,
-                Gender = viewModel.Gender,
-                Email = viewModel.Email,
-                Phone = viewModel.Phone,
-                DateOfBirth = viewModel.DateOfBirth,
-                DateJoined = viewModel.DateJoined,
-                Insurance = viewModel.Insurance,
-                PaymentMethod = viewModel.PaymentMethod,
-                StudentLoanStatus = viewModel.StudentLoanStatus,
-                UnionMemberStatus = viewModel.UnionMemberStatus,
-                Address = viewModel.Address,
-                City = viewModel.City,
-                Postcode = viewModel.Postcode,
-                Designation = viewModel.Designation
-            };
+            var employee = _mapper.Map<Employee>(viewModel);
 
             if (viewModel.ImageUrl != null && viewModel.ImageUrl.Length > 0)
             {

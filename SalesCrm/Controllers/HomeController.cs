@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using SalesCrm.Views.ViewModels;
+using SalesCrm.Controllers.ViewModels;
 
 namespace SalesCrm.Controllers;
 
