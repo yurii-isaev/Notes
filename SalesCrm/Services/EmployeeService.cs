@@ -23,4 +23,16 @@ public class EmployeeService
             return null!;
         }
     }
+    
+    public async Task<IEnumerable<Employee>> GetEmployeeListAsync()
+    {
+        try
+        {
+            return await _repository.GetEmployeeListAsync();
+        }
+        catch (Exception ex)
+        {
+            return Enumerable.Empty<Employee>();
+        }
+    }
 }

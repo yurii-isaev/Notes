@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SalesCrm.Controllers.ViewModels;
 using SalesCrm.Domains.Entities;
 using SalesCrm.Services;
+using SalesCrm.Views;
 
 namespace SalesCrm.Controllers;
 
@@ -19,22 +20,28 @@ public class EmployeeController : Controller
         _mapper = mapper;
     }
 
-    public IActionResult Index()
+    public IActionResult Index(int pageNumber = 1, int pageSize = 5)
     {
-        var vm = _employeeService.GetEmployeeListAsync();
-        return View();
+        List<EmployeeViewModel> list = _employeeService.GetEmployeeListAsync()
+            .Result
+            .Select(emp => _mapper.Map<EmployeeViewModel>(emp))
+            .ToList();
+
+        var paginationList = PaginationList<EmployeeViewModel>.Create(list, pageNumber, pageSize);
+
+        return View(paginationList);
     }
 
     [Route("/employee/create")]
     [HttpGet]
     public Task<IActionResult> CreateEmployee()
     {
-        var vm = new CreateEmployeeViewModel();
         return Task.FromResult<IActionResult>(View());
     }
 
     [Route("/employee/create")]
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(CreateEmployeeViewModel viewModel)
     {
         if (ModelState.IsValid)
@@ -51,7 +58,6 @@ public class EmployeeController : Controller
             }
 
             await _employeeService.CreateEmployeeAsync(employee);
-            
         }
 
         return RedirectToAction("Index");

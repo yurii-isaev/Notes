@@ -1,8 +1,140 @@
-@model dynamic
-
+@model SalesCrm.Views.PaginationList<SalesCrm.Controllers.ViewModels.EmployeeListViewModel>
 @{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
+    ViewData["Title"] = "Employee List";
 }
 
-<h2>List</h2>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb" style="padding:1px !important">
+                        <li class="breadcrumb-item">
+                            <a asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a asp-action="Index">EmployeeList</a>
+                        </li>
+                    </ol>
+                </nav>
+
+                <div class="row">
+                    <div class="col-12">
+                        <a asp-action="Create" class="btn btn-xs btn-outline-success float-md-end">
+                            Create new Employee
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Photo</th>
+                    <th>DataJoined</th>
+                    <th>Designation</th>
+                    <th>City</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(eml => item.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(eml => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(eml => item.Gender)
+                        </td>
+                        <td>
+                            <img alt="Image" src="@Url.Content(item.ImageUrl)"
+                                 width="40" height="40"
+                                 style="border-radius: 10px;"/>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(eml => item.DateJoined)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(eml => item.Designation)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(eml => item.City)
+                        </td>
+
+                        <td>
+                            <a asp-action="EditEmployee" asp-route-id="@item.Id">edit</a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="fixed-bottom-center">
+    <div>
+        Page @(Model.PageNumber) of @Model.TotalPages
+    </div>
+
+    <div>
+        @if (Model.IsPreviousPageAvailable)
+        {
+            @Html.ActionLink("<< Previous", "Index", new
+            {
+                pageNumber = Model.PageNumber - 1, pageSize = Model.PageSize
+            })
+        }
+        else
+        {
+            <span>Previous</span>
+        }
+
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            if (i == Model.PageNumber)
+            {
+                <span>@i</span>
+            }
+            else
+            {
+                @Html.ActionLink(i.ToString(), "Index", new
+                {
+                    pageNumber = i, pageSize = Model.PageSize
+                })
+            }
+        }
+
+        @if (Model.IsNextPageAvailable)
+        {
+            @Html.ActionLink("Next >>", "Index", new
+            {
+                pageNumber = Model.PageNumber + 1, pageSize = Model.PageSize
+            })
+        }
+        else
+        {
+            <span>Next >></span>
+        }
+    </div>
+</div>
+
+<style>
+    .fixed-bottom-center {
+        position: fixed;
+        left: 0;
+        bottom: 60px;
+        width: 100%;
+        text-align: center;
+        background-color: #f8f9fa;
+    }
+</style>

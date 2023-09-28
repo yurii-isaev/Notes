@@ -1,14 +1,15 @@
-using System.Reflection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NToastNotify;
 using SalesCrm.Controllers.Contracts;
+using SalesCrm.Controllers.ViewModels;
 using SalesCrm.DataAccess;
 using SalesCrm.DataAccess.Repositories;
 using SalesCrm.Domains.Entities;
 using SalesCrm.Domains.Identities;
 using SalesCrm.Services;
 using SalesCrm.Services.Contracts;
+using SalesCrm.Services.Mapping;
 
 namespace SalesCrm;
 
@@ -42,14 +43,26 @@ public class Program
             .AddDefaultIdentity<User>(opts => opts.SignIn.RequireConfirmedAccount = false)
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<AuthDbContext>();
-        
+
         builder.Services.AddMvc().AddNToastNotifyToastr(new ToastrOptions()
         {
             ProgressBar = true,
             PositionClass = ToastPositions.TopRight
         });
         
-        builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+  
+        builder.Services.AddAutoMapper(config =>
+        {
+            config.CreateMap<EmployeeViewModel, Employee>();
+            config.CreateMap<Employee, EmployeeViewModel>();
+            
+            config.CreateMap<EmployeeListViewModel, Employee>();
+            config.CreateMap<Employee, EmployeeListViewModel>();
+        },
+            AppDomain.CurrentDomain.GetAssemblies());
+        
+        builder.Services.AddAutoMapper(typeof(MappingProfile));
+        
         #endregion
 
         #region Configure the HTTP request pipeline
