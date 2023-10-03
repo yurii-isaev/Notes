@@ -39,10 +39,10 @@ namespace SalesCrm.DataAccess.Migrations.EmployeeTables
                         .HasColumnType("character varying(50)");
 
                     b.Property<DateTime>("DateJoined")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Designation")
                         .HasColumnType("text");
@@ -65,8 +65,8 @@ namespace SalesCrm.DataAccess.Migrations.EmployeeTables
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<int>("PaymentMethod")
-                        .HasColumnType("integer");
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("text");
 
                     b.Property<string>("Phone")
                         .HasColumnType("text");
@@ -76,11 +76,11 @@ namespace SalesCrm.DataAccess.Migrations.EmployeeTables
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<int>("StudentLoanStatus")
-                        .HasColumnType("integer");
+                    b.Property<bool>("StudentLoanStatus")
+                        .HasColumnType("boolean");
 
-                    b.Property<int>("UnionMemberStatus")
-                        .HasColumnType("integer");
+                    b.Property<bool>("UnionMemberStatus")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -125,7 +125,7 @@ namespace SalesCrm.DataAccess.Migrations.EmployeeTables
                         .HasColumnType("decimal(18, 2)");
 
                     b.Property<DateTime>("PayDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("PayMonth")
                         .HasColumnType("text");

@@ -21,4 +21,9 @@ public class EmployeeRepository : IEmployeeRepository
         await _context.SaveChangesAsync();
         return employee;
     }
+
+    public Task<Employee> GetEmployeeByIdAsync(Guid id)
+    {
+        throw new NotImplementedException();
+    }
 }

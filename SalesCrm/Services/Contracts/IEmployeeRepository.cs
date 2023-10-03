@@ -6,4 +6,5 @@ public interface IEmployeeRepository
 {
     Task<IEnumerable<Employee>> GetEmployeeListAsync();
     Task<Employee> CreateEmployeeAsync(Employee employee);
+    Task<Employee> GetEmployeeByIdAsync(Guid id);
 }
