@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SalesCrm.Domains.Entities;
 
-public abstract class Employee
+public class Employee
 {
     public Guid Id { get; set; }
     

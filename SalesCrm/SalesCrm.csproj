@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Services\Contracts\services" />
     <Folder Include="wwwroot\assets\js\vendor" />
     <Folder Include="wwwroot\images\employee" />
     <Folder Include="wwwroot\logo" />

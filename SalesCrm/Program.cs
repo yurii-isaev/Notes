@@ -9,6 +9,8 @@ using SalesCrm.Domains.Entities;
 using SalesCrm.Domains.Identities;
 using SalesCrm.Services;
 using SalesCrm.Services.Contracts;
+using SalesCrm.Services.Contracts.Services;
+using SalesCrm.Services.Input;
 using SalesCrm.Services.Mapping;
 
 namespace SalesCrm;
@@ -33,11 +35,14 @@ public class Program
 
         builder.Services.AddTransient<INewsService, NewsService>();
         builder.Services.AddTransient<IDataRepository<News>, NewsRepository>();
+        
         builder.Services.AddTransient<IUserRepository, UserRepository>();
+        
+        builder.Services.AddTransient<IEmployeeService, EmployeeService>();
         builder.Services.AddTransient<IEmployeeRepository, EmployeeRepository>();
+        
         builder.Services.AddTransient<UserService>();
         builder.Services.AddTransient<RoleService>();
-        builder.Services.AddTransient<EmployeeService>();
 
         builder.Services
             .AddDefaultIdentity<User>(opts => opts.SignIn.RequireConfirmedAccount = false)
@@ -56,6 +61,12 @@ public class Program
             config.CreateMap<EmployeeViewModel, Employee>();
             config.CreateMap<Employee, EmployeeViewModel>();
             
+            config.CreateMap<EmployeeViewModel, EmployeeDto>();
+            config.CreateMap<EmployeeDto, EmployeeViewModel>();
+            
+            config.CreateMap<EmployeeDto, Employee>();
+            config.CreateMap<Employee, EmployeeDto>();
+
             config.CreateMap<EmployeeListViewModel, Employee>();
             config.CreateMap<Employee, EmployeeListViewModel>();
         },

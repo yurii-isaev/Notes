@@ -12,6 +12,7 @@ DROP TABLE "User" CASCADE;
 
 -- Clean tables
 TRUNCATE TABLE "AspNetUsers" RESTART IDENTITY CASCADE;
+TRUNCATE TABLE "Employees" RESTART IDENTITY CASCADE;
 
 -- Creating an AspNetRoles table if it doesn't exist
 CREATE TABLE IF NOT EXISTS AspNetRoles

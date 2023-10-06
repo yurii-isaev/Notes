@@ -22,8 +22,19 @@ public class EmployeeRepository : IEmployeeRepository
         return employee;
     }
 
-    public Task<Employee> GetEmployeeByIdAsync(Guid id)
+
+    public async Task<Employee> GetEmployeeByIdAsync(Guid id)
+    { 
+        // waiting return async-type awaitable,
+        // Employee - sync-type,
+        // Task.FromResult(employee) - async-type
+        return (await _context.Employees.Where(emp => emp.Id == id).FirstOrDefaultAsync())!;
+    }
+   
+    public async Task UpdateEmployeeAsync(Employee employee)
     {
-        throw new NotImplementedException();
+        _context.Employees.Update(employee);
+        await _context.SaveChangesAsync();
+
     }
 }

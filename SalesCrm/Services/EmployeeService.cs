@@ -10,24 +10,33 @@ namespace SalesCrm.Services;
 public class EmployeeService : IEmployeeService
 {
     private readonly IEmployeeRepository _repository;
+    private readonly ILogger<EmployeeService> _logger;
     private readonly IToastNotification _toast;
-    private readonly IWebHostEnvironment _environment;
     private readonly IMapper _mapper;
+    private readonly IWebHostEnvironment _environment;
 
-    public EmployeeService(IEmployeeRepository repo, IToastNotification toast, IWebHostEnvironment environment, IMapper mapper)
+    public EmployeeService
+    (
+        IEmployeeRepository repo,
+        ILogger<EmployeeService> logger,
+        IToastNotification toast,
+        IMapper mapper,
+        IWebHostEnvironment environment
+    )
     {
         _repository = repo;
+        _logger = logger;
         _toast = toast;
-        _environment = environment;
         _mapper = mapper;
+        _environment = environment;
     }
 
-    public async Task<Employee> CreateEmployeeAsync(EmployeeInputDto dto)
+    public async Task<Employee> CreateEmployeeAsync(EmployeeDto dto)
     {
         try
         {
             var employee = _mapper.Map<Employee>(dto);
-            
+
             employee.PaymentMethod = dto.PaymentMethod.ToString();
 
             if (dto.ImageUrl != null && dto.ImageUrl.Length > 0)
@@ -38,15 +47,15 @@ public class EmployeeService : IEmployeeService
                 await dto.ImageUrl.CopyToAsync(new FileStream(path, FileMode.Create));
                 employee.ImageUrl = "/" + uploadDir + "/" + filename;
             }
-            
-            _toast.AddSuccessToastMessage("Employee successfully created");
-            
+
             return await _repository.CreateEmployeeAsync(employee);
         }
         catch (Exception ex)
         {
-            return null!;
+            _logger.LogError("Employee service: " + ex.Message);
         }
+
+        throw new InvalidOperationException();
     }
 
     public async Task<IEnumerable<Employee>> GetEmployeeListAsync()
