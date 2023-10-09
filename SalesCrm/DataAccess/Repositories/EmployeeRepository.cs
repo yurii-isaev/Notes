@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SalesCrm.Domains.Entities;
 using SalesCrm.Services.Contracts;
 

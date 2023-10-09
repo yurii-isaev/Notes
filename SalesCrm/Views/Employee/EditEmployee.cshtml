@@ -1,0 +1,186 @@
+@using SalesCrm.Domains.Enums
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model SalesCrm.Controllers.ViewModels.EmployeeViewModel
+@{
+    ViewData["Title"] = "Edit Employee";
+}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-body">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-controller="Employee" asp-action="Index">Employee List</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <a aria-current="page">Edit Employee</a>
+                    </li>
+                </ol>
+            </nav>
+            <hr style="opacity:0.5!important"/>
+
+            <form method="post" enctype="multipart/form-data" asp-action="EditEmployee">
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="row">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-group indent">
+                                <label asp-for="Name" class="form-label"></label>
+                                <input asp-for="Name" class="form-control" placeholder="Enter name"/>
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="form-group indent">
+                                <label asp-for="Email" class="form-label"></label>
+                                <input asp-for="Email" class="form-control" placeholder="Enter name"/>
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="form-group indent">
+                                <label asp-for="Phone" class="form-label"></label>
+                                <input asp-for="Phone" class="form-control" placeholder="Enter name"/>
+                                <span asp-validation-for="Phone" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="form-group indent">
+                                <label asp-for="DateOfBirth" class="form-label"></label>
+                                <input asp-for="DateOfBirth" class="form-control" placeholder="Enter name"/>
+                                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="form-group indent">
+                                <label asp-for="Gender" class="form-label"></label>
+                                <select asp-for="Gender" class="form-control" placeholder="Enter name">
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                </select>
+                                <span asp-validation-for="Gender" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="form-group indent">
+                                <label asp-for="City" class="form-label"></label>
+                                <input asp-for="City" class="form-control" placeholder="Enter name"/>
+                                <span asp-validation-for="City" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="form-group indent">
+                                <label asp-for="Postcode" class="form-label"></label>
+                                <input asp-for="Postcode" class="form-control" placeholder="Enter name"/>
+                                <span asp-validation-for="Postcode" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="form-group indent">
+                                <label asp-for="Address" class="form-label"></label>
+                                <textarea asp-for="Address" class="form-control" placeholder="Enter name"></textarea>
+                                <span asp-validation-for="Address" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="form-group indent">
+                                <label asp-for="Designation" class="form-label"></label>
+                                <input asp-for="Designation" class="form-control" placeholder="Enter name"/>
+                                <span asp-validation-for="Designation" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="form-group indent">
+                                <label asp-for="PaymentMethod" class="form-label"></label>
+                                <select asp-for="PaymentMethod" class="form-control"
+                                        placeholder="Enter name"
+                                        asp-items="@Html.GetEnumSelectList<PaymentMethod>()">
+                                </select>
+                                <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="form-group indent">
+                                <label asp-for="StudentLoanStatus" class="form-label"></label>
+                                <select asp-for="StudentLoanStatus" class="form-control" placeholder="Enter name">
+                                    <option>True</option>
+                                    <option>False</option>
+                                </select>
+                                <span asp-validation-for="StudentLoanStatus" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="form-group indent">
+                                <label asp-for="ImageUrl" class="form-label"></label>
+                                <input asp-for="ImageUrl" class="form-control" placeholder="Enter name"/>
+                                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="form-group indent">
+                                <label asp-for="UnionMemberStatus" class="form-label"></label>
+                                <select asp-for="UnionMemberStatus" class="form-control" placeholder="Enter name">
+                                    <option>True</option>
+                                    <option>False</option>
+                                </select>
+                                <span asp-validation-for="UnionMemberStatus" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="form-group indent">
+                                <label asp-for="Insurance" class="form-label"></label>
+                                <input asp-for="Insurance" class="form-control" placeholder="Number"/>
+                                <span asp-validation-for="Insurance" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                
+                <!-- ============================================================== -->
+                <!-- Edit button -->
+                <div class="row mt-2">
+                    <div class="col-3">
+                        <button type="submit" class="btn btn-rounded btn-primary">
+                            Edit
+                        </button>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<style>
+    .indent {
+        margin-top: 20px!important;
+    }
+</style>

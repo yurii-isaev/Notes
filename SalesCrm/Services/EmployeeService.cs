@@ -1,5 +1,4 @@
 using AutoMapper;
-using NToastNotify;
 using SalesCrm.Domains.Entities;
 using SalesCrm.Services.Contracts;
 using SalesCrm.Services.Contracts.Services;
@@ -11,7 +10,6 @@ public class EmployeeService : IEmployeeService
 {
     private readonly IEmployeeRepository _repository;
     private readonly ILogger<EmployeeService> _logger;
-    private readonly IToastNotification _toast;
     private readonly IMapper _mapper;
     private readonly IWebHostEnvironment _environment;
 
@@ -19,14 +17,12 @@ public class EmployeeService : IEmployeeService
     (
         IEmployeeRepository repo,
         ILogger<EmployeeService> logger,
-        IToastNotification toast,
         IMapper mapper,
         IWebHostEnvironment environment
     )
     {
         _repository = repo;
         _logger = logger;
-        _toast = toast;
         _mapper = mapper;
         _environment = environment;
     }
@@ -52,10 +48,9 @@ public class EmployeeService : IEmployeeService
         }
         catch (Exception ex)
         {
-            _logger.LogError("Employee service: " + ex.Message);
+            _logger.LogError("[Create Employee]: " + ex.Message);
+            throw;
         }
-
-        throw new InvalidOperationException();
     }
 
     public async Task<IEnumerable<Employee>> GetEmployeeListAsync()
@@ -66,7 +61,50 @@ public class EmployeeService : IEmployeeService
         }
         catch (Exception ex)
         {
+            _logger.LogError("[Get Employee List]: " + ex.Message);
             return Enumerable.Empty<Employee>();
+        }
+    }
+
+    public async Task<EmployeeDto> GetEmployeeByIdAsync(Guid employeeId)
+    {
+        var employee = await _repository.GetEmployeeByIdAsync(employeeId);
+
+        var config = new MapperConfiguration(cfg =>
+        {
+            // Игнорировать свойство ImageUrl из базового класса
+            cfg.CreateMap<Employee, EmployeeDto>().ForMember(dest => dest.ImageUrl, opt => opt.Ignore());
+            cfg.CreateMap<EmployeeDto, Employee>();
+        });
+
+        var employeeDto = config.CreateMapper().Map<Employee, EmployeeDto>(employee);
+
+        return employeeDto;
+    }
+
+    public async Task UpdateEmployeeAsync(EmployeeDto dto)
+    {
+        try
+        {
+            var employee = _mapper.Map<Employee>(dto);
+
+            employee.PaymentMethod = dto.PaymentMethod.ToString();
+
+            if (dto.ImageUrl != null && dto.ImageUrl.Length > 0)
+            {
+                var uploadDir = @"images/employee";
+                var filename = Guid.NewGuid().ToString() + "-" + dto.ImageUrl.FileName;
+                var path = Path.Combine(_environment.WebRootPath, uploadDir, filename);
+                await dto.ImageUrl.CopyToAsync(new FileStream(path, FileMode.Create));
+                employee.ImageUrl = "/" + uploadDir + "/" + filename;
+            }
+
+            await _repository.UpdateEmployeeAsync(employee);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("[Error updating Employee]: " + ex.Message);
+            throw;
         }
     }
 }

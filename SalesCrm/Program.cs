@@ -57,23 +57,22 @@ public class Program
         
   
         builder.Services.AddAutoMapper(config =>
-        {
-            config.CreateMap<EmployeeViewModel, Employee>();
-            config.CreateMap<Employee, EmployeeViewModel>();
-            
-            config.CreateMap<EmployeeViewModel, EmployeeDto>();
-            config.CreateMap<EmployeeDto, EmployeeViewModel>();
-            
-            config.CreateMap<EmployeeDto, Employee>();
-            config.CreateMap<Employee, EmployeeDto>();
+            {
+                config.CreateMap<EmployeeViewModel, Employee>();
+                config.CreateMap<Employee, EmployeeViewModel>();
 
-            config.CreateMap<EmployeeListViewModel, Employee>();
-            config.CreateMap<Employee, EmployeeListViewModel>();
-        },
+                config.CreateMap<EmployeeViewModel, EmployeeDto>();
+                config.CreateMap<EmployeeDto, EmployeeViewModel>();
+
+                config.CreateMap<EmployeeDto, Employee>();
+                config.CreateMap<Employee, EmployeeDto>();
+
+                config.CreateMap<EmployeeListViewModel, Employee>();
+                config.CreateMap<Employee, EmployeeListViewModel>();
+            },
             AppDomain.CurrentDomain.GetAssemblies());
         
         builder.Services.AddAutoMapper(typeof(MappingProfile));
-        
         #endregion
 
         #region Configure the HTTP request pipeline

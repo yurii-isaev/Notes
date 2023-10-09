@@ -58,7 +58,7 @@ public class EmployeeController : Controller
                 await _employeeService.CreateEmployeeAsync(dto);
                 _toast.AddSuccessToastMessage("Employee successfully created");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 ModelState.AddModelError("", "Error creating new employee");
                 _toast.AddErrorToastMessage("Error creating new employee");
@@ -68,37 +68,34 @@ public class EmployeeController : Controller
         return RedirectToAction("Index");
     }
 
-    // [Route("/employee/edit/{id}")]
-    // [HttpGet]
-    // public async Task<IActionResult> EditEmployee(Guid employeeId)
-    // {
-    //     var employee = await _employeeService.GetEmployeeByIdAsync(employeeId);
-    //     var viewModel = _mapper.Map<EmployeeViewModel>(employee);
-    //
-    //     return await Task.FromResult<IActionResult>(View(viewModel));
-    // }
-    //
-    // [Route("/employee/edit/{id}")]
-    // [HttpPost]
-    // [ValidateAntiForgeryToken]
-    // public async Task<IActionResult> Edit(EmployeeViewModel viewModel)
-    // {
-    //     if (ModelState.IsValid)
-    //     {
-    //         var employee = _mapper.Map<EmployeeInputDto>(viewModel);
-    //
-    //         if (viewModel.ImageUrl != null && viewModel.ImageUrl.Length > 0)
-    //         {
-    //             var uploadDir = @"images/employee";
-    //             var filename = Guid.NewGuid().ToString() + "-" + viewModel.ImageUrl.FileName;
-    //             var path = Path.Combine(_environment.WebRootPath, uploadDir, filename);
-    //             await viewModel.ImageUrl.CopyToAsync(new FileStream(path, FileMode.Create));
-    //             employee.ImageUrl = "/" + uploadDir + "/" + filename;
-    //         }
-    //
-    //         await _employeeService.UpdateEmployeeAsync(employee);
-    //     }
-    //
-    //     return RedirectToAction("Index");
-    // }
+    [Route("/employee/edit/{id}")]
+    [HttpGet]
+    public async Task<IActionResult> EditEmployee(Guid id)
+    {
+        var dto = await _employeeService.GetEmployeeByIdAsync(id);
+        var viewModel = _mapper.Map<EmployeeViewModel>(dto);
+        return await Task.FromResult<IActionResult>(View(viewModel));
+    }
+
+    [Route("/employee/edit/{id}")]
+    [HttpPost]
+    public async Task<IActionResult> Edit(EmployeeViewModel viewModel)
+    {
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                var dto = _mapper.Map<EmployeeDto>(viewModel);
+                await _employeeService.UpdateEmployeeAsync(dto);
+                _toast.AddSuccessToastMessage("Employee successfully updated");
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError("", "Error updated employee");
+                _toast.AddErrorToastMessage("Error updated employee");
+            }
+        }
+
+        return RedirectToAction("Index");
+    }
 }
