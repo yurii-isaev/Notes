@@ -1,0 +1,162 @@
+@using SalesCrm.Domains.Enums
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model SalesCrm.Controllers.ViewModels.EmployeeViewModel
+@{
+    Layout = null;
+}
+
+<style>
+    .container {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f7f7f7;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .form-label {
+        font-weight: bold;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .form-select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .btn-primary {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        background-color: #45a049;
+    }
+
+    .form-photo {
+        float: left;
+        margin-right: 20px;
+    }
+
+    .form-photo img {
+        width: 150px;
+        height: auto;
+        border-radius: 5px;
+    }
+</style>
+
+<form method="post" action="/Employee/Create" class="container">
+    <div class="form-photo">
+        <img src="placeholder.jpg" alt="Employee Photo">
+    </div>
+
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Name, new { @class = "form-label" })
+        @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Name)
+    </div>
+    
+    
+    <div class="form-group">
+        @Html.LabelFor(model => model.Gender, new { @class = "form-label" })
+        @Html.TextBoxFor(model => model.Gender, new { @class = "form-control" })
+    </div>
+    
+    <div class="form-group">
+        @Html.LabelFor(model => model.ImageUrl, new { @class = "form-label" })
+        @Html.TextBoxFor(model => model.ImageUrl, new { @type = "file", @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.ImageUrl)
+    </div>
+    
+    <div class="form-group">
+        @Html.LabelFor(model => model.DateOfBirth, new { @class = "form-label" })
+        @Html.TextBoxFor(model => model.DateOfBirth, "{0:yyyy-MM-dd}", new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.DateOfBirth)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.DateJoined, new { @class = "form-label" })
+        @Html.TextBoxFor(model => model.DateJoined, "{0:yyyy-MM-dd}", new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.DateJoined)
+    </div>
+    
+    <div class="form-group">
+        @Html.LabelFor(model => model.Phone, new { @class = "form-label" })
+        @Html.TextBoxFor(model => model.Phone, new { @class = "form-control" })
+    </div>
+    
+    <div class="form-group">
+        @Html.LabelFor(model => model.Designation, new { @class = "form-label" })
+        @Html.TextBoxFor(model => model.Designation, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Designation)
+    </div>
+    
+    <div class="form-group">
+        @Html.LabelFor(model => model.Email, new { @class = "form-label" })
+        @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+    </div>
+    
+    <div class="form-group">
+        @Html.LabelFor(model => model.Insurance, new { @class = "form-label" })
+        @Html.TextBoxFor(model => model.Insurance, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Insurance)
+    </div>
+    
+    @* <div class="form-group"> *@
+    @*     @Html.LabelFor(model => model.PaymentMethod, new { @class = "form-label" }) *@
+    @*     @Html.DropDownListFor(model => model.PaymentMethod, *@
+    @*         Enum.GetValues(typeof(PaymentMethod)).Cast<PaymentMethod>().Select(e => new SelectListItem *@
+    @*     { *@
+    @*         Text = e.ToString(), *@
+    @*         Value = e.ToString(), *@
+    @*         Selected = (Model.PaymentMethod == e) *@
+    @*     }), new { @class = "form-select" }) *@
+    @* </div> *@
+    
+    <div class="form-group">
+        @Html.LabelFor(model => model.UnionMemberStatus, new { @class = "form-label" })
+        @Html.CheckBoxFor(model => model.UnionMemberStatus)
+    </div>
+    
+    <div class="form-group">
+        @Html.LabelFor(model => model.StudentLoanStatus, new { @class = "form-label" })
+        @Html.CheckBoxFor(model => model.StudentLoanStatus)
+    </div>
+    
+    <div class="form-group">
+        @Html.LabelFor(model => model.Address, new { @class = "form-label" })
+        @Html.TextBoxFor(model => model.Address, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Address)
+    </div>
+    
+    <div class="form-group">
+        @Html.LabelFor(model => model.City, new { @class = "form-label" })
+        @Html.TextBoxFor(model => model.City, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.City)
+    </div>
+    
+    <div class="form-group">
+        @Html.LabelFor(model => model.Postcode, new { @class = "form-label" })
+        @Html.TextBoxFor(model => model.Postcode, new { @class = "form-control" })
+    </div>
+    
+    <button type="submit" class="btn-primary">Submit</button>
+</form>

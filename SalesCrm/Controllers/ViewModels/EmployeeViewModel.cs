@@ -16,9 +16,16 @@ public class EmployeeViewModel
     
     public string? Gender { get; set; }
     
-    [DisplayName("Photo")]
-    [Required]
+     [DisplayName("Photo")]
+    // [Required(ErrorMessage = "Please Upload a Valid Image File. Only jpg format allowed")]
+    // [DataType(DataType.Upload)]
+    // [Display(Name = "Upload Product Image")]
+    // [FileExtensions(Extensions = "jpg")]
+    // [Required]
     public IFormFile? ImageUrl { get; set; }
+    
+    [DisplayName("Image")]
+    public string? ImageName { get; set; }
     
     [DataType(DataType.Date), DisplayName("Date Of Birth")]
     public DateTime DateOfBirth { get; set; }

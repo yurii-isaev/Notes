@@ -15,13 +15,13 @@ TRUNCATE TABLE "AspNetUsers" RESTART IDENTITY CASCADE;
 TRUNCATE TABLE "Employees" RESTART IDENTITY CASCADE;
 
 -- Creating an AspNetRoles table if it doesn't exist
-CREATE TABLE IF NOT EXISTS AspNetRoles
-(
-    Id               UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    Name             VARCHAR(255) NOT NULL,
-    NormalizedName   VARCHAR(255) NOT NULL,
-    ConcurrencyStamp UUID             DEFAULT uuid_generate_v4()
-);
+-- CREATE TABLE IF NOT EXISTS AspNetRoles
+-- (
+--     Id               UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+--     Name             VARCHAR(255) NOT NULL,
+--     NormalizedName   VARCHAR(255) NOT NULL,
+--     ConcurrencyStamp UUID             DEFAULT uuid_generate_v4()
+-- );
 
 -- Create administrator role
 INSERT INTO public."AspNetRoles" ("Id", "Name", "NormalizedName", "ConcurrencyStamp")

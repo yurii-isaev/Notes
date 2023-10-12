@@ -23,14 +23,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="DataAccess\Scripts" />
     <Folder Include="Services\Contracts\services" />
     <Folder Include="wwwroot\assets\js\vendor" />
-    <Folder Include="wwwroot\images\employee" />
     <Folder Include="wwwroot\logo" />
   </ItemGroup>
 
   <ItemGroup>
     <AdditionalFiles Include="Pages\News.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\sql\Admin.sql" />
   </ItemGroup>
 
 </Project>

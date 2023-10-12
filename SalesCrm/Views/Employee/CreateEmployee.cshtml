@@ -1,8 +1,6 @@
 @using SalesCrm.Domains.Enums
 @model SalesCrm.Controllers.ViewModels.EmployeeViewModel
-@{
-    ViewData["Title"] = "Create new Employee";
-}
+@{ ViewData["Title"] = "Create new Employee"; }
 
 <div class="col-md-12">
     <div class="card">
@@ -126,16 +124,21 @@
                                 <option>True</option>
                                 <option>False</option>
                             </select>
-                            
                             <span asp-validation-for="StudentLoanStatus" class="text-danger"></span>
                         </div>
                     </div>
 
                     <div class="col-4">
                         <div class="form-group indent">
-                            <label asp-for="ImageUrl" class="form-label"></label>
-                            <input asp-for="ImageUrl" class="form-control" placeholder="Enter name"/>
-                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                          
+                            <img id="preview" src="~/images/employee/user.jpg" alt="Preview" width="200" height="200"/>
+                            
+                            <div class="form-group">
+                                 <label asp-for="ImageUrl" class="form-label"></label>
+                                 <input asp-for="ImageUrl" class="form-control" onchange="previewImage(event)" />
+                                 <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                            </div>
+
                         </div>
                     </div>
 
@@ -146,7 +149,6 @@
                                 <option>True</option>
                                 <option>False</option>
                             </select>
-                            
                             <span asp-validation-for="UnionMemberStatus" class="text-danger"></span>
                         </div>
                     </div>
@@ -160,7 +162,7 @@
                     </div>
                 </div>
                 <br/>
-                
+
                 <!-- ============================================================== -->
                 <!-- Edit button -->
                 <div class="row mt-2">
@@ -176,15 +178,44 @@
     </div>
 </div>
 
-@section Scripts
-{
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
-
 <style>
     .indent {
         margin-top: 20px!important;
     }
 </style>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    
+    <script>
+    function previewImage(event) {
+        var input = event.target;
+        var preview = document.getElementById('preview');
+        var reader = new FileReader();
+
+        reader.onload = function () {
+            preview.src = reader.result;
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    }
+    </script>
+
+    <script>
+        function previewImage(event) {
+            var input = event.target;
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var previewElement = document.getElementById("preview");
+                    previewElement.src = e.target.result;
+                    previewElement.style.display = "block";
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+}

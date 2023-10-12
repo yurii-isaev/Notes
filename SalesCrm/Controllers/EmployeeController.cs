@@ -79,6 +79,7 @@ public class EmployeeController : Controller
 
     [Route("/employee/edit/{id}")]
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(EmployeeViewModel viewModel)
     {
         if (ModelState.IsValid)

@@ -12,7 +12,7 @@ using SalesCrm.DataAccess;
 namespace SalesCrm.DataAccess.Migrations.EmployeeTables
 {
     [DbContext(typeof(EmployeeDbContext))]
-    [Migration("20231228182909_Employee")]
+    [Migration("20231230235636_Employee")]
     partial class Employee
     {
         /// <inheritdoc />
@@ -48,15 +48,18 @@ namespace SalesCrm.DataAccess.Migrations.EmployeeTables
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Designation")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Gender")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("ImageUrl")
+                    b.Property<string>("ImageName")
                         .HasColumnType("text");
 
                     b.Property<string>("Insurance")
@@ -65,13 +68,16 @@ namespace SalesCrm.DataAccess.Migrations.EmployeeTables
                         .HasColumnType("character varying(50)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
                     b.Property<string>("PaymentMethod")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Phone")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Postcode")

@@ -12,7 +12,7 @@ public class Employee
     [Required]
     public string? Gender { get; set; }
     
-    public string? ImageUrl { get; set; }
+    public string? ImageName { get; set; }
     
     public DateTime DateOfBirth { get; set; }
 

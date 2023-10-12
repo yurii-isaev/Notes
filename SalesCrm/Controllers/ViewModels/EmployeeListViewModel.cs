@@ -8,7 +8,7 @@ public class EmployeeListViewModel
 
     public string? Gender { get; set; }
 
-    public string? ImageUrl { get; set; }
+    public string? ImageName { get; set; }
 
     public DateTime DateJoined { get; set; }
 

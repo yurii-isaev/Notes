@@ -31,7 +31,15 @@ public class EmployeeService : IEmployeeService
     {
         try
         {
-            var employee = _mapper.Map<Employee>(dto);
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Employee, EmployeeDto>()
+                    .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.ImageName));
+                cfg.CreateMap<EmployeeDto, Employee>().ForMember(dest => dest.ImageName,
+                    opt => opt.MapFrom(src => src.ImageUrl!.FileName));
+            });
+
+            var employee = config.CreateMapper().Map<EmployeeDto, Employee>(dto);
 
             employee.PaymentMethod = dto.PaymentMethod.ToString();
 
@@ -41,7 +49,7 @@ public class EmployeeService : IEmployeeService
                 var filename = Guid.NewGuid().ToString() + "-" + dto.ImageUrl.FileName;
                 var path = Path.Combine(_environment.WebRootPath, uploadDir, filename);
                 await dto.ImageUrl.CopyToAsync(new FileStream(path, FileMode.Create));
-                employee.ImageUrl = "/" + uploadDir + "/" + filename;
+                employee.ImageName = "/" + uploadDir + "/" + filename;
             }
 
             return await _repository.CreateEmployeeAsync(employee);
@@ -72,7 +80,6 @@ public class EmployeeService : IEmployeeService
 
         var config = new MapperConfiguration(cfg =>
         {
-            // Игнорировать свойство ImageUrl из базового класса
             cfg.CreateMap<Employee, EmployeeDto>().ForMember(dest => dest.ImageUrl, opt => opt.Ignore());
             cfg.CreateMap<EmployeeDto, Employee>();
         });
@@ -86,7 +93,15 @@ public class EmployeeService : IEmployeeService
     {
         try
         {
-            var employee = _mapper.Map<Employee>(dto);
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Employee, EmployeeDto>()
+                    .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.ImageName));
+                cfg.CreateMap<EmployeeDto, Employee>().ForMember(dest => dest.ImageName,
+                    opt => opt.MapFrom(src => src.ImageUrl!.FileName));
+            });
+
+            var employee = config.CreateMapper().Map<EmployeeDto, Employee>(dto);
 
             employee.PaymentMethod = dto.PaymentMethod.ToString();
 
@@ -96,7 +111,7 @@ public class EmployeeService : IEmployeeService
                 var filename = Guid.NewGuid().ToString() + "-" + dto.ImageUrl.FileName;
                 var path = Path.Combine(_environment.WebRootPath, uploadDir, filename);
                 await dto.ImageUrl.CopyToAsync(new FileStream(path, FileMode.Create));
-                employee.ImageUrl = "/" + uploadDir + "/" + filename;
+                employee.ImageName = "/" + uploadDir + "/" + filename;
             }
 
             await _repository.UpdateEmployeeAsync(employee);
