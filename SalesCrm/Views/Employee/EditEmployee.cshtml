@@ -1,14 +1,16 @@
 @using SalesCrm.Domains.Enums
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model SalesCrm.Controllers.ViewModels.EmployeeViewModel
-@{ ViewData["Title"] = "Edit Employee"; }
+@{
+    ViewData["Title"] = "Edit Employee";
+}
 
 <div class="col-md-12">
     <div class="card">
         <div class="card-body">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb"
-                    style="margin:0px!important;padding:1px;">
+                    style="margin:0!important;padding:1px;">
 
                     <li class="breadcrumb-item">
                         <a asp-controller="Home" asp-action="Index">Home</a>
@@ -34,20 +36,13 @@
 
                     <div class="col-4">
                         <div class="form-group indent">
-
-                            @if (@Model.ImageName != null)
-                            {
-                                <img id="preview" src="@Model.ImageName" alt="Preview"
-                                     width="200" height="200"
-                                     style="margin-bottom:10px"/>
-                            }
-                            else
-                            {
-                                <img id="preview" src="~/images/employee/user.jpg"
-                                     alt="Preview"
-                                     width="200" height="200"/>
-                            }
-
+                    
+                            <img id="preview"
+                                 src="@(Model.ImageName != null
+                                          ? Url.Content(Model.ImageName)
+                                          : Url.Content("~/images/employee/user.jpg"))"
+                                 alt="Preview" width="200" height="200" style="margin-bottom:10px"/>
+                    
                             <label asp-for="ImageUrl" class="form-label"></label>
                             <input asp-for="ImageUrl" type="file" class="form-control" onchange="previewImage(event)"/>
                             <span asp-validation-for="ImageUrl" class="text-danger"></span>
@@ -213,27 +208,49 @@
         var input = event.target;
         var preview = document.getElementById('preview');
         var reader = new FileReader();
-
+    
         reader.onload = function () {
             preview.src = reader.result;
         };
-
+    
         reader.readAsDataURL(input.files[0]);
     }
     </script>
     
+    @* <script> *@
+    @*     function previewImage(event) { *@
+    @*         var input = event.target; *@
+    @*         if (input.files && input.files[0]) { *@
+    @*             var reader = new FileReader(); *@
+    @*             reader.onload = function (e) { *@
+    @*                 var previewElement = document.getElementById("preview"); *@
+    @*                 previewElement.src = e.target.result; *@
+    @*                 previewElement.style.display = "block"; *@
+    @*             }; *@
+    @*             reader.readAsDataURL(input.files[0]); *@
+    @*         } *@
+    @*     } *@
+    @* </script> *@
+    
+    
     <script>
-        function previewImage(event) {
-            var input = event.target;
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    var previewElement = document.getElementById("preview");
-                    previewElement.src = e.target.result;
-                    previewElement.style.display = "block";
-                };
-                reader.readAsDataURL(input.files[0]);
+        $(function () {
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        $("img#imgpreview")
+                        .attr("src", e.target.result)
+                        .width(200)
+                        .height(200);
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
             }
-        }
-    </script>
+            $("#imageUpload").change(function() {
+                readURL(this);
+            });
+        });
+        </script>
+
 }

@@ -5,8 +5,9 @@ namespace SalesCrm.Services.Contracts.Services;
 
 public interface IEmployeeService
 {
-    Task<Employee> CreateEmployeeAsync(EmployeeDto employee);
+    Task<Employee> CreateEmployeeAsync(EmployeeDto employeeDto);
     Task<IEnumerable<Employee>> GetEmployeeListAsync();
     Task<EmployeeDto> GetEmployeeByIdAsync(Guid id);
-    Task UpdateEmployeeAsync(EmployeeDto employee);
+    Task UpdateEmployeeAsync(EmployeeDto employeeDto);
+    Task DeleteEmployeeByIdAsync(Guid employeeId);
 }

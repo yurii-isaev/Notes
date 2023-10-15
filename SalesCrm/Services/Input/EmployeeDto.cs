@@ -5,6 +5,6 @@ namespace SalesCrm.Services.Input;
 
 public class EmployeeDto : Employee
 {
-    public new IFormFile? ImageUrl { get; set; }
+    public IFormFile? ImageUrl { get; set; }
     public new PaymentMethod PaymentMethod { get; set; }
 }

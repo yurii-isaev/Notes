@@ -99,4 +99,25 @@ public class EmployeeController : Controller
 
         return RedirectToAction("Index");
     }
+    
+    [Route("/employee/delete/{id}")]
+    [HttpGet]
+    public async Task<IActionResult> DeleteEmployee(Guid id)
+    {
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                await _employeeService.DeleteEmployeeByIdAsync(id);
+                _toast.AddSuccessToastMessage("Employee successfully deleted");
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError("", "Error deleted employee");
+                _toast.AddErrorToastMessage("Error deleted employee");
+            }
+        }
+        
+        return RedirectToAction("Index");
+    }
 }

@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SalesCrm.Domains.Entities;
 using SalesCrm.Services.Contracts;
 
@@ -23,19 +22,24 @@ public class EmployeeRepository : IEmployeeRepository
         return employee;
     }
 
-
-    public async Task<Employee> GetEmployeeByIdAsync(Guid id)
+    public async Task<Employee> GetEmployeeByIdAsync(Guid employeeId)
     { 
         // waiting return async-type awaitable,
         // Employee - sync-type,
         // Task.FromResult(employee) - async-type
-        return (await _context.Employees.Where(emp => emp.Id == id).FirstOrDefaultAsync())!;
+        return (await _context.Employees.Where(emp => emp.Id == employeeId).FirstOrDefaultAsync())!;
     }
    
     public async Task UpdateEmployeeAsync(Employee employee)
     {
         _context.Employees.Update(employee);
         await _context.SaveChangesAsync();
+    }
 
+    public async Task DeleteEmployeeAsync(Guid employeeId)
+    {
+        var employee = await _context.Employees.Where(emp => emp.Id == employeeId).FirstOrDefaultAsync();
+        _context.Employees.Remove(employee ?? throw new InvalidOperationException());
+        await _context.SaveChangesAsync();
     }
 }

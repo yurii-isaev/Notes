@@ -14,14 +14,9 @@ public class EmployeeViewModel
      StringLength(50, MinimumLength = 2, ErrorMessage = "Invalid Name Length")]
     public string? Name { get; set; }
     
-    public string? Gender { get; set; }
+    public string? Gender { get; set; } 
     
-     [DisplayName("Photo")]
-    // [Required(ErrorMessage = "Please Upload a Valid Image File. Only jpg format allowed")]
-    // [DataType(DataType.Upload)]
-    // [Display(Name = "Upload Product Image")]
-    // [FileExtensions(Extensions = "jpg")]
-    // [Required]
+    [Required]
     public IFormFile? ImageUrl { get; set; }
     
     [DisplayName("Image")]
