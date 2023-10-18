@@ -17,7 +17,7 @@ public class EmployeeViewModel
     public string? Gender { get; set; } 
     
     [Required]
-    public IFormFile? ImageUrl { get; set; }
+    public IFormFile? FormFile { get; set; }
     
     [DisplayName("Image")]
     public string? ImageName { get; set; }

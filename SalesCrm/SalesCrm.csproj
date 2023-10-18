@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DataAccess\Scripts" />
     <Folder Include="Services\Contracts\services" />
     <Folder Include="wwwroot\assets\js\vendor" />
     <Folder Include="wwwroot\logo" />

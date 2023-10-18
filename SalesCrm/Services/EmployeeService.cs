@@ -11,15 +11,17 @@ public class EmployeeService : IEmployeeService
     private readonly IEmployeeRepository _repository;
     private readonly ILogger<EmployeeService> _logger;
     private readonly IWebHostEnvironment _environment;
+    
+    private const string UploadDir = @"images/employees/";
 
     public EmployeeService
     (
-        IEmployeeRepository repo,
+        IEmployeeRepository repository,
         ILogger<EmployeeService> logger,
         IWebHostEnvironment environment
     )
     {
-        _repository = repo;
+        _repository = repository;
         _logger = logger;
         _environment = environment;
     }
@@ -31,20 +33,16 @@ public class EmployeeService : IEmployeeService
             var mapper = new MapperConfiguration(conf =>
             {
                 conf.CreateMap<Employee, EmployeeDto>()
-                    .ForMember(o => o.ImageUrl, opt => opt.MapFrom(e => e.ImageName));
+                    .ForMember(o => o.FormFile, opt => opt.MapFrom(e => e.ImageName));
             });
 
             var employee = mapper.CreateMapper().Map<EmployeeDto, Employee>(dto);
 
             employee.PaymentMethod = dto.PaymentMethod.ToString();
 
-            if (dto.ImageUrl != null && dto.ImageUrl.Length > 0)
+            if (dto.FormFile != null && dto.FormFile.Length > 0)
             {
-                var uploadDir = @"images/employees";
-                var filename = dto.Name?.ToString() + "-" + dto.ImageUrl.FileName;
-                var path = Path.Combine(_environment.WebRootPath, uploadDir, filename);
-                await dto.ImageUrl.CopyToAsync(new FileStream(path, FileMode.Create));
-                employee.ImageName = "/" + uploadDir + "/" + filename;
+                await AddEmployeePhoto(dto, employee);
             }
 
             return await _repository.CreateEmployeeAsync(employee);
@@ -54,6 +52,26 @@ public class EmployeeService : IEmployeeService
             _logger.LogError("[Exception create employee]: " + ex.Message);
             throw;
         }
+    }
+
+    private async Task AddEmployeePhoto(EmployeeDto dto, Employee employee)
+    {
+        // var filename = Guid.NewGuid().ToString() + "-" + dto.ImageUrl.FileName; 
+
+        // Get the image file extension
+        var fileExtension = Path.GetExtension(dto.FormFile!.FileName);
+
+        // Form the file name using the name from the DTO and the file extension 
+        var filename = $"{dto.Name}{fileExtension}";
+
+        // Concatenates these path strings, taking into account the correct path separation for the operating system
+        var path = Path.Combine(_environment.WebRootPath, UploadDir, filename);
+
+        // Performs an asynchronous copy of the contents of the file at the specified URL to a new file submitted by FileStream
+        await dto.FormFile!.CopyToAsync(new FileStream(path, FileMode.Create));
+
+        // Assign a file name with a path to the corresponding property of the employee
+        employee.ImageName = $"/{UploadDir}{filename}";
     }
 
     public async Task<IEnumerable<Employee>> GetEmployeeListAsync()
@@ -75,15 +93,11 @@ public class EmployeeService : IEmployeeService
 
         var mapper = new MapperConfiguration(conf =>
         {
-            conf.CreateMap<Employee, EmployeeDto>()
-                .ForMember(dto => dto.ImageUrl, opt => opt.Ignore());
-
+            conf.CreateMap<Employee, EmployeeDto>().ForMember(dto => dto.FormFile, opt => opt.Ignore());
             conf.CreateMap<EmployeeDto, Employee>();
         });
 
-        var employeeDto = mapper
-            .CreateMapper()
-            .Map<Employee, EmployeeDto>(employee);
+        var employeeDto = mapper.CreateMapper().Map<Employee, EmployeeDto>(employee);
 
         return employeeDto;
     }
@@ -95,23 +109,42 @@ public class EmployeeService : IEmployeeService
             var mapper = new MapperConfiguration(conf =>
             {
                 conf.CreateMap<Employee, EmployeeDto>()
-                    .ForMember(o => o.ImageUrl, opt => opt.MapFrom(e => e.ImageName));
+                    .ForMember(o => o.FormFile, opt => opt.MapFrom(e => e.ImageName));
 
                 conf.CreateMap<EmployeeDto, Employee>()
-                    .ForMember(e => e.ImageName, opt => opt.MapFrom(o => o.ImageUrl!.FileName));
+                    .ForMember(e => e.ImageName, opt => opt.MapFrom(o => o.FormFile!.FileName));
             });
 
             var employee = mapper.CreateMapper().Map<EmployeeDto, Employee>(dto);
 
             employee.PaymentMethod = dto.PaymentMethod.ToString();
 
-            if (dto.ImageUrl != null && dto.ImageUrl.Length > 0)
+            if (dto.FormFile != null && dto.FormFile.Length > 0)
             {
-                var uploadDir = @"images/employee";
-                var filename = Guid.NewGuid().ToString() + "-" + dto.ImageUrl.FileName;
-                var path = Path.Combine(_environment.WebRootPath, uploadDir, filename);
-                await dto.ImageUrl.CopyToAsync(new FileStream(path, FileMode.Create));
-                employee.ImageName = "/" + uploadDir + "/" + filename;
+                var fileExtension = Path.GetExtension(dto.FormFile!.FileName);
+                var filename = $"{dto.Name}{fileExtension}";
+                var newEmployeePhotoPath = Path.Combine(_environment.WebRootPath, UploadDir, filename);
+                var employeeObj = await _repository.GetEmployeeByIdAsync(dto.Id);
+                var employeePhoto = employeeObj.ImageName;
+
+                // Delete the old photo, if it exists
+                if (!string.IsNullOrEmpty(employeePhoto))
+                {
+                    var oldEmployeePhoto = Path.Combine(_environment.WebRootPath, employeePhoto.TrimStart('/'));
+
+                    if (File.Exists(oldEmployeePhoto))
+                    {
+                        await Task.Run(() => File.Delete(oldEmployeePhoto));
+                    }
+                }
+
+                // This ensures that the file is properly closed after the image is copied, even if an exception occurs
+                using (var fileStream = new FileStream(newEmployeePhotoPath, FileMode.Create))
+                {
+                    await dto.FormFile!.CopyToAsync(fileStream);
+                }
+
+                employee.ImageName = $"/{UploadDir}{filename}";
             }
 
             await _repository.UpdateEmployeeAsync(employee);
@@ -131,8 +164,8 @@ public class EmployeeService : IEmployeeService
         {
             if (dto.ImageName != null && dto.ImageName.Length > 0)
             {
-                var filename = dto.ImageName;
-                await DeletePhotoFromStorage(filename);
+                var photoNamePath = dto.ImageName;
+                await DeletePhotoFromStorage(photoNamePath);
             }
 
             await _repository.DeleteEmployeeAsync(employeeId);
@@ -144,10 +177,9 @@ public class EmployeeService : IEmployeeService
         }
     }
 
-    private async Task DeletePhotoFromStorage(string filename)
+    private async Task DeletePhotoFromStorage(string photoNamePath)
     {
-        var path = Path.Combine(_environment.WebRootPath, filename);
-        var fullPath = $"wwwroot{path}";
+        var fullPath = $"wwwroot{photoNamePath}";
 
         try
         {

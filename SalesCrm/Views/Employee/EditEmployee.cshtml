@@ -33,22 +33,22 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                 <div class="row" style="align-items:end">
-
+                    
                     <div class="col-4">
                         <div class="form-group indent">
-                    
                             <img id="preview"
-                                 src="@(Model.ImageName != null
-                                          ? Url.Content(Model.ImageName)
-                                          : Url.Content("~/images/employee/user.jpg"))"
+                                 src="@(Model.ImageName != null ? Url.Content(Model.ImageName) : Url.Content("~/images/employees/user.jpg"))"
                                  alt="Preview" width="200" height="200" style="margin-bottom:10px"/>
                     
-                            <label asp-for="ImageUrl" class="form-label"></label>
-                            <input asp-for="ImageUrl" type="file" class="form-control" onchange="previewImage(event)"/>
-                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                            <input asp-for="FormFile"
+                                   type="file" accept="image/*" class="form-control"
+                                   onchange="previewImage(event)"
+                                   width="200" height="200"/>
+                    
+                            <span asp-validation-for="FormFile" class="text-danger"></span>
                         </div>
                     </div>
-
+                    
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="Name" class="form-label"></label>
@@ -138,11 +138,6 @@
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="StudentLoanStatus" class="form-label"></label>
-                            @* <select asp-for="StudentLoanStatus" *@
-                            @*         class="form-control" *@
-                            @*         placeholder="Enter name" *@
-                            @*         asp-items="@Html.GetEnumSelectList<StudentLoanStatus>()"> *@
-                            @* </select> *@
                             <select asp-for="StudentLoanStatus" class="form-control" placeholder="Enter name">
                                 <option>True</option>
                                 <option>False</option>
@@ -174,7 +169,6 @@
                     </div>
                 </div>
                 <br/>
-
                 <!-- ============================================================== -->
                 <!-- Edit button -->
                 <div class="row mt-2">
@@ -185,7 +179,6 @@
                     </div>
                 </div>
                 <!-- ============================================================== -->
-
             </form>
         </div>
     </div>
@@ -202,7 +195,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-
+    
     <script>
     function previewImage(event) {
         var input = event.target;
@@ -216,41 +209,5 @@
         reader.readAsDataURL(input.files[0]);
     }
     </script>
-    
-    @* <script> *@
-    @*     function previewImage(event) { *@
-    @*         var input = event.target; *@
-    @*         if (input.files && input.files[0]) { *@
-    @*             var reader = new FileReader(); *@
-    @*             reader.onload = function (e) { *@
-    @*                 var previewElement = document.getElementById("preview"); *@
-    @*                 previewElement.src = e.target.result; *@
-    @*                 previewElement.style.display = "block"; *@
-    @*             }; *@
-    @*             reader.readAsDataURL(input.files[0]); *@
-    @*         } *@
-    @*     } *@
-    @* </script> *@
-    
-    
-    <script>
-        $(function () {
-            function readURL(input) {
-                if (input.files && input.files[0]) {
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                        $("img#imgpreview")
-                        .attr("src", e.target.result)
-                        .width(200)
-                        .height(200);
-                    }
-                    reader.readAsDataURL(input.files[0]);
-                }
-            }
-            $("#imageUpload").change(function() {
-                readURL(this);
-            });
-        });
-        </script>
-
 }
+    

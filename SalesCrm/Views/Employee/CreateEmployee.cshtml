@@ -1,13 +1,16 @@
 @using SalesCrm.Domains.Enums
 @model SalesCrm.Controllers.ViewModels.EmployeeViewModel
-@{ ViewData["Title"] = "Create new Employee"; }
+
+@{
+    ViewData["Title"] = "Create new Employee";
+}
 
 <div class="col-md-12">
     <div class="card">
         <div class="card-body">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb"
-                    style="margin:0px!important;padding:1px;">
+                    style="margin:0!important;padding:1px;">
                     <li class="breadcrumb-item">
                         <a asp-controller="Home" asp-action="Index">Home</a>
                     </li>
@@ -25,6 +28,19 @@
 
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+                <div class="col-4">
+                    <div class="form-group indent">
+                        <img id="preview"
+                             src="~/images/employees/user.jpg"
+                             alt="Preview" width="200" height="200"/>
+                        
+                        <div class="form-group">
+                            <input asp-for="FormFile" class="form-control" onchange="previewImage(event)" />
+                            <span asp-validation-for="FormFile" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="row">
                     <div class="col-4">
                         <div class="form-group indent">
@@ -115,30 +131,11 @@
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="StudentLoanStatus" class="form-label"></label>
-                            @* <select asp-for="StudentLoanStatus" *@
-                            @*         class="form-control" *@
-                            @*         placeholder="Enter name" *@
-                            @*         asp-items="@Html.GetEnumSelectList<StudentLoanStatus>()"> *@
-                            @* </select> *@
                             <select asp-for="StudentLoanStatus" class="form-control" placeholder="Enter name">
                                 <option>True</option>
                                 <option>False</option>
                             </select>
                             <span asp-validation-for="StudentLoanStatus" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div class="col-4">
-                        <div class="form-group indent">
-                          
-                            <img id="preview" src="~/images/employee/user.jpg" alt="Preview" width="200" height="200"/>
-                            
-                            <div class="form-group">
-                                 <label asp-for="ImageUrl" class="form-label"></label>
-                                 <input asp-for="ImageUrl" class="form-control" onchange="previewImage(event)" />
-                                 <span asp-validation-for="ImageUrl" class="text-danger"></span>
-                            </div>
-
                         </div>
                     </div>
 
@@ -162,7 +159,6 @@
                     </div>
                 </div>
                 <br/>
-
                 <!-- ============================================================== -->
                 <!-- Edit button -->
                 <div class="row mt-2">
@@ -202,20 +198,5 @@
 
         reader.readAsDataURL(input.files[0]);
     }
-    </script>
-
-    <script>
-        function previewImage(event) {
-            var input = event.target;
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    var previewElement = document.getElementById("preview");
-                    previewElement.src = e.target.result;
-                    previewElement.style.display = "block";
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
     </script>
 }

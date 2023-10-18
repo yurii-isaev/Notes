@@ -31,6 +31,13 @@ public class Program
         builder.Services.AddDbContext<NewsDbContext>(opts => opts.UseNpgsql(connectionString));
         builder.Services.AddDbContext<EmployeeDbContext>(opts => opts.UseNpgsql(connectionString));
         
+        // builder.Services.AddDbContext<EmployeeDbContext>(opts =>
+        // {
+        //     opts.UseNpgsql(connectionString);
+        //     opts.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        //     opts.EnableSensitiveDataLogging();
+        // });
+        
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
         builder.Services.AddTransient<INewsService, NewsService>();
