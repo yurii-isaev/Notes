@@ -9,6 +9,7 @@ using SalesCrm.Domains.Entities;
 using SalesCrm.Domains.Identities;
 using SalesCrm.Services;
 using SalesCrm.Services.Contracts;
+using SalesCrm.Services.Contracts.Repositories;
 using SalesCrm.Services.Contracts.Services;
 using SalesCrm.Services.Input;
 using SalesCrm.Services.Mapping;
@@ -48,6 +49,9 @@ public class Program
         builder.Services.AddTransient<IEmployeeService, EmployeeService>();
         builder.Services.AddTransient<IEmployeeRepository, EmployeeRepository>();
         
+        builder.Services.AddTransient<ITaxYearService, TaxYearService>();
+        builder.Services.AddTransient<ITaxYearRepository, TaxYearRepository>();
+        
         builder.Services.AddTransient<UserService>();
         builder.Services.AddTransient<RoleService>();
 
@@ -76,6 +80,12 @@ public class Program
 
                 config.CreateMap<EmployeeListViewModel, Employee>();
                 config.CreateMap<Employee, EmployeeListViewModel>();
+                
+                config.CreateMap<TaxYearViewModel, TaxYearDto>();
+                config.CreateMap<TaxYearDto, TaxYearViewModel>();
+                
+                config.CreateMap<TaxYear, TaxYearDto>();
+                config.CreateMap<TaxYearDto, TaxYear>();
             },
             AppDomain.CurrentDomain.GetAssemblies());
         

@@ -1,0 +1,47 @@
+﻿@model IEnumerable<SalesCrm.Controllers.ViewModels.TaxYearViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Create new Tax Year</h1>
+
+<div class="row">
+    <div class="col-12">
+        <a asp-action="CreateTaxYear" class="btn btn-xs btn-outline-success float-md-end">
+            Create new Tax Year
+        </a>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.YearOfTax)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.YearOfTax)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new {/* id=item.PrimaryKey */}) |
+                @Html.ActionLink("Details", "Details", new {/* id=item.PrimaryKey */}) |
+                @Html.ActionLink("Delete", "Delete", new {/* id=item.PrimaryKey */})
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -1,0 +1,61 @@
+﻿@model SalesCrm.Controllers.ViewModels.TaxYearViewModel
+
+@{
+    ViewData["Title"] = "CreateTaxYear";
+}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-body">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb"
+                    style="margin:0!important;padding:1px;">
+                    <li class="breadcrumb-item">
+                        <a asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index">Tax Year List</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <a aria-current="page">New Tax Year</a>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+
+        <h2>Create Tax Year</h2>
+        <hr style="opacity:0.5!important"/>
+
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-action="Create" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="YearOfTax" class="control-label">Enter a new tax year</label>
+                        <input asp-for="YearOfTax" class="form-control"/>
+                        <span asp-validation-for="YearOfTax" class="text-danger"></span>
+                    </div>
+                    <!-- Create button -->
+                    <div class="row mt-2">
+                        <div class="col-3">
+                            <button type="submit" value="Create" class="btn btn-rounded btn-primary">
+                                Create
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Create button -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
