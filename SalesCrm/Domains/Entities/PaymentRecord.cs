@@ -15,6 +15,9 @@ public class PaymentRecord
     [MaxLength(100)]
     public string? Name { get; set; }
     
+    [Required, MaxLength(50)]
+    public string? InsuranceNumber { get; set; }
+    
     public DateTime PayDate { get; set; }
     
     public string? PayMonth { get; set; }

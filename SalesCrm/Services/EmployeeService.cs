@@ -10,6 +10,7 @@ public class EmployeeService : IEmployeeService
 {
     private readonly IEmployeeRepository _repository;
     private readonly ILogger<EmployeeService> _logger;
+    private readonly IMapper _mapper;
     private readonly IWebHostEnvironment _environment;
     
     private const string UploadDir = @"images/employees/";
@@ -18,11 +19,13 @@ public class EmployeeService : IEmployeeService
     (
         IEmployeeRepository repository,
         ILogger<EmployeeService> logger,
+        IMapper mapper,
         IWebHostEnvironment environment
     )
     {
         _repository = repository;
         _logger = logger;
+        _mapper = mapper;
         _environment = environment;
     }
 
@@ -74,17 +77,17 @@ public class EmployeeService : IEmployeeService
         employee.ImageName = $"/{UploadDir}{filename}";
     }
 
-    public async Task<IEnumerable<Employee>> GetEmployeeListAsync()
+    public async Task<IEnumerable<EmployeeDto>> GetEmployeeListAsync()
     {
         try
         {
-            // map ????
-            return await _repository.GetEmployeeListAsync();
+            var employeeList = _repository.GetEmployeeListAsync();
+            return _mapper.Map<IEnumerable<EmployeeDto>>(employeeList);
         }
         catch (Exception ex)
         {
-            _logger.LogError("[Get employee List]: " + ex.Message);
-            return Enumerable.Empty<Employee>();
+            _logger.LogError("[Get employee list]: " + ex.Message);
+            return Enumerable.Empty<EmployeeDto>();
         }
     }
 

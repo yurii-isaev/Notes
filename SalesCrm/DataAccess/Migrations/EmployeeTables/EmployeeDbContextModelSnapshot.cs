@@ -59,7 +59,7 @@ namespace SalesCrm.DataAccess.Migrations.EmployeeTables
                     b.Property<string>("ImageName")
                         .HasColumnType("text");
 
-                    b.Property<string>("Insurance")
+                    b.Property<string>("InsuranceNumber")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
@@ -113,6 +113,11 @@ namespace SalesCrm.DataAccess.Migrations.EmployeeTables
 
                     b.Property<decimal>("HoursWorked")
                         .HasColumnType("decimal(18, 2)");
+
+                    b.Property<string>("InsuranceNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(100)

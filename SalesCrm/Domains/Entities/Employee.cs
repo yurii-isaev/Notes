@@ -28,7 +28,7 @@ public class Employee
     public string? Email { get; set; }
 
     [Required, MaxLength(50)]
-    public string? Insurance { get; set; }
+    public string? InsuranceNumber { get; set; }
 
     [Required]
     public string? PaymentMethod { get; set; }
