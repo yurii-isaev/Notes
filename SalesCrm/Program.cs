@@ -52,6 +52,9 @@ public class Program
         builder.Services.AddTransient<ITaxYearService, TaxYearService>();
         builder.Services.AddTransient<ITaxYearRepository, TaxYearRepository>();
         
+        builder.Services.AddTransient<IPaymentRecordService, PaymentRecordService>();
+        builder.Services.AddTransient<IPaymentRecordRepository, PaymentRecordRepository>();
+        
         builder.Services.AddTransient<UserService>();
         builder.Services.AddTransient<RoleService>();
 
@@ -71,7 +74,6 @@ public class Program
             {
                 config.CreateMap<EmployeeViewModel, Employee>();
                 config.CreateMap<Employee, EmployeeViewModel>();
-
                 config.CreateMap<EmployeeViewModel, EmployeeDto>();
                 config.CreateMap<EmployeeDto, EmployeeViewModel>();
 
@@ -83,9 +85,13 @@ public class Program
                 
                 config.CreateMap<TaxYearViewModel, TaxYearDto>();
                 config.CreateMap<TaxYearDto, TaxYearViewModel>();
-                
                 config.CreateMap<TaxYear, TaxYearDto>();
                 config.CreateMap<TaxYearDto, TaxYear>();
+                
+                config.CreateMap<PaymentRecordViewModel, PaymentRecordDto>();
+                config.CreateMap<PaymentRecordDto, PaymentRecordViewModel>();
+                config.CreateMap<PaymentRecord, PaymentRecordDto>();
+                config.CreateMap<PaymentRecordDto, PaymentRecord>();
             },
             AppDomain.CurrentDomain.GetAssemblies());
         

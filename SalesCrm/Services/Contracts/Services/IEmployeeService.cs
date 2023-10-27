@@ -10,4 +10,6 @@ public interface IEmployeeService
     Task<EmployeeDto> GetEmployeeByIdAsync(Guid id);
     Task UpdateEmployeeAsync(EmployeeDto employeeDto);
     Task DeleteEmployeeByIdAsync(Guid employeeId);
+    
+    Task<decimal> GetUnionFree(Guid id);
 }

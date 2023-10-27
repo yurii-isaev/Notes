@@ -32,22 +32,22 @@
 
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                <div class="row" style="align-items:end">
-                    
-                    <div class="col-4">
-                        <div class="form-group indent">
-                            <img id="preview"
-                                 src="@(Model.ImageName != null ? Url.Content(Model.ImageName) : Url.Content("~/images/employees/user.jpg"))"
-                                 alt="Preview" width="200" height="200" style="margin-bottom:10px"/>
-                    
-                            <input asp-for="FormFile"
-                                   type="file" accept="image/*" class="form-control"
-                                   onchange="previewImage(event)"
-                                   width="200" height="200"/>
-                    
-                            <span asp-validation-for="FormFile" class="text-danger"></span>
-                        </div>
+                <div class="col-4">
+                    <div class="form-group indent">
+                        <img id="preview"
+                             src="@(Model.ImageName != null ? Url.Content(Model.ImageName) : Url.Content("~/images/employees/user.jpg"))"
+                             alt="Preview" width="200" height="200" style="margin-bottom:10px"/>
+                                    
+                        <input asp-for="FormFile"
+                               type="file" accept="image/*" class="form-control"
+                               onchange="previewImage(event)"
+                               width="200" height="200"/>
+                                    
+                        <span asp-validation-for="FormFile" class="text-danger"></span>
                     </div>
+                </div>
+                
+                <div class="row">
                     
                     <div class="col-4">
                         <div class="form-group indent">
@@ -142,7 +142,6 @@
                                 <option>True</option>
                                 <option>False</option>
                             </select>
-
                             <span asp-validation-for="StudentLoanStatus" class="text-danger"></span>
                         </div>
                     </div>
@@ -155,16 +154,15 @@
                                 <option>True</option>
                                 <option>False</option>
                             </select>
-
                             <span asp-validation-for="UnionMemberStatus" class="text-danger"></span>
                         </div>
                     </div>
 
                     <div class="col-4">
                         <div class="form-group indent">
-                            <label asp-for="Insurance" class="form-label"></label>
-                            <input asp-for="Insurance" class="form-control" placeholder="Number"/>
-                            <span asp-validation-for="Insurance" class="text-danger"></span>
+                            <label asp-for="InsuranceNumber" class="form-label"></label>
+                            <input asp-for="InsuranceNumber" class="form-control" placeholder="Number"/>
+                            <span asp-validation-for="InsuranceNumber" class="text-danger"></span>
                         </div>
                     </div>
                 </div>

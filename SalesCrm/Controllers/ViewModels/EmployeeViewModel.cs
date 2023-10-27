@@ -16,6 +16,7 @@ public class EmployeeViewModel
     
     public string? Gender { get; set; } 
     
+    [DisplayName("Photo")]
     [Required]
     public IFormFile? FormFile { get; set; }
     
@@ -36,9 +37,10 @@ public class EmployeeViewModel
     [DataType(DataType.EmailAddress)]
     public string? Email { get; set; }
 
+    [DisplayName("Insurance Number")]
     [Required, StringLength(50)]
     [RegularExpression(@"^[A-CEGHJ-PR-TW-Z]{1}[A-CEGHJ-NPR-TW-Z]{1}[0-9]{6}[A-D\s]$")]
-    public string? Insurance { get; set; }
+    public string? InsuranceNumber { get; set; }
 
     [DisplayName("Payment Method")]
     public PaymentMethod PaymentMethod { get; set; }

@@ -40,7 +40,7 @@ public class PaymentRecordViewModel
 
     public decimal Nic { get; set; }
 
-    public decimal? UnionFree { get; set; }
+    public decimal UnionFree { get; set; }
 
     public decimal TotalEarnings { get; set; }
 

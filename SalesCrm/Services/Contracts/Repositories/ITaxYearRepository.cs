@@ -7,9 +7,9 @@ public interface ITaxYearRepository
 {
     Task CreateTaxYearAsync(TaxYear taxYear);
 
-    IEnumerable<TaxYear> GetTaxYearListAsync();
+    Task<IEnumerable<TaxYear>> GetTaxYearListAsync();
 
     Task<TaxYear> GetTaxYearByIdAsync(Guid id);
 
-    IEnumerable<SelectListItem> GetSelectTaxYearListAsync();
+    Task<IEnumerable<SelectListItem>> GetSelectTaxYearListAsync();
 }

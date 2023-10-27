@@ -32,7 +32,7 @@
                     <div class="form-group indent">
                         <img id="preview"
                              src="~/images/employees/user.jpg"
-                             alt="Preview" width="200" height="200"/>
+                             alt="Preview" width="200" height="200" style="margin-bottom:10px"/>
                         
                         <div class="form-group">
                             <input asp-for="FormFile" class="form-control" onchange="previewImage(event)" />
@@ -152,9 +152,9 @@
 
                     <div class="col-4">
                         <div class="form-group indent">
-                            <label asp-for="Insurance" class="form-label"></label>
-                            <input asp-for="Insurance" class="form-control" placeholder="Number"/>
-                            <span asp-validation-for="Insurance" class="text-danger"></span>
+                            <label asp-for="InsuranceNumber" class="form-label"></label>
+                            <input asp-for="InsuranceNumber" class="form-control" placeholder="Number"/>
+                            <span asp-validation-for="InsuranceNumber" class="text-danger"></span>
                         </div>
                     </div>
                 </div>

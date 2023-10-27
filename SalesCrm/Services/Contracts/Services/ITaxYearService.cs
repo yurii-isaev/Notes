@@ -1,3 +1,4 @@
+using System.Collections;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SalesCrm.Domains.Entities;
 using SalesCrm.Services.Input;
@@ -8,9 +9,10 @@ public interface ITaxYearService
 {
     Task CreateTaxYearAsync(TaxYearDto dto);
     
-    IEnumerable<TaxYearDto> GetTaxYearList();
+    Task<IEnumerable<TaxYearDto>> GetTaxYearList();
     
     Task<TaxYear> GetTaxYearByIdAsync(Guid id);
     
     Task<IEnumerable<SelectListItem>> GetSelectTaxListAsync();
+    decimal GetTotalTax(decimal totalEarnings);
 }

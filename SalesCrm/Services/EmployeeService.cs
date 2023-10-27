@@ -81,7 +81,7 @@ public class EmployeeService : IEmployeeService
     {
         try
         {
-            var employeeList = _repository.GetEmployeeListAsync();
+            var employeeList = await _repository.GetEmployeeListAsync();
             return _mapper.Map<IEnumerable<EmployeeDto>>(employeeList);
         }
         catch (Exception ex)
@@ -179,6 +179,14 @@ public class EmployeeService : IEmployeeService
             _logger.LogError("[Error deleting employee]: " + ex.Message);
             throw;
         }
+    }
+
+    public async Task<decimal> GetUnionFree(Guid id)
+    {
+        decimal unionFree = 0;
+        var dto = await GetEmployeeByIdAsync(id); 
+        unionFree = (dto.UnionMemberStatus) ? 20m : 0;
+        return unionFree;
     }
 
     private async Task DeletePhotoFromStorage(string photoNamePath)

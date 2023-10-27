@@ -17,9 +17,9 @@ public class TaxYearRepository : ITaxYearRepository
         await _context.SaveChangesAsync();
     }
 
-    public IEnumerable<TaxYear> GetTaxYearListAsync()
+    public Task<IEnumerable<TaxYear>> GetTaxYearListAsync()
     {
-        return _context.TaxYears;
+        return Task.FromResult<IEnumerable<TaxYear>>(_context.TaxYears);
     }
 
     public async Task<TaxYear> GetTaxYearByIdAsync(Guid taxId)
@@ -29,12 +29,14 @@ public class TaxYearRepository : ITaxYearRepository
             .FirstOrDefaultAsync() ?? throw new InvalidOperationException();
     }
 
-    public IEnumerable<SelectListItem> GetSelectTaxYearListAsync()
+    public Task<IEnumerable<SelectListItem>> GetSelectTaxYearListAsync()
     {
-        return GetTaxYearListAsync().Select(taxYear => new SelectListItem
-        {
-            Text = taxYear.YearOfTax,
-            Value = taxYear.Id.ToString()
-        }).ToList();
+        return Task.FromResult<IEnumerable<SelectListItem>>(GetTaxYearListAsync()
+            .Result.Select(taxYear => new SelectListItem
+            {
+                Text = taxYear.YearOfTax,
+                Value = taxYear.Id.ToString()
+            }).ToList()
+        );
     }
 }

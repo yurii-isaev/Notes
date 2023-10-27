@@ -31,9 +31,7 @@ namespace SalesCrm.Controllers
         [HttpGet]
         public Task<IActionResult> Index()
         {
-            var taxYear = _taxService
-                .GetTaxYearList()
-                .Select(tax => _mapper.Map<TaxYearViewModel>(tax));
+            var taxYear = _taxService.GetTaxYearList().Result.Select(tax => _mapper.Map<TaxYearViewModel>(tax));
             
             return Task.FromResult<IActionResult>(View(taxYear));
         }

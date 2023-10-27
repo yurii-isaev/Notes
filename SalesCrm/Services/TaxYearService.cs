@@ -34,11 +34,11 @@ public class TaxYearService : ITaxYearService
         }
     }
 
-    public IEnumerable<TaxYearDto> GetTaxYearList()
+    public async Task<IEnumerable<TaxYearDto>> GetTaxYearList()
     {
         try
         {
-            var taxYearList = _repository.GetTaxYearListAsync();
+            var taxYearList = await _repository.GetTaxYearListAsync();
             return _mapper.Map<IEnumerable<TaxYearDto>>(taxYearList);
         }
         catch (Exception ex)
@@ -55,6 +55,38 @@ public class TaxYearService : ITaxYearService
 
     public async Task<IEnumerable<SelectListItem>> GetSelectTaxListAsync()
     {
-        throw new NotImplementedException();
+        try
+        {
+            return await _repository.GetSelectTaxYearListAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("[Get Select Tax Year]: " + ex.Message);
+            throw;
+        }
+    }
+
+    public decimal GetTotalTax(decimal totalEarnings)
+    {
+        decimal totalTax = 0m;
+        decimal taxRate = 0m;
+
+        if (totalEarnings < 250000)
+        {
+            taxRate = .0m;
+            totalTax = totalEarnings * taxRate;
+        }
+        else if (totalEarnings > 250000 && totalEarnings < 500000)
+        {
+            taxRate = .50m;
+            totalTax = (totalEarnings - 250000) * taxRate;
+        }
+        else if (totalEarnings > 500000 && totalEarnings <= 1000000)
+        {
+            taxRate = 1m;
+            totalTax = ((totalEarnings - 250000) * .50m) + ((totalEarnings - 500000) * taxRate);
+        }
+
+        return totalTax;
     }
 }
