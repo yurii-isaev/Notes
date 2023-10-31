@@ -33,8 +33,12 @@ namespace SalesCrm.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return RedirectToAction(nameof(Index));
-            // return await Task.FromResult<IActionResult>(View());
+            var list = _paymentRecordService.GetPaymentRecordList()
+                .Result
+                .Select(dto => _mapper.Map<PaymentRecordViewModel>(dto))
+                .ToList();
+            
+            return await Task.FromResult<IActionResult>(View(list));
         }
 
         [HttpGet]
@@ -46,7 +50,6 @@ namespace SalesCrm.Controllers
             return await Task.FromResult<IActionResult>(View(viewModel));
         }
 
-        //[Route("/employee/create")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PaymentRecordViewModel vm)

@@ -1,0 +1,67 @@
+@model IEnumerable<SalesCrm.Controllers.ViewModels.PaymentRecordViewModel>
+@{
+    ViewData["Title"] = "Payment Record List";
+}
+
+<div class="row">
+    <div class="col-md-12 grid-margin">
+        <div class="card">
+            <div class="card-body">
+
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb" style="padding:1px !important">
+                        <li class="breadcrumb-item">
+                            <a asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a asp-action="Index">Payment Record List</a>
+                        </li>
+                    </ol>
+                </nav>
+
+                <div class="row">
+                    <div class="col-12 table-responsive-md">
+                        <a asp-action="Create" class="btn btn-xs btn-outline-success float-md-end">
+                            Create new Payment Record
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Employee</th>
+                    <th>Pay Date</th>
+                    <th>Pay Month</th>
+                    <th>Tax Year</th>
+                    <th>Total Earnings</th>
+                    <th>Total Deduction</th>
+                    <th>Net Payment</th>
+                    <th class="text-warning">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Employee?.Name</td>
+                        <td>@item.PayDate.ToString("dd/MM/yyyy")</td>
+                        <td>@item.PayMonth</td>
+                        <td>@item.TaxYear?.YearOfTax</td>
+                        <td>@item.TotalEarnings.ToString("C")</td>
+                        <td>@item.TotalDeduction.ToString("c")</td>
+                        <td>@item.NetPayment.ToString("C")</td>
+                        <td>
+                            @Html.ActionLink("info | ", "Create", new {id = item.Id})
+                        
+                            @Html.ActionLink("pdf", "Create", new {id = item.Id})
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

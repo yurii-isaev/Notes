@@ -19,4 +19,6 @@ public interface IPaymentRecordService
     Task<decimal> GetNetPaymentAsync(decimal totalEarnings, decimal totalDeduction);
     
     Task CreatePaymentRecord(PaymentRecordDto dto);
+
+    Task<IEnumerable<PaymentRecordDto>> GetPaymentRecordList();
 }

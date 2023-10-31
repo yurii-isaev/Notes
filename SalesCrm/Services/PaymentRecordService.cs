@@ -88,4 +88,18 @@ public class PaymentRecordService : IPaymentRecordService
             _logger.LogError("[Exception create Payment Record]: " + ex.Message);
         }
     }
+
+    public async Task<IEnumerable<PaymentRecordDto>> GetPaymentRecordList()
+    {
+        try
+        {
+            var taxYearList = await _repository.GetPaymentRecordList();
+            return _mapper.Map<IEnumerable<PaymentRecordDto>>(taxYearList);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("[Get Payment Record List]: " + ex.Message);
+            return Enumerable.Empty<PaymentRecordDto>();
+        }
+    }
 }

@@ -5,6 +5,7 @@ namespace SalesCrm.Domains.Entities;
 
 public class PaymentRecord
 {
+    [Key]
     public Guid Id { get; set; }
     
     [ForeignKey("Employee")]

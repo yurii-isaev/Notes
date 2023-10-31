@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using SalesCrm.Domains.Entities;
 using SalesCrm.Services.Contracts.Repositories;
 
@@ -13,5 +14,13 @@ public class PaymentRecordRepository : IPaymentRecordRepository
     {
         await _context.PaymentRecords.AddAsync(paymentRecord);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<PaymentRecord>> GetPaymentRecordList()
+    {
+        return await _context.PaymentRecords
+            .Include(n => n.Employee)
+            .Include(m => m.TaxYear)
+            .ToListAsync();
     }
 }
