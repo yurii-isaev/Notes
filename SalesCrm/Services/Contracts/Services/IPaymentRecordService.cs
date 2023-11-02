@@ -21,4 +21,6 @@ public interface IPaymentRecordService
     Task CreatePaymentRecord(PaymentRecordDto dto);
 
     Task<IEnumerable<PaymentRecordDto>> GetPaymentRecordList();
+    
+     Task<PaymentRecordDto> GetEmployeePaymentRecordAsync(Guid paymentRecordId);
 }

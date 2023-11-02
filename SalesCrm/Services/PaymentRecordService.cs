@@ -102,4 +102,18 @@ public class PaymentRecordService : IPaymentRecordService
             return Enumerable.Empty<PaymentRecordDto>();
         }
     }
+
+    public async Task<PaymentRecordDto> GetEmployeePaymentRecordAsync(Guid paymentRecordId)
+    {
+        try
+        {
+            var employeePaymentRecord = await _repository.GetEmployeePaymentRecordAsync(paymentRecordId);
+            return _mapper.Map<PaymentRecordDto>(employeePaymentRecord);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("[Get Employee Payment Record]: " + ex.Message);
+            throw;
+        }
+    }
 }

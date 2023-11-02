@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -54,7 +55,6 @@ namespace SalesCrm.DataAccess.Migrations.EmployeeTables
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     EmployeeId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     InsuranceNumber = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     PayDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     PayMonth = table.Column<string>(type: "text", nullable: true),

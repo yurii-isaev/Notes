@@ -55,8 +55,7 @@
                         <td>@item.NetPayment.ToString("C")</td>
                         <td>
                             @Html.ActionLink("info | ", "Create", new {id = item.Id})
-                        
-                            @Html.ActionLink("pdf", "Create", new {id = item.Id})
+                            @Html.ActionLink("pdf", "GenerateInvoicePdf", new { PaymentRecordId  = item.Id })
                         </td>
                     </tr>
                 }

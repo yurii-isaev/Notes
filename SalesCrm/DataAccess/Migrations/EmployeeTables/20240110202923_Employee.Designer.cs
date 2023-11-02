@@ -12,7 +12,7 @@ using SalesCrm.DataAccess;
 namespace SalesCrm.DataAccess.Migrations.EmployeeTables
 {
     [DbContext(typeof(EmployeeDbContext))]
-    [Migration("20240106195401_Employee")]
+    [Migration("20240110202923_Employee")]
     partial class Employee
     {
         /// <inheritdoc />
@@ -122,10 +122,6 @@ namespace SalesCrm.DataAccess.Migrations.EmployeeTables
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
                     b.Property<decimal>("NetPayment")
                         .HasColumnType("money");
 
@@ -187,7 +183,7 @@ namespace SalesCrm.DataAccess.Migrations.EmployeeTables
 
             modelBuilder.Entity("SalesCrm.Domains.Entities.PaymentRecord", b =>
                 {
-                    b.HasOne("SalesCrm.Domains.Entities.Employee", "Employee")
+                    b.HasOne("SalesCrm.Domains.Entities.Employee", null)
                         .WithMany("PaymentRecord")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -198,8 +194,6 @@ namespace SalesCrm.DataAccess.Migrations.EmployeeTables
                         .HasForeignKey("TaxYearId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Employee");
 
                     b.Navigation("TaxYear");
                 });

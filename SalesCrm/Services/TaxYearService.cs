@@ -48,7 +48,7 @@ public class TaxYearService : ITaxYearService
         }
     }
 
-    public async Task<TaxYear> GetTaxYearByIdAsync(Guid id)
+    public Task<TaxYear> GetTaxYearByIdAsync(Guid id)
     {
         throw new NotImplementedException();
     }

@@ -10,12 +10,8 @@ public class PaymentRecord
     
     [ForeignKey("Employee")]
     public Guid EmployeeId { get; set; }
-    
     public Employee? Employee { get; set; }
-    
-    [MaxLength(100)]
-    public string? Name { get; set; }
-    
+
     [Required, MaxLength(50)]
     public string? InsuranceNumber { get; set; }
     
@@ -25,7 +21,6 @@ public class PaymentRecord
     
     [ForeignKey("TaxYear")]
     public Guid TaxYearId { get; set; }
-    
     public TaxYear? TaxYear { get; set; }
     
     public string? TaxCode { get; set; }
