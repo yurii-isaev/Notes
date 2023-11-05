@@ -1,7 +1,10 @@
+using System.Globalization;
 using AutoMapper;
 using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
+using iText.Layout.Borders;
+using iText.Layout.Properties;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using NToastNotify;
@@ -96,7 +99,6 @@ namespace SalesCrm.Controllers
         }
 
         // Method to generate a PDF invoice document
-        [HttpGet]
         public async Task<IActionResult> GenerateInvoicePdf(Guid paymentRecordId)
         {
             // Retrieving Employee Data by Employee ID
@@ -114,31 +116,126 @@ namespace SalesCrm.Controllers
                     // Creating a Document Object
                     using (var document = new Document(pdf))
                     {
-                        // Creating a Table
-                        var table = new Table(2);
+                        float col = 300f;
+                        float[] colwidth = {col, col};
+                        
+                        // Address Table
+                        Table address = new Table(colwidth);
+                        
+                        // Table Header
+                        var header = new Cell(1, 1)
+                            .SetFontSize(14)
+                            .SetBold()
+                            .SetBorder(Border.NO_BORDER)
+                            //.Add(logo)
+                            .Add(new Paragraph("APP"));
+                        
+                        var cell1 = new Cell(2, 1)
+                            .SetFontSize(26)
+                            .SetTextAlignment(TextAlignment.RIGHT)
+                            .SetBorder(Border.NO_BORDER)
+                            .Add(new Paragraph("Salary receipt"));
+                        
+                        var cell2 = new Cell(1, 1)
+                            .SetItalic()
+                            .SetBorder(Border.NO_BORDER)
+                            .Add(new Paragraph("FROM"))
+                            .SetMarginBottom(20f);
+                        
+                        var cell3 = new Cell(1, 1)
+                            .SetFontSize(10)
+                            .SetItalic()
+                            .SetBorder(Border.NO_BORDER)
+                            .Add(new Paragraph(
+                                "Dummy Street \n Dummy City, 12345 \n" +
+                                "00 11 22 33 44 55 \n company@mail.co | example.co"));
+                        
+                        var cell4 = new Cell(1, 1)
+                            .SetTextAlignment(TextAlignment.RIGHT)
+                            .SetItalic()
+                            .SetBorder(Border.NO_BORDER)
+                            .Add(new Paragraph("INVOICE # 15984125 \n DATE April 4, 2023"));
 
-                        // Adding a Table Header
-                        var headerCell = new Cell(1, 2).Add(new Paragraph("Invoice"));
-                        table.AddCell(headerCell);
+                       
+                        string employeeName = employeeData.Employee!.Name!;
+                        string city = employeeData.Employee.City!;
+                        string employeeAddress = employeeData.Employee.Address!;
+                        string phone = employeeData.Employee.Phone!;
+                        
+                        var cell5 = new Cell(1, 1)
+                            .SetFontSize(10)
+                            .SetTextAlignment(TextAlignment.LEFT)
+                            .SetItalic()
+                            .SetPaddingTop(20f)
+                            .SetBorder(Border.NO_BORDER)
+                            .Add(new Paragraph(
+                                $"TO \n MR. {employeeName} \n Company \n" +
+                                $" {city},{employeeAddress} \n" +
+                                $" {employeeName} \n {phone}"));
+                        
+                        address.AddCell(header);
+                        address.AddCell(cell1);
+                        address.AddCell(cell2);
+                        address.AddCell(cell3);
+                        address.AddCell(cell4);
+                        address.AddCell(cell5);
+                        document.Add(address);
+                        
+                        // Statement table
+                        Table statement = new Table(colwidth);
+                        statement.SetMarginTop(20f); 
+                        
+                        var total = new Cell(1, 1)
+                            .SetTextAlignment(TextAlignment.LEFT)
+                            .SetBold()
+                            .Add(new Paragraph("Total"));
+                        
+                        var totalValue = new Cell(1, 1)
+                            .SetTextAlignment(TextAlignment.LEFT)
+                            .SetBold()
+                            .Add(new Paragraph(employeeData.NetPayment.ToString(CultureInfo.InvariantCulture)));
+                        
+                        statement.AddCell("Employee Name");
+                        statement.AddCell(employeeName);
+                        statement.AddCell("Pay Date");
+                        statement.AddCell(employeeData.PayDate.ToString("dd/MM/yyyy"));
+                        statement.AddCell("Pay Month");
+                        statement.AddCell(employeeData.PayMonth);
+                        statement.AddCell("Tax Year");
+                        statement.AddCell(employeeData.TaxYear!.YearOfTax);
+                        statement.AddCell("Total Earnings");
+                        statement.AddCell(employeeData.TotalEarnings.ToString(CultureInfo.InvariantCulture));
+                        statement.AddCell("Total Deduction");
+                        statement.AddCell(employeeData.TotalDeduction.ToString(CultureInfo.InvariantCulture));
+                        statement.AddCell("Net Payment");
+                        statement.AddCell(employeeData.NetPayment.ToString(CultureInfo.InvariantCulture));
+                        statement.AddCell(total);
+                        statement.AddCell(totalValue);
+                        document.Add(statement);
 
-                        // Adding employee data to a table
-                        table.AddCell("Employee Name");
-                        table.AddCell(employeeData.Employee!.Name);
-                        table.AddCell("Pay Date");
-                        table.AddCell(employeeData.PayDate.ToString("dd/MM/yyyy"));
-                        table.AddCell("Pay Month");
-                        table.AddCell(employeeData.PayMonth);
-                        table.AddCell("Tax Year");
-                        table.AddCell(employeeData.TaxYear!.YearOfTax);
-                        table.AddCell("Total Earnings");
-                        table.AddCell(employeeData.TotalEarnings.ToString("C"));
-                        table.AddCell("Total Deduction");
-                        table.AddCell(employeeData.TotalDeduction.ToString("C"));
-                        table.AddCell("Net Payment");
-                        table.AddCell(employeeData.NetPayment.ToString("C"));
-
-                        // Adding a Table to a Document
-                        document.Add(table);
+                        // Footer Table
+                        Table footer = new Table(colwidth);
+                        footer.SetMarginTop(20f);
+                        
+                        var footerValue = new Cell(1, 2)
+                            .SetTextAlignment(TextAlignment.LEFT)
+                            .SetBorder(Border.NO_BORDER)
+                            .Add(new Paragraph(
+                                "Make all checks payable to Payroll. \n" +
+                                " Payment is due within 30 day. \n" +
+                                "If you have any questions concerning this invoice," +
+                                " contact 00 11 22 33 44 55 | company@mail.co.")
+                            );
+                        
+                        var value = new Cell(1, 2)
+                            .SetTextAlignment(TextAlignment.CENTER)
+                            .SetBorder(Border.NO_BORDER)
+                            .SetPaddingTop(20f)
+                            .Add(new Paragraph("THANKS YOU FOR YOUR BUSINESS !"));
+                        
+                        footer.AddCell(footerValue);
+                        footer.AddCell(value);
+                        document.Add(footer);
                     }
                 }
             }
