@@ -1,24 +1,24 @@
 using NToastNotify;
-using SalesCrm.Controllers.Contracts;
 using SalesCrm.Domains.Entities;
-using SalesCrm.Services.Contracts;
+using SalesCrm.Services.Contracts.Repositories;
+using SalesCrm.Services.Contracts.Services;
 
 namespace SalesCrm.Services;
 
 public class NewsService : INewsService
 {
-    private readonly IDataRepository<News> _repository;
+    private readonly INewsRepository _repository;
     private readonly ILogger<NewsService> _logger;
     private readonly IToastNotification _toast;
 
-    public NewsService(IDataRepository<News> repo, ILogger<NewsService> log, IToastNotification toastNotification)
+    public NewsService(INewsRepository repo, ILogger<NewsService> log, IToastNotification toastNotification)
     {
         _repository = repo;
         _logger = log;
         _toast = toastNotification;
     }
 
-    public async Task<IEnumerable<News>> GetNewsAsync()
+    public async Task<IEnumerable<News>> GetNewsListAsync()
     {
         try
         {

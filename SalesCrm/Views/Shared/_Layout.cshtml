@@ -18,7 +18,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet"/>
 </head>
 
-<body class="loading" data-layout-config='{"leftSideBarTheme":"dark","layoutBoxed":false, "leftSidebarCondensed":false, "leftSidebarScrollable":false,"darkMode":false, "showRightSidebarOnStart": true}'>
+<body class="loading"
+      data-layout-config='{"leftSideBarTheme":"dark","layoutBoxed":false, "leftSidebarCondensed":false, "leftSidebarScrollable":false,"darkMode":false, "showRightSidebarOnStart": true}'>
 <!-- Begin page -->
 <div class="wrapper">
     <!-- ========== Left Sidebar Start ========== -->
@@ -62,7 +63,7 @@
                     <i class="mdi mdi-menu"></i>
                 </button>
                 <div class="container-fluid">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SalesCrm</a>
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Admin panel</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                             data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
@@ -70,11 +71,14 @@
                     </button>
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1 nav">
+                            <!-- News controller-->
                             <li class="nav-item">
-                                <a class="nav-link a" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                <a class="nav-link a" asp-area="" asp-controller="News" asp-action="CreateNews">
+                                    News
+                                </a>
                             </li>
-
                             <!-- ============================================================== -->
+
                             <!-- Roles controller-->
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Roles" asp-action="Index">
@@ -83,14 +87,20 @@
                             </li>
                             <!-- ============================================================== -->
 
+                            <!-- Roles controller-->
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">
+                                    Users
+                                </a>
+                            </li>
                             <!-- ============================================================== -->
+                            
                             <!-- Employee controller-->
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="Index">
                                     Employees
                                 </a>
                             </li>
-                            <!-- ============================================================== -->
 
                             <!-- ============================================================== -->
                             <!-- TaxYear controller-->
@@ -99,28 +109,19 @@
                                     Tax-Year
                                 </a>
                             </li>
-                            <!-- ============================================================== -->
 
                             <!-- ============================================================== -->
                             <!-- PaymentSlip controller-->
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="PaymentSlip" asp-action="CreatePaymentSlip">
-                                     Payment-Slip
+                                    Payment-Slip
                                 </a>
                             </li>
-                            <!-- ============================================================== -->
-
-                            <!-- ============================================================== -->
-                            <!-- Employee controller-->
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">
-                                    Admin
-                                </a>
-                            </li>
-                            <!-- ============================================================== -->
 
                             @* <li class="nav-item"> *@
-                            @*     <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Privacy">Privacy</a> *@
+                            @*     <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Privacy"> *@
+                            @*         Privacy *@
+                            @*     </a> *@
                             @* </li> *@
                         </ul>
                         <partial name="_LoginPartial"/>

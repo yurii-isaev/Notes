@@ -5,7 +5,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h1>View Roles</h1>
+        <h1>Roles</h1>
         <hr/>
     </div>
 </div>
@@ -57,16 +57,16 @@
                     <a asp-action="EditRole" asp-route-id="@item.Id">edit</a>
                     <a asp-action="DeleteRole" asp-route-id="@item.Id">delete</a>
                 </td>
-                
-                @* <td> *@
-                @*                     <a href="/admin/news/edit/@item.Id">edit</a> *@
-                @*                 </td> *@
-                @*                 <td> *@
-                @*                     <a class="delete-link" href="/admin/news/delete/@item.Id" *@
-                @*                        onclick="return confirm('Are you sure you want to delete this news item?')"> *@
-                @*                         delete *@
-                @*                     </a> *@
-                @*                 </td> *@
+
+                <td>
+                    <a href="/admin/news/edit/@item.Id">edit</a>
+                </td>
+                <td>
+                    <a class="delete-link" href="/admin/news/delete/@item.Id"
+                       onclick="return confirm('Are you sure you want to delete this news item?')">
+                        delete
+                    </a>
+                </td>
             </tr>
         }
         </tbody>

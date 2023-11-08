@@ -1,4 +1,3 @@
-using System.Collections;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SalesCrm.Domains.Entities;
 using SalesCrm.Services.Input;

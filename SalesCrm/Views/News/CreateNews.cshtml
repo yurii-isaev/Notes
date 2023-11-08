@@ -1,7 +1,7 @@
-@model SalesCrm.Domains.Entities.News
+@model SalesCrm.Controllers.ViewModels.NewsViewModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-    ViewData["Title"] = "Create New News";
+    ViewData["Title"] = "Create News";
 }
 
 <!-- Breadcrumb -->
@@ -16,35 +16,21 @@
 
 <form method="post" action="#">
     <div class="mb-3">
-        <label for="" class="form-label">Title</label>
+        <label class="form-label">Title</label>
         <input type="text" class="form-control" asp-for="Title">
     </div>
     <div class="mb-3">
-        <label for="" class="form-label">Text</label>
+        <label class="form-label">Text</label>
         <input type="text" class="form-control" asp-for="Text">
     </div>
     <div class="mb-3">
-        <label for="" class="form-label">Publication date</label>
-        <input id="publicationDateInput" type="text" class="form-control date" asp-for="Date">
+        <label class="form-label">Publication date</label>
+         <input asp-for="CreateDate" class="form-control date"/>
+        @* <input id="publicationDateInput" type="text" class="form-control date" asp-for="Date"> *@
     </div>
     <div class="mb-3">
-        <label for="" class="form-label">Is active</label>
+        <label class="form-label">Is active</label>
         <input type="checkbox" checked="checked" asp-for="IsActive">
     </div>
     <button type="submit" class="btn btn-primary">Create</button>
 </form>
-
-@section Scripts {
-    
-    <script type="text/javascript">
-     $('#publicationDateInput').datepicker({
-          format: 'dd/mm/yyyy'
-     })
-    </script>
-
-    <script>
-    function goBack() {
-        window.history.back();
-    }
-    </script>
-}

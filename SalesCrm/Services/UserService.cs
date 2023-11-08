@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Identity;
-using NToastNotify;
-using SalesCrm.Services.Contracts;
+using SalesCrm.Services.Contracts.Repositories;
+using SalesCrm.Services.Contracts.Services;
 
 namespace SalesCrm.Services;
 
-public class UserService
+public class UserService : IUserService
 {
     private readonly IUserRepository _repository;
 
@@ -12,8 +12,8 @@ public class UserService
     {
         _repository = repo;
     }
-    
-    public async Task<List<IdentityUser>> GetUsersAsync()
+
+    public async Task<IEnumerable<IdentityUser>> GetUsersAsync()
     {
         return await _repository.GetUsersAsync();
     }

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NToastNotify;
-using SalesCrm.Controllers.Contracts;
 using SalesCrm.Controllers.ViewModels;
 using SalesCrm.DataAccess;
 using SalesCrm.DataAccess.Repositories;
@@ -23,54 +22,48 @@ public class Program
         #region Web Application config
         var builder = WebApplication.CreateBuilder(args);
 
-        var connectionString = builder
-            .Configuration
+        var connectionString = builder.Configuration
             .GetConnectionString("DefaultConnection") ?? throw
             new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-        builder.Services.AddDbContext<AuthDbContext>(opts => opts.UseNpgsql(connectionString));
-        builder.Services.AddDbContext<NewsDbContext>(opts => opts.UseNpgsql(connectionString));
-        builder.Services.AddDbContext<EmployeeDbContext>(opts => opts.UseNpgsql(connectionString));
+        var services = builder.Services;
         
-        // builder.Services.AddDbContext<EmployeeDbContext>(opts =>
-        // {
-        //     opts.UseNpgsql(connectionString);
-        //     opts.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-        //     opts.EnableSensitiveDataLogging();
-        // });
-        
-        builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+        services.AddDbContext<AuthDbContext>(opts => opts.UseNpgsql(connectionString));
+        services.AddDbContext<NewsDbContext>(opts => opts.UseNpgsql(connectionString));
+        services.AddDbContext<EmployeeDbContext>(opts => opts.UseNpgsql(connectionString));
 
-        builder.Services.AddTransient<INewsService, NewsService>();
-        builder.Services.AddTransient<IDataRepository<News>, NewsRepository>();
-        
-        builder.Services.AddTransient<IUserRepository, UserRepository>();
-        
-        builder.Services.AddTransient<IEmployeeService, EmployeeService>();
-        builder.Services.AddTransient<IEmployeeRepository, EmployeeRepository>();
-        
-        builder.Services.AddTransient<ITaxYearService, TaxYearService>();
-        builder.Services.AddTransient<ITaxYearRepository, TaxYearRepository>();
-        
-        builder.Services.AddTransient<IPaymentRecordService, PaymentRecordService>();
-        builder.Services.AddTransient<IPaymentRecordRepository, PaymentRecordRepository>();
-        
-        builder.Services.AddTransient<UserService>();
-        builder.Services.AddTransient<RoleService>();
+        services.AddDatabaseDeveloperPageExceptionFilter();
 
-        builder.Services
+        services.AddTransient<INewsService, NewsService>();
+        services.AddTransient<INewsRepository, NewsRepository>();
+        
+        services.AddTransient<IUserService, UserService>();
+        services.AddTransient<IUserRepository, UserRepository>();
+        
+        services.AddTransient<IEmployeeService, EmployeeService>();
+        services.AddTransient<IEmployeeRepository, EmployeeRepository>();
+        
+        services.AddTransient<ITaxYearService, TaxYearService>();
+        services.AddTransient<ITaxYearRepository, TaxYearRepository>();
+        
+        services.AddTransient<IPaymentRecordService, PaymentRecordService>();
+        services.AddTransient<IPaymentRecordRepository, PaymentRecordRepository>();
+        
+        services.AddTransient<IRoleService, RoleService>();
+
+        services
             .AddDefaultIdentity<User>(opts => opts.SignIn.RequireConfirmedAccount = false)
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<AuthDbContext>();
 
-        builder.Services.AddMvc().AddNToastNotifyToastr(new ToastrOptions()
+        services.AddMvc().AddNToastNotifyToastr(new ToastrOptions()
         {
             ProgressBar = true,
             PositionClass = ToastPositions.TopRight
         });
         
   
-        builder.Services.AddAutoMapper(config =>
+        services.AddAutoMapper(config =>
             {
                 config.CreateMap<EmployeeViewModel, Employee>();
                 config.CreateMap<Employee, EmployeeViewModel>();
@@ -92,10 +85,13 @@ public class Program
                 config.CreateMap<PaymentRecordDto, PaymentRecordViewModel>();
                 config.CreateMap<PaymentRecord, PaymentRecordDto>();
                 config.CreateMap<PaymentRecordDto, PaymentRecord>();
+                
+                config.CreateMap<UserViewModel, IdentityUser>();
+                config.CreateMap<IdentityUser, UserViewModel>();
             },
             AppDomain.CurrentDomain.GetAssemblies());
         
-        builder.Services.AddAutoMapper(typeof(MappingProfile));
+        services.AddAutoMapper(typeof(MappingProfile));
         #endregion
 
         #region Configure the HTTP request pipeline
@@ -121,7 +117,7 @@ public class Program
 
         app.MapControllerRoute(
             name: "default",
-            pattern: "{controller=Home}/{action=Index}/{id?}"
+            pattern: "{controller=News}/{action=Index}/{id?}"
         );
 
         app.UseNToastNotify();

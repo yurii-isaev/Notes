@@ -1,6 +1,10 @@
-﻿@{
+﻿
+@model IEnumerable<SalesCrm.Controllers.ViewModels.UserViewModel>
+
+@{
     ViewData["Title"] = "Users";
 }
+
 <div>
     <div class="text-center">
         <h1 class="display-4">Users</h1>
@@ -12,11 +16,11 @@
 
     <table>
         <tr>
-            <th>Id</th>
+            @* <th>Id</th> *@
             <th>UserName</th>
             <th>Created</th>
             <th>Email</th>
-            <th>PhoneNumber</th>
+            @* <th>PhoneNumber</th> *@
             <th>LockoutEnd</th>
             <th></th>
             <th></th>
@@ -25,17 +29,17 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.Id</td>
+                @* <td>@item.Id</td> *@
                 <td>@item.UserName</td>
                 <td>@item.Created.ToString("dd.MM.yyyy HH:mm")</td>
                 <td>@item.Email</td>
-                <td>@item.PhoneNumber</td>
+                @* <td>@item.PhoneNumber</td> *@
                 <td>@item.LockoutEnd?.ToString("dd.MM.yyyy HH:mm")</td>
                 <td>
-                    <a href="/admin/users/block/@item.Id">Block</a>
+                    <a href="/users/block/@item.Id">Block</a>
                 </td>
                 <td>
-                    <a href="/admin/users/unblock/@item.Id">Unblock</a>
+                    <a href="/users/unblock/@item.Id">Unblock</a>
                 </td>
             </tr>
         }

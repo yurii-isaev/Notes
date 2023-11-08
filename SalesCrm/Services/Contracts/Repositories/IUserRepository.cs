@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace SalesCrm.Services.Contracts;
+namespace SalesCrm.Services.Contracts.Repositories;
 
 public interface IUserRepository
 {
-    Task<List<IdentityUser>> GetUsersAsync();
+    Task<IEnumerable<IdentityUser>> GetUsersAsync();
     Task BlockUsersAsync(string id);
     Task UnBlockUsersAsync(string id);
 }

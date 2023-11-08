@@ -2,59 +2,24 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SalesCrm.Controllers.Contracts;
 using SalesCrm.Controllers.ViewModels;
 using SalesCrm.Domains.Entities;
-using SalesCrm.Services;
+using SalesCrm.Services.Contracts.Services;
 
 namespace SalesCrm.Controllers;
 
 [Authorize(Roles = "Admin")]
-public class AdminController : Controller
+public class NewsController : Controller
 {
     private readonly INewsService _newsService;
-    private readonly UserService _userService;
 
-    public AdminController(INewsService newsService, UserService userService)
-    {
-        _newsService = newsService;
-        _userService = userService;
-    }
+    public NewsController(INewsService newsService) => _newsService = newsService;
 
-    public IActionResult Index()
+    [HttpGet]
+    public async Task<IActionResult> Index()
     {
-        var isAdmin = User.IsInRole("Admin");
-        return View();
-    }
-
-    public IActionResult Privacy()
-    {
-        return View();
-    }
-
-    public async Task<IActionResult> Users()
-    {
-        var userList = await _userService.GetUsersAsync();
-        return View(userList);
-    }
-
-    [Route("/admin/users/block/{id}")]
-    public async Task<IActionResult> BlockUsers(string id)
-    {
-        await _userService.BlockUsersAsync(id);
-        return Redirect("/admin/users");
-    }
-
-    [Route("/admin/users/unblock/{id}")]
-    public async Task<IActionResult> UnBlockUsers(string id)
-    {
-        await _userService.UnBlockUsersAsync(id);
-        return Redirect("/admin/users");
-    }
-
-    public async Task<IActionResult> News()
-    {
-        var newsList = await _newsService.GetNewsAsync();
+        ViewBag.CurrentPage = "News/Index";
+        var newsList = await _newsService.GetNewsListAsync();
         return View(newsList);
     }
 

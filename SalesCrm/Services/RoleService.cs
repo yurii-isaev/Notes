@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NToastNotify;
+using SalesCrm.Services.Contracts.Services;
 
 namespace SalesCrm.Services;
 
-public class RoleService
+public class RoleService : IRoleService
 {
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IToastNotification _toast;

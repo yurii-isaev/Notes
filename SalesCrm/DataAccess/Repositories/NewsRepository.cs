@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using SalesCrm.Domains.Entities;
-using SalesCrm.Services.Contracts;
+using SalesCrm.Services.Contracts.Repositories;
 
 namespace SalesCrm.DataAccess.Repositories;
 
-public class NewsRepository : IDataRepository<News>
+public class NewsRepository : INewsRepository
 {
     private NewsDbContext _context;
 

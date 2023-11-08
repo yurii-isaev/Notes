@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using SalesCrm.Services.Contracts;
+using SalesCrm.Services.Contracts.Repositories;
 
 namespace SalesCrm.DataAccess.Repositories;
 
@@ -10,7 +10,7 @@ public class UserRepository : IUserRepository
 
     public UserRepository(AuthDbContext ctx) => _context = ctx;
     
-    public async Task<List<IdentityUser>> GetUsersAsync()
+    public async Task<IEnumerable<IdentityUser>> GetUsersAsync()
     {
         return await _context.Users.ToListAsync();
     }

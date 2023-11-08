@@ -1,16 +1,16 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SalesCrm.Services;
+using SalesCrm.Services.Contracts.Services;
 
 namespace SalesCrm.Controllers;
 
 [Authorize(Roles = "Admin")]
 public class RolesController : Controller
 {
-    private readonly RoleService _roleService;
+    private readonly IRoleService _roleService;
 
-    public RolesController(RoleService roleService) => _roleService = roleService;
+    public RolesController(IRoleService roleService) => _roleService = roleService;
 
     public async Task<IActionResult> Index()
     {
