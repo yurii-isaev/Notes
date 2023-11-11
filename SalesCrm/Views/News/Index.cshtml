@@ -1,59 +1,88 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using SalesCrm.Views.Components.Pagination
+@model SalesCrm.Views.Components.Pagination.PaginationList<SalesCrm.Controllers.ViewModels.NewsViewModel>
+
 @{
     ViewData["Title"] = "News Page";
 }
 
-<div>
-    <h1 class="display-4 text-center">
-        Admin News Page
-    </h1>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
 
-    <a class="btn btn-primary" role="button" asp-action="CreateNews">
-        Create news
-    </a>
-    <br/>
-    <hr/>
-    <br/>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb" style="padding:1px !important">
+                        <li class="breadcrumb-item">
+                            <a asp-controller="News" asp-action="Index">
+                                Home
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a asp-action="Index">
+                                News List
+                            </a>
+                        </li>
+                    </ol>
+                </nav>
 
-    <h4 class="page-title" style="line-height:15px;">News</h4>
-    <br/>
+                <a class="btn btn-primary" role="button" asp-action="CreateNews">
+                    Create news
+                </a>
 
-    <table>
-        <tr>
-            <th>Title</th>
-            <th>Text</th>
-            <th>Publication date</th>
-            <th>AuthorId</th>
-            <th>CreateDate</th>
-            <th>Is active</th>
-            <th></th>
-            <th></th>
-        </tr>
-        
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Title</td>
-                <td>@item.Text</td>
-                <td>@item.Date.ToString("yyyy")</td>
-                <td>@item.AuthorId</td>
-                <td>@item.CreateDate.ToString("dd.MM.yyyy HH:mm")</td>
-                <td>@item.IsActive</td>
-                <td>
-                    <a asp-action="EditNews" asp-route-id="@item.Id">edit</a>
-                </td>
-                <td>
-                    <a class="delete-alert"
-                       asp-action="DeleteNews" asp-route-id="@item.Id"
-                       onclick="return confirm('Are you sure you want to delete this news item?')"
-                       >
-                        delete
-                    </a>
-                </td>
-            </tr>
-        }
-        
-    </table>
+                <br/><hr/>
+
+                <h3 class="page-title" style="text-align:center">
+                    News List
+                </h3>
+                
+                <br/>
+
+                <table>
+                    <tr>
+                        <th>Title</th>
+                        <th>Text</th>
+                        <th>Author</th>
+                        <th>Create date</th>
+                        <th>Is active</th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Title</td>
+                            <td>@item.Text</td>
+                            <td>@item.Author!.UserName</td>
+                            <td>@item.CreateDate.ToString("dd.MM.yyyy")</td>
+                            <td>@item.IsActive</td>
+
+                            <td>
+                                @Html.ActionLink("edit | ", "EditNews",
+                                    new {id = item.Id})
+
+                                @Html.ActionLink("delete", "DeleteNews",
+                                    new {id = item.Id},
+                                    new {onclick = "showConfirmationDialog(event, 'Are you sure you want to delete this news?', href)"})
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
+
+@Html.Partial("../Components/Pagination/_Pagination", new PaginationViewModel
+{
+    ActionName = "Index",
+    PageNumber = Model.PageNumber,
+    PageSize = Model.PageSize,
+    IsPreviousPageAvailable = Model.IsPreviousPageAvailable,
+    IsNextPageAvailable = Model.IsNextPageAvailable,
+    TotalPages = Model.TotalPages
+})
+
+@Html.Partial("../Components/DeleteModal/_DeleteConfirmationModal")
 
 <style>
     table {

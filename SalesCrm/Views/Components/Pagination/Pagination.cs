@@ -1,4 +1,4 @@
-namespace SalesCrm.Views;
+namespace SalesCrm.Views.Components.Pagination;
 
 public class PaginationList<T> : List<T>
 {
@@ -11,7 +11,7 @@ public class PaginationList<T> : List<T>
         TotalPages = (int) Math.Ceiling(count / (double) pageSize);
         PageNumber = pageNumber;
         PageSize = pageSize;
-        this.AddRange(list);
+        AddRange(list);
     }
 
     public bool IsPreviousPageAvailable => PageNumber > 1;
@@ -22,6 +22,7 @@ public class PaginationList<T> : List<T>
     {
         var count = source.Count;
         var items = source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+        
         return new PaginationList<T>(items, count, pageNumber, pageSize);
     }
 }

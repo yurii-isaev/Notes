@@ -12,7 +12,7 @@ public class NewsRepository : INewsRepository
 
     public async Task<IEnumerable<News>> GetNewsListAsync()
     {
-        return await _context.News.ToListAsync();
+        return await _context.News.Include(n => n.Author).ToListAsync();
     }
 
     public async Task<IEnumerable<News>> GetOnlyActiveNewsAsync()

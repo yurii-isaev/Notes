@@ -1,7 +1,9 @@
+using AutoMapper;
 using NToastNotify;
 using SalesCrm.Domains.Entities;
 using SalesCrm.Services.Contracts.Repositories;
 using SalesCrm.Services.Contracts.Services;
+using SalesCrm.Services.Input;
 
 namespace SalesCrm.Services;
 
@@ -10,28 +12,35 @@ public class NewsService : INewsService
     private readonly INewsRepository _repository;
     private readonly ILogger<NewsService> _logger;
     private readonly IToastNotification _toast;
+    private readonly IMapper _mapper;
 
-    public NewsService(INewsRepository repo, ILogger<NewsService> log, IToastNotification toastNotification)
+    public NewsService
+    (
+        INewsRepository repo,
+        ILogger<NewsService> log,
+        IToastNotification toastNotification,
+        IMapper mapper
+    )
     {
         _repository = repo;
         _logger = log;
         _toast = toastNotification;
+        _mapper = mapper;
     }
 
-    public async Task<IEnumerable<News>> GetNewsListAsync()
+    public async Task<IEnumerable<NewsDto>> GetNewsListAsync()
     {
         try
         {
-            return await _repository.GetNewsListAsync();
+            var newsList = await _repository.GetNewsListAsync();
+            var newsTransferList = _mapper.Map<IEnumerable<NewsDto>>(newsList);
+
+            return newsTransferList;
         }
         catch (Exception ex)
         {
-            // Обработка исключения, например, логирование или возврат значения по умолчанию
-            // Можно здесь выполнить логирование ошибки
-            _logger.LogError(ex.Message);
-
-            // Возврат значения по умолчанию или пустой коллекции в случае ошибки
-            return Enumerable.Empty<News>();
+            _logger.LogError("[Get News List]: " + ex.Message);
+            return Enumerable.Empty<NewsDto>();
         }
     }
 
@@ -47,7 +56,7 @@ public class NewsService : INewsService
             // Обработка исключения, например, вывод сообщения об ошибке
             _logger.LogError("An error occurred while creating a news item: " + ex.Message);
             _toast.AddErrorToastMessage("Error creating news item");
-            
+
             // Возвращаем null или другое значение в случае ошибки
             return null!;
         }

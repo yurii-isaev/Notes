@@ -1,0 +1,68 @@
+@model SalesCrm.Views.Components.Pagination.PaginationViewModel
+
+<nav aria-label="Page navigation example" class="d-flex justify-content-center" style="padding-top:60px">
+    <ul class="pagination">
+        @if (Model.IsPreviousPageAvailable)
+        {
+            <li class="page-item">
+                @Html.ActionLink("Previous", Model.ActionName, new
+                {
+                    pageNumber = Model.PageNumber - 1, pageSize = Model.PageSize
+                },
+                    new
+                    {
+                        @class = "page-link"
+                    })
+            </li>
+        }
+        else
+        {
+            <li class="page-item disabled">
+                <span class="page-link">Previous</span>
+            </li>
+        }
+
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            if (i == Model.PageNumber)
+            {
+                <li class="page-item active">
+                    <span class="page-link">@i</span>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    @Html.ActionLink(i.ToString(), Model.ActionName, new
+                    {
+                        pageNumber = i, pageSize = Model.PageSize
+                    },
+                        new
+                        {
+                            @class = "page-link"
+                        })
+                </li>
+            }
+        }
+
+        @if (Model.IsNextPageAvailable)
+        {
+            <li class="page-item">
+                @Html.ActionLink("Next", Model.ActionName, new
+                {
+                    pageNumber = Model.PageNumber + 1, pageSize = Model.PageSize
+                },
+                    new
+                    {
+                        @class = "page-link"
+                    })
+            </li>
+        }
+        else
+        {
+            <li class="page-item disabled">
+                <span class="page-link">Next</span>
+            </li>
+        }
+    </ul>
+</nav>
