@@ -1,10 +1,13 @@
 ﻿using System.Diagnostics;
 using System.Security.Claims;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 using SalesCrm.Controllers.ViewModels;
-using SalesCrm.Domains.Entities;
 using SalesCrm.Services.Contracts.Services;
+using SalesCrm.Services.Input;
+using SalesCrm.Views.Components.Pagination;
 
 namespace SalesCrm.Controllers;
 
@@ -12,64 +15,123 @@ namespace SalesCrm.Controllers;
 public class NewsController : Controller
 {
     private readonly INewsService _newsService;
+    private readonly IMapper _mapper;
+    private readonly IToastNotification _toast;
 
-    public NewsController(INewsService newsService) => _newsService = newsService;
-
-    [HttpGet]
-    public async Task<IActionResult> Index()
+    public NewsController(INewsService newsService, IMapper mapper, IToastNotification toast)
     {
-        ViewBag.CurrentPage = "News/Index";
-        var newsList = await _newsService.GetNewsListAsync();
-        return View(newsList);
+        _newsService = newsService;
+        _mapper = mapper;
+        _toast = toast;
     }
 
-    [Route("/admin/news/createNews")]
     [HttpGet]
-    public Task<IActionResult> CreateNews()
+    public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 7)
     {
-        return Task.FromResult<IActionResult>(View());
+        try
+        {
+            List<NewsViewModel> list = _newsService.GetNewsListAsync()
+                .Result
+                .Select(news => _mapper.Map<NewsViewModel>(news))
+                .ToList();
+
+            var paginationList = PaginationList<NewsViewModel>.Create(list, pageNumber, pageSize);
+
+            return await Task.FromResult<IActionResult>(View(paginationList));
+        }
+        catch (Exception)
+        {
+            return RedirectToAction("Error");
+        }
     }
 
-    [Route("/admin/news/createNews")]
+    [Route("/admin/news/create")]
+    [HttpGet]
+    public async Task<IActionResult> CreateNews()
+    {
+        return await Task.FromResult<IActionResult>(View());
+    }
+
+    [Route("/admin/news/create")]
     [HttpPost]
-    public async Task<IActionResult> Create(News news)
+    public async Task<IActionResult> Create(NewsViewModel viewModel)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (!string.IsNullOrEmpty(userId))
+        
+        if (ModelState.IsValid)
         {
-            news.AuthorId = userId;
-            news.Date = DateTime.SpecifyKind(news.Date, DateTimeKind.Utc);
+            try
+            {
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    viewModel.AuthorId = userId;
+                    viewModel.Date = DateTime.SpecifyKind(viewModel.Date, DateTimeKind.Utc);
 
-            await _newsService.CreateNewsAsync(news);
+                    var dto = _mapper.Map<NewsDto>(viewModel);
+                    await _newsService.CreateNewsAsync(dto);
+                    
+                    _toast.AddSuccessToastMessage("News created successfully");
+                }
+            }
+            catch
+            {
+                ModelState.AddModelError("", "Error creating news");
+                _toast.AddErrorToastMessage("Error creating news");
+            }
         }
 
-        return Redirect("/admin/news");
+        return RedirectToAction("Index");
     }
 
     [Route("/admin/news/edit/{id}")]
     [HttpGet]
     public async Task<IActionResult> EditNews(int id)
     {
-        var news = await _newsService.GetOneNewsAsync(id);
+        var news = await _newsService.GetNewsItemAsync(id);
         return View(news);
     }
 
     [Route("/admin/news/edit/{id}")]
     [HttpPost]
-    public async Task<IActionResult> Edit(News news)
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(NewsViewModel viewModel)
     {
-        news.Date = DateTime.SpecifyKind(news.Date, DateTimeKind.Utc);
-        await _newsService.UpdateNewsAsync(news);
-        return Redirect("/admin/news");
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                viewModel.Date = DateTime.SpecifyKind(viewModel.Date, DateTimeKind.Utc);
+                var dto = _mapper.Map<NewsDto>(viewModel);
+                await _newsService.UpdateNewsAsync(dto);
+                
+                _toast.AddSuccessToastMessage("News updated successfully");
+            }
+            catch
+            {
+                ModelState.AddModelError("", "Error updated news");
+                _toast.AddErrorToastMessage("Error updated news");
+            }
+        }
+
+        return RedirectToAction("Index");
     }
 
     [Route("/admin/news/delete/{id}")]
     [HttpGet]
     public async Task<IActionResult> DeleteNews(int id)
     {
-        await _newsService.DeleteNewsAsync(id);
-        return Redirect("/admin/news");
+        try
+        {
+            await _newsService.DeleteNewsAsync(id);
+            _toast.AddSuccessToastMessage("News deleted successfully");
+        }
+        catch
+        {
+            ModelState.AddModelError("", "Error deleted news");
+            _toast.AddErrorToastMessage("Error deleted news");
+        }
+        
+        return RedirectToAction("Index");
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

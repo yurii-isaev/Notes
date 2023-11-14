@@ -1,16 +1,16 @@
-using SalesCrm.Domains.Entities;
+using SalesCrm.Services.Input;
 
 namespace SalesCrm.Services.Contracts.Services;
 
 public interface INewsService
 {
-    Task<IEnumerable<News>> GetNewsListAsync();
-    
-    Task<News> CreateNewsAsync(News news);
-    
-    Task<News> GetOneNewsAsync(int id);
-    
-    Task<News> UpdateNewsAsync(News news);
-    
+    Task<IEnumerable<NewsDto>> GetNewsListAsync();
+
+    Task CreateNewsAsync(NewsDto dto);
+
+    Task<NewsDto> GetNewsItemAsync(int id);
+
+    Task UpdateNewsAsync(NewsDto dto);
+
     Task DeleteNewsAsync(int id);
 }

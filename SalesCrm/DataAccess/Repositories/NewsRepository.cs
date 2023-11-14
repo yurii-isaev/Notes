@@ -17,26 +17,25 @@ public class NewsRepository : INewsRepository
 
     public async Task<IEnumerable<News>> GetOnlyActiveNewsAsync()
     {
-        return await _context.News.Where(x => x.IsActive).ToListAsync();
+        return await _context.News.Where(n => n.IsActive).ToListAsync();
     }
 
-    public async Task<News> CreateNewsAsync(News news)
+    public async Task CreateNewsAsync(News news)
     {
-        _context.News.Add(news);
+        await _context.News.AddAsync(news);
         await _context.SaveChangesAsync();
-        return news;
     }
 
-    public async Task<News> GetOneNewsAsync(int id)
+    public async Task<News> GetOneNewsAsync(int newsId)
     {
         return await _context.News
-            .Where(x => x.Id == id)
+            .Where(n => n.Id == newsId)
             .FirstOrDefaultAsync() ?? throw new InvalidOperationException();
     }
 
     public async Task<News> UpdateNewsAsync(News news)
     {
-        var item = await _context.News.Where(x => x.Id == news.Id).FirstOrDefaultAsync();
+        var item = await _context.News.Where(n => n.Id == news.Id).FirstOrDefaultAsync();
 
         item!.Title = news.Title;
         item.Text = news.Text;
@@ -48,9 +47,9 @@ public class NewsRepository : INewsRepository
         return item;
     }
 
-    public async Task DeleteNewsAsync(int id)
+    public async Task DeleteNewsAsync(int newsId)
     {
-        var item = await _context.News.Where(x => x.Id == id).FirstOrDefaultAsync();
+        var item = await _context.News.Where(n => n.Id == newsId).FirstOrDefaultAsync();
         _context.News.Remove(item ?? throw new InvalidOperationException());
         await _context.SaveChangesAsync();
     }

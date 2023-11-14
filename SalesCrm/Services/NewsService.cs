@@ -1,5 +1,4 @@
 using AutoMapper;
-using NToastNotify;
 using SalesCrm.Domains.Entities;
 using SalesCrm.Services.Contracts.Repositories;
 using SalesCrm.Services.Contracts.Services;
@@ -11,20 +10,12 @@ public class NewsService : INewsService
 {
     private readonly INewsRepository _repository;
     private readonly ILogger<NewsService> _logger;
-    private readonly IToastNotification _toast;
     private readonly IMapper _mapper;
 
-    public NewsService
-    (
-        INewsRepository repo,
-        ILogger<NewsService> log,
-        IToastNotification toastNotification,
-        IMapper mapper
-    )
+    public NewsService(INewsRepository repository, ILogger<NewsService> log, IMapper mapper)
     {
-        _repository = repo;
+        _repository = repository;
         _logger = log;
-        _toast = toastNotification;
         _mapper = mapper;
     }
 
@@ -39,45 +30,50 @@ public class NewsService : INewsService
         }
         catch (Exception ex)
         {
-            _logger.LogError("[Get News List]: " + ex.Message);
+            _logger.LogError("[NewsService .. Get News List]: " + ex.Message);
             return Enumerable.Empty<NewsDto>();
         }
     }
 
-    public async Task<News> CreateNewsAsync(News news)
+    public async Task CreateNewsAsync(NewsDto dto)
     {
         try
         {
-            _toast.AddSuccessToastMessage("News item successfully created !");
-            return await _repository.CreateNewsAsync(news);
+            var entity = _mapper.Map<News>(dto);
+            await _repository.CreateNewsAsync(entity);
         }
         catch (Exception ex)
         {
-            // Обработка исключения, например, вывод сообщения об ошибке
-            _logger.LogError("An error occurred while creating a news item: " + ex.Message);
-            _toast.AddErrorToastMessage("Error creating news item");
-
-            // Возвращаем null или другое значение в случае ошибки
-            return null!;
+            _logger.LogError("[NewsService .. Create News]: " + ex.Message);
+            throw;
         }
     }
 
-    public async Task<News> GetOneNewsAsync(int id)
-    {
-        return await _repository.GetOneNewsAsync(id);
-    }
-
-    public async Task<News> UpdateNewsAsync(News news)
+    public async Task<NewsDto> GetNewsItemAsync(int id)
     {
         try
         {
-            _toast.AddSuccessToastMessage("News item successfully updated !");
-            return await _repository.UpdateNewsAsync(news);
+            var news = await _repository.GetOneNewsAsync(id);
+            var dto = _mapper.Map<NewsDto>(news);
+            return dto;
         }
         catch (Exception ex)
         {
-            _logger.LogError("An error occurred while updating news: " + ex.Message);
-            _toast.AddErrorToastMessage("Error updating news item");
+            _logger.LogError("[NewsService .. Get News Item]: " + ex.Message);
+            throw;
+        }
+    }
+
+    public async Task UpdateNewsAsync(NewsDto dto)
+    {
+        try
+        {
+            var news = _mapper.Map<News>(dto);
+            await _repository.UpdateNewsAsync(news);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("[NewsService .. Update News]: " + ex.Message);
             throw;
         }
     }
@@ -87,12 +83,10 @@ public class NewsService : INewsService
         try
         {
             await _repository.DeleteNewsAsync(id);
-            _toast.AddSuccessToastMessage("News item successfully deleted !");
         }
         catch (Exception ex)
         {
-            _logger.LogError("An error occurred while deleting news: " + ex.Message);
-            _toast.AddErrorToastMessage("Error deleting news item");
+            _logger.LogError("[NewsService .. Delete News]: " + ex.Message);
             throw;
         }
     }

@@ -61,8 +61,7 @@ public class Program
             ProgressBar = true,
             PositionClass = ToastPositions.TopRight
         });
-        
-  
+
         services.AddAutoMapper(config =>
             {
                 config.CreateMap<EmployeeViewModel, Employee>();
@@ -88,6 +87,11 @@ public class Program
                 
                 config.CreateMap<UserViewModel, IdentityUser>();
                 config.CreateMap<IdentityUser, UserViewModel>();
+                
+                config.CreateMap<NewsViewModel, NewsDto>();
+                config.CreateMap<NewsDto, NewsViewModel>();
+                config.CreateMap<News, NewsDto>();
+                config.CreateMap<NewsDto, News>();
             },
             AppDomain.CurrentDomain.GetAssemblies());
         
