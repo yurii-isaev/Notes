@@ -21,17 +21,14 @@ public class NewsDbContext : DbContext
 
         modelBuilder
             .Entity<News>()
-            .Property(e => e.Date)
-            .HasDefaultValueSql("now()");
+            .Property(e => e.PublishedAt).HasDefaultValueSql("now()");
 
         modelBuilder
             .Entity<News>()
-            .Property(e => e.CreateDate)
-            .HasDefaultValueSql("now()");
+            .Property(e => e.CreatedAt).HasDefaultValueSql("now()");
 
         modelBuilder
             .Entity<News>()
-            .Property(e => e.IsActive)
-            .HasDefaultValue(true);
+            .Property(e => e.IsActive).HasDefaultValue(true);
     }
 }

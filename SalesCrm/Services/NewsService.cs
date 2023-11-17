@@ -49,7 +49,7 @@ public class NewsService : INewsService
         }
     }
 
-    public async Task<NewsDto> GetNewsItemAsync(int id)
+    public async Task<NewsDto> GetNewsItemAsync(Guid id)
     {
         try
         {
@@ -78,7 +78,7 @@ public class NewsService : INewsService
         }
     }
 
-    public async Task DeleteNewsAsync(int id)
+    public async Task DeleteNewsAsync(Guid id)
     {
         try
         {

@@ -41,23 +41,26 @@
                 <table>
                     <tr>
                         <th>Title</th>
-                        <th>Text</th>
+                        <th>Description</th>
                         <th>Author</th>
                         <th>Create date</th>
-                        <th>Is active</th>
+                        <th>Publishe date</th>
+                        <th>Activity</th>
+                        <th class="text-warning">Actions</th>
                     </tr>
 
                     @foreach (var item in Model)
                     {
                         <tr>
                             <td>@item.Title</td>
-                            <td>@item.Text</td>
+                            <td>@item.Description</td>
                             <td>@item.Author!.UserName</td>
-                            <td>@item.CreateDate.ToString("dd.MM.yyyy")</td>
-                            <td>@item.IsActive</td>
+                            <td>@item.CreatedAt.ToString("dd.MM.yyyy")</td>
+                            <td>@item.PublishedAt.ToString("dd.MM.yyyy")</td>
+                            <td>@item.IsActive.ToString().ToLower()</td>
 
                             <td>
-                                @Html.ActionLink("edit | ", "EditNews",
+                                @Html.ActionLink("edit  |  ", "EditNews",
                                     new {id = item.Id})
 
                                 @Html.ActionLink("delete", "DeleteNews",

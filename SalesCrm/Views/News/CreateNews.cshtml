@@ -1,36 +1,117 @@
 @model SalesCrm.Controllers.ViewModels.NewsViewModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
 @{
     ViewData["Title"] = "Create News";
 }
 
-<!-- Breadcrumb -->
-<nav aria-label="breadcrumb">
-    <button type="button" class="btn btn-secondary" onclick="goBack()"
-     style="margin-bottom:40px;">
-        < Back
-    </button>
-</nav>
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-body">
 
-<h1>Create News</h1>
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb"
+                    style="margin:0!important;padding:1px;">
+                    <li class="breadcrumb-item">
+                        <a asp-controller="News" asp-action="Index">Home</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index">News List</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <a aria-current="page">Create News</a>
+                    </li>
+                </ol>
+            </nav>
+            <!-- Breadcrumb -->
 
-<form method="post" action="#">
-    <div class="mb-3">
-        <label class="form-label">Title</label>
-        <input type="text" class="form-control" asp-for="Title">
+            <hr style="opacity:0.5!important"/>
+
+            <h3 class="page-title" style="text-align:center">
+                Create News
+            </h3><br/>
+
+            <form method="post" asp-action="Create">
+
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="Title" class="form-label"></label>
+                                <input asp-for="Title" class="form-control" placeholder="Enter title"/>
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="Description" class="form-label">Description</label>
+                                <input asp-for="Description" type="text" class="form-control" placeholder="Enter text">
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label class="form-label">Create date</label>
+                                <input asp-for="CreatedAt" class="form-control date"/>
+                                <span asp-validation-for="CreatedAt" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label class="form-label">Published date</label>
+                                <input type="text" class="form-control date" id="publishedAt" disabled/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <label class="form-label">Is active</label>
+                        <input type="checkbox" checked="checked" asp-for="IsActive" disabled>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-3">
+                        <button type="submit" class="btn btn-rounded btn-primary">
+                            Create
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
     </div>
-    <div class="mb-3">
-        <label class="form-label">Text</label>
-        <input type="text" class="form-control" asp-for="Text">
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Publication date</label>
-         <input asp-for="CreateDate" class="form-control date"/>
-        @* <input id="publicationDateInput" type="text" class="form-control date" asp-for="Date"> *@
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Is active</label>
-        <input type="checkbox" checked="checked" asp-for="IsActive">
-    </div>
-    <button type="submit" class="btn btn-primary">Create</button>
-</form>
+</div>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var dateInput = document.getElementById("publishedAt");
+            var currentDate = new Date();
+            dateInput.value = currentDate.toLocaleDateString();
+        });
+    </script>
+}

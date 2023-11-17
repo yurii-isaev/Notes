@@ -7,20 +7,20 @@ namespace SalesCrm.Domains.Entities;
 public class News
 {
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     public string? Title { get; set; }
 
-    public string? Text { get; set; }
+    public string? Description { get; set; }
+    
+    public DateTime PublishedAt { get; set; }
 
-    public DateTime Date { get; set; }
-
-    [ForeignKey("Author")]
-    public string? AuthorId { get; set; }
-    public User? Author { get; set; }
-
-    public DateTime CreateDate { get; set; }
-
+    public DateTime CreatedAt { get; set; }
+    
     public bool IsActive { get; set; }
+    
+    [ForeignKey("AuthorId")]
+    public string? AuthorId { get; set; }
+    
+    public User? Author { get; set; }
 }

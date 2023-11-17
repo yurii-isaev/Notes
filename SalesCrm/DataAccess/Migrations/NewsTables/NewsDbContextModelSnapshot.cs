@@ -8,7 +8,7 @@ using SalesCrm.DataAccess;
 
 #nullable disable
 
-namespace SalesCrm.Migrations.NewsDb
+namespace SalesCrm.DataAccess.Migrations.NewsTables
 {
     [DbContext(typeof(NewsDbContext))]
     partial class NewsDbContextModelSnapshot : ModelSnapshot
@@ -24,32 +24,30 @@ namespace SalesCrm.Migrations.NewsDb
 
             modelBuilder.Entity("SalesCrm.Domains.Entities.News", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("AuthorId")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("CreateDate")
+                    b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("now()");
 
-                    b.Property<DateTime>("Date")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("now()");
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
-                    b.Property<string>("Text")
-                        .HasColumnType("text");
+                    b.Property<DateTime>("PublishedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("now()");
 
                     b.Property<string>("Title")
                         .HasColumnType("text");
@@ -59,7 +57,8 @@ namespace SalesCrm.Migrations.NewsDb
                     b.HasIndex("AuthorId");
 
                     b.ToTable("News");
-                });
+                }
+            );
 
             modelBuilder.Entity("SalesCrm.Domains.Identities.User", b =>
                 {
@@ -73,9 +72,7 @@ namespace SalesCrm.Migrations.NewsDb
                         .HasColumnType("text");
 
                     b.Property<DateTime>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Email")
                         .HasColumnType("text");
@@ -115,8 +112,9 @@ namespace SalesCrm.Migrations.NewsDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
-                });
+                    b.ToTable("AspNetUsers", (string)null);
+                }
+            );
 
             modelBuilder.Entity("SalesCrm.Domains.Entities.News", b =>
                 {
@@ -125,7 +123,8 @@ namespace SalesCrm.Migrations.NewsDb
                         .HasForeignKey("AuthorId");
 
                     b.Navigation("Author");
-                });
+                }
+            );
 #pragma warning restore 612, 618
         }
     }

@@ -12,8 +12,9 @@
 
 ## Commands dotnet-ef for add data sets
 ```
-# dotnet ef migrations add News --context NewsDbContext
+# dotnet ef migrations add News --context NewsDbContext --output-dir DataAccess/Migrations/NewsTables
 # dotnet ef database update --context NewsDbContext
+# dotnet ef migrations remove --context NewsDbContext -f
 
 # dotnet ef migrations add Employee --context EmployeeDbContext --output-dir DataAccess/Migrations/EmployeeTables
 # dotnet ef database update --context EmployeeDbContext

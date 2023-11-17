@@ -8,9 +8,9 @@ public interface INewsService
 
     Task CreateNewsAsync(NewsDto dto);
 
-    Task<NewsDto> GetNewsItemAsync(int id);
+    Task<NewsDto> GetNewsItemAsync(Guid id);
 
     Task UpdateNewsAsync(NewsDto dto);
 
-    Task DeleteNewsAsync(int id);
+    Task DeleteNewsAsync(Guid id);
 }

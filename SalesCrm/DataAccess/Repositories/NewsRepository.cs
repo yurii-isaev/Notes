@@ -26,7 +26,7 @@ public class NewsRepository : INewsRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<News> GetOneNewsAsync(int newsId)
+    public async Task<News> GetOneNewsAsync(Guid newsId)
     {
         return await _context.News
             .Where(n => n.Id == newsId)
@@ -38,8 +38,8 @@ public class NewsRepository : INewsRepository
         var item = await _context.News.Where(n => n.Id == news.Id).FirstOrDefaultAsync();
 
         item!.Title = news.Title;
-        item.Text = news.Text;
-        item.Date = news.Date;
+        item.Description = news.Description;
+        item.PublishedAt = news.PublishedAt;
         item.IsActive = news.IsActive;
 
         await _context.SaveChangesAsync();
@@ -47,7 +47,7 @@ public class NewsRepository : INewsRepository
         return item;
     }
 
-    public async Task DeleteNewsAsync(int newsId)
+    public async Task DeleteNewsAsync(Guid newsId)
     {
         var item = await _context.News.Where(n => n.Id == newsId).FirstOrDefaultAsync();
         _context.News.Remove(item ?? throw new InvalidOperationException());

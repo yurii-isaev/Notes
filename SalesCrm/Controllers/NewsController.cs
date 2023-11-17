@@ -65,7 +65,7 @@ public class NewsController : Controller
                 if (!string.IsNullOrEmpty(userId))
                 {
                     viewModel.AuthorId = userId;
-                    viewModel.Date = DateTime.SpecifyKind(viewModel.Date, DateTimeKind.Utc);
+                    viewModel.CreatedAt = DateTime.SpecifyKind(viewModel.CreatedAt, DateTimeKind.Utc);
 
                     var dto = _mapper.Map<NewsDto>(viewModel);
                     await _newsService.CreateNewsAsync(dto);
@@ -85,7 +85,7 @@ public class NewsController : Controller
 
     [Route("/admin/news/edit/{id}")]
     [HttpGet]
-    public async Task<IActionResult> EditNews(int id)
+    public async Task<IActionResult> EditNews(Guid id)
     {
         var news = await _newsService.GetNewsItemAsync(id);
         return View(news);
@@ -100,7 +100,7 @@ public class NewsController : Controller
         {
             try
             {
-                viewModel.Date = DateTime.SpecifyKind(viewModel.Date, DateTimeKind.Utc);
+                viewModel.CreatedAt = DateTime.SpecifyKind(viewModel.CreatedAt, DateTimeKind.Local);
                 var dto = _mapper.Map<NewsDto>(viewModel);
                 await _newsService.UpdateNewsAsync(dto);
                 
@@ -118,7 +118,7 @@ public class NewsController : Controller
 
     [Route("/admin/news/delete/{id}")]
     [HttpGet]
-    public async Task<IActionResult> DeleteNews(int id)
+    public async Task<IActionResult> DeleteNews(Guid id)
     {
         try
         {
