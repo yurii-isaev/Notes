@@ -59,7 +59,7 @@ public class Program
         services.AddMvc().AddNToastNotifyToastr(new ToastrOptions()
         {
             ProgressBar = true,
-            PositionClass = ToastPositions.TopRight
+            PositionClass = ToastPositions.BottomRight
         });
 
         services.AddAutoMapper(config =>

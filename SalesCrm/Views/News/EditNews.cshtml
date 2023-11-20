@@ -1,34 +1,133 @@
-@model SalesCrm.Domains.Entities.News
+@model SalesCrm.Controllers.ViewModels.NewsViewModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
 @{
     ViewData["Title"] = "Edit News";
 }
 
-<h1>Edit News</h1>
-<form method="post" action="">
-    <div class="mb-3">
-        <label for="" class="form-label">Title</label>
-        <input type="text" class="form-control" asp-for="Title">
-    </div>
-    <div class="mb-3">
-        <label for="" class="form-label">Text</label>
-        <input type="text" class="form-control" asp-for="Text">
-    </div>
-    <div class="mb-3">
-        <label for="" class="form-label">Publication date</label>
-        <input type="text" id="publicationDateInput" class="form-control date" asp-for="Date">
-    </div>
-    <div class="mb-3">
-        <label for="" class="form-label">Is active</label>
-        <input type="checkbox" checked="checked" asp-for="IsActive">
-    </div>
-    <button type="submit" class="btn btn-primary">Update</button>
-</form>
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-body">
 
-@section Scripts {
-    <script type="text/javascript">
-        $('#publicationDateInput').datepicker({
-            format: 'dd/mm/yyyy'
-        })
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb"
+                    style="margin:0!important;padding:1px;">
+                    <li class="breadcrumb-item">
+                        <a asp-controller="News" asp-action="Index">
+                            Home
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index">
+                            News List
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <a aria-current="page">
+                            Edit News
+                        </a>
+                    </li>
+                </ol>
+            </nav>
+            <!-- Breadcrumb -->
+
+            <hr style="opacity:0.5!important"/>
+
+            <h3 class="page-title" style="text-align:center">
+                Edit News
+            </h3><br/>
+
+            <form method="post" action="">
+
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="Title" class="form-label"></label>
+                                <input asp-for="Title" class="form-control" type="text"/>
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="Description" class="form-label"></label>
+                                <input asp-for="Description" class="form-control" type="text"/>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label class="form-label">Created date</label>
+                                <input asp-for="CreatedAt" class="form-control date"/>
+                                <span asp-validation-for="CreatedAt" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label class="form-label">Published date</label>
+                                <input asp-for="PublishedAt" class="form-control date"/>
+                                <span asp-validation-for="PublishedAt" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label class="form-label">Updated date</label>
+                                <input type="text" class="form-control date" id="updatedAt" disabled/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Activity</label>
+                    <input asp-for="IsActive" type="checkbox" checked="checked">
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-3">
+                        <button type="submit" class="btn btn-rounded btn-primary">
+                            Update
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var currentDate = new Date();
+            var updateDateInput = document.getElementById("updatedAt");
+            updateDateInput.value = currentDate.toLocaleDateString();
+        });
     </script>
 }

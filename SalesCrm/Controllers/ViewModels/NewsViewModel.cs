@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using SalesCrm.Domains.Identities;
 
@@ -14,14 +13,15 @@ public class NewsViewModel
 
     [Required(ErrorMessage = "Text is required")]
     public string? Description { get; set; }
-    
+
     [Required(ErrorMessage = "Create date is required")]
     public DateTime CreatedAt { get; set; }
 
     public DateTime PublishedAt { get; set; }
 
-    [Required]
-    public bool IsActive { get; set; }
+    public DateTime UpdatedAt { get; set; }
+
+    [Required] public bool IsActive { get; set; }
 
     public string? AuthorId { get; set; }
 

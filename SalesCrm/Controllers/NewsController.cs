@@ -87,8 +87,16 @@ public class NewsController : Controller
     [HttpGet]
     public async Task<IActionResult> EditNews(Guid id)
     {
-        var news = await _newsService.GetNewsItemAsync(id);
-        return View(news);
+        try
+        {
+            var dto = await _newsService.GetNewsItemAsync(id);
+            var viewModel = _mapper.Map<NewsViewModel>(dto);
+            return await Task.FromResult<IActionResult>(View(viewModel));
+        }
+        catch (Exception)
+        {
+            return RedirectToAction("Error");
+        }
     }
 
     [Route("/admin/news/edit/{id}")]
@@ -100,7 +108,6 @@ public class NewsController : Controller
         {
             try
             {
-                viewModel.CreatedAt = DateTime.SpecifyKind(viewModel.CreatedAt, DateTimeKind.Local);
                 var dto = _mapper.Map<NewsDto>(viewModel);
                 await _newsService.UpdateNewsAsync(dto);
                 
@@ -110,6 +117,7 @@ public class NewsController : Controller
             {
                 ModelState.AddModelError("", "Error updated news");
                 _toast.AddErrorToastMessage("Error updated news");
+                return RedirectToAction("Error");
             }
         }
 

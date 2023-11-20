@@ -45,6 +45,7 @@
                         <th>Author</th>
                         <th>Create date</th>
                         <th>Publishe date</th>
+                        <th>Update date</th>
                         <th>Activity</th>
                         <th class="text-warning">Actions</th>
                     </tr>
@@ -57,15 +58,28 @@
                             <td>@item.Author!.UserName</td>
                             <td>@item.CreatedAt.ToString("dd.MM.yyyy")</td>
                             <td>@item.PublishedAt.ToString("dd.MM.yyyy")</td>
+                            <td>@item.UpdatedAt.ToString("dd.MM.yyyy")</td>
                             <td>@item.IsActive.ToString().ToLower()</td>
-
+                            @* <td> *@
+                            @*     @Html.ActionLink("edit  |  ", "EditNews", *@
+                            @*         new {id = item.Id}) *@
+                            @* *@
+                            @*     @Html.ActionLink("delete", "DeleteNews", *@
+                            @*         new {id = item.Id}, *@
+                            @*         new {onclick = "showConfirmationDialog(event, 'Are you sure you want to delete this news?', href)"}) *@
+                            @* </td> *@
+                            
                             <td>
-                                @Html.ActionLink("edit  |  ", "EditNews",
-                                    new {id = item.Id})
-
-                                @Html.ActionLink("delete", "DeleteNews",
-                                    new {id = item.Id},
-                                    new {onclick = "showConfirmationDialog(event, 'Are you sure you want to delete this news?', href)"})
+                                <button class="btn btn-outline-primary button"
+                                        onclick="location.href='@Url.Action("EditNews", new {id = item.Id})'">
+                                    edit
+                                </button>
+                                
+                                <button class="btn btn-outline-danger button"
+                                        onclick="showConfirmationDialog(event, 'Are you sure you want to delete this news?',
+                                        '@Url.Action("DeleteNews", new {id = item.Id})')">
+                                    delete
+                                </button>
                             </td>
                         </tr>
                     }
@@ -91,7 +105,12 @@
     table {
       padding: 10px;
     }
+    
     td, th {
       padding: 10px;
+    }
+    
+    .button {
+      padding:0rem 0.9rem
     }
 </style>
