@@ -8,11 +8,12 @@ DROP TABLE "AspNetUserLogins";
 DROP TABLE "AspNetUserRoles";
 DROP TABLE "AspNetUsers" CASCADE;
 DROP TABLE "AspNetUserTokens";
-DROP TABLE "User" CASCADE;
+DROP TABLE "IdentityUser" CASCADE;
 
 -- Clean tables
 TRUNCATE TABLE "AspNetUsers" RESTART IDENTITY CASCADE;
 TRUNCATE TABLE "Employees" RESTART IDENTITY CASCADE;
+TRUNCATE TABLE "News" RESTART IDENTITY CASCADE;
 
 -- Creating an AspNetRoles table if it doesn't exist
 -- CREATE TABLE IF NOT EXISTS AspNetRoles
@@ -30,4 +31,8 @@ VALUES ('1', 'Admin', 'ADMIN', null);
 
 -- Assign administrator role user
 INSERT INTO public."AspNetUserRoles" ("UserId", "RoleId")
-VALUES ('e877e75f-0849-4a4c-a1cd-6767517951ad', '1');
+VALUES ('fb489992-771d-4f79-8c70-8f523c511ddf', '1');
+-- rCm-DWc-ATM-536
+
+UPDATE "News" SET "UpdatedAt" = CURRENT_TIMESTAMP WHERE "UpdatedAt" IS NULL;
+

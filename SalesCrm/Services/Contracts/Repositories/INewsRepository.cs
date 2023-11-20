@@ -12,7 +12,7 @@ public interface INewsRepository
     
     Task<News> GetOneNewsAsync(Guid id);
     
-    Task<News> UpdateNewsAsync(News news);
+    Task UpdateNewsAsync(News news);
     
     Task DeleteNewsAsync(Guid id);
 }

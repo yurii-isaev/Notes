@@ -33,18 +33,17 @@ public class NewsRepository : INewsRepository
             .FirstOrDefaultAsync() ?? throw new InvalidOperationException();
     }
 
-    public async Task<News> UpdateNewsAsync(News news)
+    public async Task UpdateNewsAsync(News news)
     {
-        var item = await _context.News.Where(n => n.Id == news.Id).FirstOrDefaultAsync();
+        var currentNews = await _context.News.Where(n => n.Id == news.Id).FirstOrDefaultAsync();
 
-        item!.Title = news.Title;
-        item.Description = news.Description;
-        item.PublishedAt = news.PublishedAt;
-        item.IsActive = news.IsActive;
+        currentNews!.Title = news.Title;
+        currentNews.Description = news.Description;
+        currentNews.PublishedAt = news.PublishedAt;
+        currentNews.CreatedAt = news.CreatedAt;
+        currentNews.IsActive = news.IsActive;
 
         await _context.SaveChangesAsync();
-
-        return item;
     }
 
     public async Task DeleteNewsAsync(Guid newsId)

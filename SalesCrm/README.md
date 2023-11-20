@@ -21,6 +21,14 @@
 # dotnet ef migrations remove --context EmployeeDbContext -f
 ```
 
+## Commands dotnet-ef for Add Column to News(migrations)
+```
+# dotnet ef migrations add NewsAddColumn --context NewsDbContext --output-dir DataAccess/Migrations/NewsTables
+# ADD SQL-script
+# Migrations check
+# dotnet ef database update NewsAddColumn --context NewsDbContext --verbose
+```
+
 ### Hot reload server
 ```
 # dotnet watch -lp https

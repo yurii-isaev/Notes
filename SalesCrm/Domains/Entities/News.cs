@@ -13,9 +13,11 @@ public class News
 
     public string? Description { get; set; }
     
-    public DateTime PublishedAt { get; set; }
+    public DateTime PublishedAt { get; set; } = DateTime.UtcNow;
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     
     public bool IsActive { get; set; }
     

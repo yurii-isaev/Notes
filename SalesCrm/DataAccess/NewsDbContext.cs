@@ -29,6 +29,10 @@ public class NewsDbContext : DbContext
 
         modelBuilder
             .Entity<News>()
+            .Property(e => e.UpdatedAt).HasDefaultValueSql("now()");
+        
+        modelBuilder
+            .Entity<News>()
             .Property(e => e.IsActive).HasDefaultValue(true);
     }
 }
