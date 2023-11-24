@@ -96,6 +96,7 @@ public class Program
             AppDomain.CurrentDomain.GetAssemblies());
         
         services.AddAutoMapper(typeof(MappingProfile));
+        services.AddRazorPages();
         #endregion
 
         #region Configure the HTTP request pipeline
@@ -123,10 +124,19 @@ public class Program
             name: "default",
             pattern: "{controller=News}/{action=Index}/{id?}"
         );
+        
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapRazorPages();
+
+            endpoints.MapGet("/", context =>
+            {
+                context.Response.Redirect("/manager/news");
+                return Task.CompletedTask;
+            });
+        });
 
         app.UseNToastNotify();
-        
-        app.MapRazorPages();
 
         app.Run();
         #endregion

@@ -12,7 +12,7 @@
             <div class="card-body">
 
                 <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb" style="padding:1px !important">
+                    <ol class="breadcrumb" style="padding:1px!important">
                         <li class="breadcrumb-item">
                             <a asp-controller="News" asp-action="Index">
                                 Home
@@ -29,7 +29,6 @@
                 <a class="btn btn-primary" role="button" asp-action="CreateNews">
                     Create news
                 </a>
-
                 <br/><hr/>
 
                 <h3 class="page-title" style="text-align:center">
@@ -38,7 +37,7 @@
                 
                 <br/>
 
-                <table>
+                 <table class="table">
                     <tr>
                         <th>Title</th>
                         <th>Description</th>
@@ -47,7 +46,7 @@
                         <th>Publishe date</th>
                         <th>Update date</th>
                         <th>Activity</th>
-                        <th class="text-warning">Actions</th>
+                        <th class="text-info">Actions</th>
                     </tr>
 
                     @foreach (var item in Model)
@@ -90,7 +89,12 @@
     TotalPages = Model.TotalPages
 })
 
-@Html.Partial("../Components/DeleteModal/_DeleteConfirmationModal")
+@section Scripts
+{
+    @{
+        @Html.Partial("../Components/DeleteModal/_DeleteConfirmationModal");
+    }
+}
 
 <style>
     table {

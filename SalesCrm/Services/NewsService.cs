@@ -64,6 +64,21 @@ public class NewsService : INewsService
         }
     }
 
+    public async Task<IEnumerable<NewsDto>> GetOnlyActiveNewsAsync()
+    {
+        try
+        {
+            var news = await _repository.GetOnlyActiveNewsAsync();
+            var dto = _mapper.Map<IEnumerable<NewsDto>>(news);
+            return dto;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("[NewsService .. Get Only Active News Async]: " + ex.Message);
+            throw;
+        }
+    }
+
     public async Task UpdateNewsAsync(NewsDto dto)
     {
         try

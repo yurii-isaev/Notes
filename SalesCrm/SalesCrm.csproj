@@ -30,10 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="Pages\News.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\sql\Admin.sql" />
   </ItemGroup>
 

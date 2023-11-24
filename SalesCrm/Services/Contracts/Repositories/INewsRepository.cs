@@ -10,9 +10,9 @@ public interface INewsRepository
     
     Task CreateNewsAsync(News news);
     
-    Task<News> GetOneNewsAsync(Guid id);
+    Task<News> GetOneNewsAsync(Guid newsId);
     
     Task UpdateNewsAsync(News news);
     
-    Task DeleteNewsAsync(Guid id);
+    Task DeleteNewsAsync(Guid newsId);
 }

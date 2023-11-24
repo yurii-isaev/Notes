@@ -25,6 +25,7 @@ public class NewsController : Controller
         _toast = toast;
     }
 
+    [Route("/admin/news")]
     [HttpGet]
     public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 7)
     {
