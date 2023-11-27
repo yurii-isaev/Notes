@@ -41,6 +41,7 @@ public class NewsRepository : INewsRepository
         currentNews.Description = news.Description;
         currentNews.PublishedAt = news.PublishedAt;
         currentNews.CreatedAt = news.CreatedAt;
+        currentNews.UpdatedAt = news.UpdatedAt;
         currentNews.IsActive = news.IsActive;
 
         await _context.SaveChangesAsync();

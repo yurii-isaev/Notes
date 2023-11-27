@@ -4,7 +4,7 @@ using NToastNotify;
 using SalesCrm.Controllers.ViewModels;
 using SalesCrm.Services.Contracts.Services;
 using SalesCrm.Services.Input;
-using SalesCrm.Views;
+using SalesCrm.Views.Components.Pagination;
 
 namespace SalesCrm.Controllers;
 
@@ -99,7 +99,7 @@ public class EmployeeController : Controller
 
         return RedirectToAction("Index");
     }
-    
+
     [Route("/employee/delete/{id}")]
     [HttpGet]
     public async Task<IActionResult> DeleteEmployee(Guid id)
@@ -117,7 +117,7 @@ public class EmployeeController : Controller
                 _toast.AddErrorToastMessage("Error deleted employee");
             }
         }
-        
+
         return RedirectToAction("Index");
     }
 }

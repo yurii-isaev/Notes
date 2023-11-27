@@ -19,9 +19,10 @@ public class NewsViewModel
 
     public DateTime PublishedAt { get; set; }
 
-    public DateTime UpdatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-    [Required] public bool IsActive { get; set; }
+    [Required]
+    public bool IsActive { get; set; } = true;
 
     public string? AuthorId { get; set; }
 
