@@ -1,0 +1,72 @@
+@page "/news/create/"
+@model CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-body">
+
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb"
+                    style="margin:0!important;padding:1px;">
+                    <li class="breadcrumb-item">
+                        <a asp-controller="News" asp-action="Index">Home</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index">News List</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        <a aria-current="page">Create News</a>
+                    </li>
+                </ol>
+            </nav>
+            <!-- Breadcrumb -->
+
+            <hr style="opacity:0.5!important"/>
+            <h3 class="page-title" style="text-align:center">Create News</h3><br/>
+
+            <form method="post" asp-action="Create">
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="News.Title" class="form-label"></label>
+                                <input asp-for="News.Title" class="form-control"/>
+                                <span asp-validation-for="News.Title" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="News.Description" class="form-label"></label>
+                                <input asp-for="News.Description" type="text" class="form-control">
+                                <span asp-validation-for="News.Description" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-3">
+                        <button type="submit" class="btn btn-rounded btn-primary">
+                            Create
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -2,7 +2,7 @@
 @model IndexModel
 
 @{
-    ViewData["Title"] = "News cards manager page";
+    ViewData["Title"] = "News cards page";
 }
 
 <h1 class="display-6 text-center">
@@ -25,11 +25,9 @@
             </div>
         </form>
     </div>
-
     <div class="col-md-4" style="margin-top:19px!important">
         <partial name="../Shared/_CreateButtonPartial.cshtml"></partial>
     </div>
-
 </div> <br/> <br/>
 
 
@@ -63,9 +61,7 @@
 
 @section Scripts
 {
-    @{
-        @Html.Partial("../Components/DeleteModal/_DeleteConfirmationModal")
-    }
+    @Html.Partial("../Components/DeleteModal/_DeleteConfirmationModal")
 }
 
 <style>
