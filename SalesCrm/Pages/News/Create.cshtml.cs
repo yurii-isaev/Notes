@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using NToastNotify;
@@ -30,9 +31,10 @@ public class CreateModel : PageModel
     [BindProperty]
     public NewsViewModel News { get; set; } = null!;
 
-    
-    public async Task<IActionResult> OnPostAsync()
+    [Authorize(Roles = "Manager")]
+    public async Task<IActionResult> OnPostCreateAsync()
     {
+        // Registation only
         var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         
         if (ModelState.IsValid)
@@ -47,15 +49,20 @@ public class CreateModel : PageModel
                     
                     _toast.AddSuccessToastMessage("News created successfully");
                 }
+                else
+                {
+                    return Page();
+                }
             }
-            catch
+            catch (Exception ex)
             {
                 ModelState.AddModelError("", "Error created news");
                 _toast.AddErrorToastMessage("Error created news");
-                return RedirectToAction("Error");
+                
+                return RedirectToPage("Error", new { errorMessage = ex.Message });
             }
         }
 
-        return RedirectToAction("Index");
+        return RedirectToPage("/News");
     }
 }

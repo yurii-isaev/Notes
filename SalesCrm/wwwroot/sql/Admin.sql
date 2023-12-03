@@ -34,5 +34,10 @@ INSERT INTO public."AspNetUserRoles" ("UserId", "RoleId")
 VALUES ('fb489992-771d-4f79-8c70-8f523c511ddf', '1');
 -- rCm-DWc-ATM-536
 
+-- Assign manager role user
+INSERT INTO public."AspNetUserRoles" ("UserId", "RoleId")
+VALUES ('fb489992-771d-4f79-8c70-8f523c511ddf', '53a8772b-ee20-4a23-83b2-0db1db32db35');
+-- rCm-DWc-ATM-536
+
 UPDATE "News" SET "UpdatedAt" = CURRENT_TIMESTAMP WHERE "UpdatedAt" IS NULL;
 

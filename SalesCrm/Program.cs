@@ -96,7 +96,13 @@ public class Program
             AppDomain.CurrentDomain.GetAssemblies());
         
         services.AddAutoMapper(typeof(MappingProfile));
+        
         services.AddRazorPages();
+        services.AddMvc().AddRazorPagesOptions(opts =>
+        {
+            opts.Conventions.AddPageRoute("/Error", "/Error");
+        });
+        
         #endregion
 
         #region Configure the HTTP request pipeline
@@ -115,6 +121,8 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseStaticFiles();
+        
+        app.UseStatusCodePagesWithReExecute("/Error");
 
         app.UseRouting();
 
@@ -131,7 +139,7 @@ public class Program
 
             endpoints.MapGet("/", context =>
             {
-                context.Response.Redirect("/manager/news");
+                context.Response.Redirect("/News");
                 return Task.CompletedTask;
             });
         });

@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using NToastNotify;
@@ -8,6 +9,7 @@ using SalesCrm.Services.Input;
 
 namespace SalesCrm.Pages.News;
 
+[Authorize(Roles = "Manager")]
 public class EditModel : PageModel
 {
     private readonly INewsService _newsService;
@@ -47,7 +49,6 @@ public class EditModel : PageModel
         catch (Exception ex)
         {
             _logger.LogError("[EditModel .. On Get Async]: " + ex.Message);
-            //RedirectToAction("Error");
             return NotFound();
         }
         
@@ -77,6 +78,6 @@ public class EditModel : PageModel
             }
         }
 
-        return RedirectToAction("Index");
+        return Page();
     }
 }
