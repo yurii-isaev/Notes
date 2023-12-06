@@ -1,0 +1,59 @@
+@model PaginationViewModel
+
+<nav aria-label="Page navigation example" class="d-flex justify-content-center" style="padding-top:60px">
+    <ul class="pagination">
+        @if (Model.IsPreviousPageAvailable)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-page="@Model.ActionName"
+                   asp-route-pageNumber="@(Model.PageNumber - 1)"
+                   asp-route-pageSize="@Model.PageSize">
+                    Previous
+                </a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item disabled">
+                <span class="page-link">Previous</span>
+            </li>
+        }
+
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            if (i == Model.PageNumber)
+            {
+                <li class="page-item active">
+                    <span class="page-link">@i</span>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-page="@Model.ActionName"
+                       asp-route-pageNumber="@i"
+                       asp-route-pageSize="@Model.PageSize">
+                        @i
+                    </a>
+                </li>
+            }
+        }
+
+        @if (Model.IsNextPageAvailable)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-page="@Model.ActionName"
+                   asp-route-pageNumber="@(Model.PageNumber + 1)"
+                   asp-route-pageSize="@Model.PageSize">
+                    Next
+                </a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item disabled">
+                <span class="page-link">Next</span>
+            </li>
+        }
+    </ul>
+</nav>

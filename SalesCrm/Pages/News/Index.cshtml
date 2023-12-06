@@ -1,4 +1,6 @@
 @page "/News"
+@using SalesCrm.Pages.Shared.Pagination
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model IndexModel
 
 @{
@@ -10,22 +12,30 @@
 </h1>
 
 <div class="row">
-    <div class="col-md-8">
-        <form id="filterForm" method="post" asp-action="index" asp-route-Fill="true">
-            <div class="row">
-                <div class="col-md-8">
-                    <partial name="Shared/_SearcherPartial"></partial>
+    <div class="col-md-4">
+        <form method="get" asp-page="Index" asp-handler="Index">
+            <div class="form-group">
+                <label class="form-label">Search keywords:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control"
+                           name="keyword" placeholder="Enter keywords..."
+                           value="@ViewBag.keyword">
+                    <button class="btn btn-secondary" type="submit">Search</button>
                 </div>
             </div>
         </form>
     </div>
-    <div class="col-md-4" style="margin-top:19px!important">
-        <a class="btn btn-primary" asp-page="Create">
-            <i class="fa fa-plus" aria-hidden="true"></i>
-            Create News
-        </a>
+    
+    <div class="col-md-7" style="padding-top:30px">
+        <div class="text-md-end">
+            <a class="btn btn-primary" asp-page="Create">
+                Create News
+            </a>
+        </div>
     </div>
-</div> <br/> <br/>
+</div>
+
+<br/> <br/>
 
 
 <div class="row">
@@ -36,9 +46,9 @@
                 <div class="card-body">
                     <h5 class="card-title">@item.Title</h5>
                     <p class="card-text">@item.Description</p>
+                    <p class="card-text">@item.PublishedAt</p>
 
                     <div class="btn-group">
-
                         <a class="btn btn-outline-primary button" asp-page="Edit" asp-route-newsId="@item.Id">
                             <i class="fa fa-edit" aria-hidden="true"></i>
                             edit
@@ -58,6 +68,16 @@
         </div>
     }
 </div>
+
+@Html.Partial("Shared/Pagination/_Pagination", new PaginationViewModel
+{
+    ActionName = "Index",
+    PageNumber = Model.PageNumber,
+    PageSize = Model.PageSize,
+    IsPreviousPageAvailable = Model.IsPreviousPageAvailable,
+    IsNextPageAvailable = Model.IsNextPageAvailable,
+    TotalPages = Model.TotalPages
+})
 
 <style>
     table {
