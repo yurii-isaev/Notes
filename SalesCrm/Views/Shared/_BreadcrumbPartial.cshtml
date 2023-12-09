@@ -1,0 +1,15 @@
+@model string
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb" style="padding:1px !important">
+        <li class="breadcrumb-item">
+            <a asp-controller="News" asp-action="Index">Home</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a asp-action="Index">Employee List</a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a aria-current="page">@Model</a>
+        </li>
+    </ol>
+</nav>

@@ -38,10 +38,17 @@
             <ul class="side-nav">
                 <li class="side-nav-item">
                     <a href="/news" class="side-nav-link">
-                        <i class="uil-rss" style="margin:15px"></i>
+                        <i class="uil-rss"></i>
                         <span> News </span>
                     </a>
                 </li>
+                <!-- Employee controller-->
+                 <li class="side-nav-item">
+                     <a class="side-nav-link" asp-area="" asp-controller="Employee" asp-action="Index">
+                     <i class="uil-rss"></i>
+                     <span> Employees </span>
+                     </a>
+                 </li>
             </ul>
 
             <!-- End Sidebar -->
@@ -97,14 +104,6 @@
                             </li>
                             <!-- ============================================================== -->
                             
-                            <!-- Employee controller-->
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="Index">
-                                    Employees
-                                </a>
-                            </li>
-
-                            <!-- ============================================================== -->
                             <!-- TaxYear controller-->
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="TaxYear" asp-action="Index">

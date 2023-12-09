@@ -14,21 +14,18 @@ public class EmployeeController : Controller
     private readonly IMapper _mapper;
     private readonly IToastNotification _toast;
 
-    public EmployeeController
-    (
-        IEmployeeService service,
-        IMapper mapper,
-        IToastNotification toast
-    )
+    public EmployeeController(IEmployeeService service, IMapper mapper, IToastNotification toast)
     {
         _employeeService = service;
         _mapper = mapper;
         _toast = toast;
     }
-
-    public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 5)
+    
+    public async Task<IActionResult> Index(string keyword, int pageNumber = 1, int pageSize = 5)
     {
-        List<EmployeeListViewModel> list = _employeeService.GetEmployeeListAsync()
+        ViewBag.keyword = keyword;
+        
+        List<EmployeeListViewModel> list = _employeeService.GetEmployeeListAsync(keyword)
             .Result
             .Select(emp => _mapper.Map<EmployeeListViewModel>(emp))
             .ToList();

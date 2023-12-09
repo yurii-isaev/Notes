@@ -8,20 +8,10 @@
 <div class="col-md-12">
     <div class="card">
         <div class="card-body">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb"
-                    style="margin:0!important;padding:1px;">
-                    <li class="breadcrumb-item">
-                        <a asp-controller="News" asp-action="Index">Home</a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a asp-action="Index">EmployeeList</a>
-                    </li>
-                    <li class="breadcrumb-item active">
-                        <a aria-current="page">New Employee</a>
-                    </li>
-                </ol>
-            </nav>
+             <!-- Breadcrumb -->
+            @await Html.PartialAsync("_BreadcrumbPartial", "Create Employee")
+             <!-- Breadcrumb -->
+             
             <hr style="opacity:0.5!important"/>
 
             <form method="post" enctype="multipart/form-data" asp-action="Create">

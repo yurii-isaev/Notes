@@ -90,6 +90,26 @@ public class EmployeeService : IEmployeeService
             return Enumerable.Empty<EmployeeDto>();
         }
     }
+    
+    public async Task<IEnumerable<EmployeeDto>> GetEmployeeListAsync(string keyword)
+    {
+        try
+        {
+            var employeeList = await _repository.GetEmployeeListAsync();
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                employeeList = employeeList.Where(emp => emp.Name!.Contains(keyword));
+            }
+
+            return _mapper.Map<IEnumerable<EmployeeDto>>(employeeList);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("[Get employee list]: " + ex.Message);
+            return Enumerable.Empty<EmployeeDto>();
+        }
+    }
 
     public async Task<EmployeeDto> GetEmployeeByIdAsync(Guid employeeId)
     {
