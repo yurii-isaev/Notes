@@ -10,7 +10,7 @@ public interface INewsService
 
     Task<NewsDto> GetNewsItemAsync(Guid id);
 
-    Task<IEnumerable<NewsDto>> GetOnlyActiveNewsAsync();
+    Task<IEnumerable<NewsDto>> GetOnlyActiveNewsAsync(string keyword);
 
     Task UpdateNewsAsync(NewsDto dto);
 

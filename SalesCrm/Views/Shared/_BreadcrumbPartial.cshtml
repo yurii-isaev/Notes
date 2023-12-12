@@ -1,15 +1,21 @@
-@model string
+@model string[]
 
 <nav aria-label="breadcrumb">
-    <ol class="breadcrumb" style="padding:1px !important">
+    <ol class="breadcrumb" style="margin:0!important;padding:1px">
         <li class="breadcrumb-item">
-            <a asp-controller="News" asp-action="Index">Home</a>
+            <a asp-controller="News" asp-action="Index">
+                Home
+            </a>
         </li>
         <li class="breadcrumb-item">
-            <a asp-action="Index">Employee List</a>
+            <a asp-action="Index">
+                @Model[0]
+            </a>
         </li>
         <li class="breadcrumb-item active">
-            <a aria-current="page">@Model</a>
+            <a aria-current="page">
+                @Model[1]
+            </a>
         </li>
     </ol>
 </nav>

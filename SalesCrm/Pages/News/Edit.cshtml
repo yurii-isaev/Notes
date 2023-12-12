@@ -1,20 +1,28 @@
-@page "/news/edit/{newsId:Guid}"
+@page "/news/edit/{newsId}"
 @model EditModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit News";
 }
 
 <div class="col-md-12">
     <div class="card">
         <div class="card-body">
 
-            <!-- Breadcrumb -->
-            @await Html.PartialAsync("_BreadcrumbPartial", "Edit News")
-            <!-- Breadcrumb -->
+            <!-- Card breadcrumb -->
+            @await Html.PartialAsync("_BreadcrumbPartial", new[] {"News List", @ViewData["Title"]!.ToString()})
+            <!-- Card breadcrumb  -->
+            <br/>
 
-            <hr style="opacity:0.5!important"/>
-            <h3 class="page-title" style="text-align:center">Edit News</h3><br/>
+            <!-- Card title -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="page-title">@ViewData["Title"]</h2>
+                </div>
+            </div>
+            <br/>
+            @* <hr style="opacity:0.5!important"/> *@
+            <!-- Card title -->
 
             <form method="post" asp-page-handler="Edit" asp-route-id="@Model.NewsId">
                 <div class="row">

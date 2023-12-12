@@ -9,28 +9,20 @@
     <div class="card">
         <div class="card-body">
 
-            <!-- Breadcrumb -->
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb"
-                    style="margin:0!important;padding:1px;">
-                    <li class="breadcrumb-item">
-                        <a asp-controller="News" asp-action="Index">Home</a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a asp-action="Index">News List</a>
-                    </li>
-                    <li class="breadcrumb-item active">
-                        <a aria-current="page">Create News</a>
-                    </li>
-                </ol>
-            </nav>
-            <!-- Breadcrumb -->
+            <!-- Card breadcrumb -->
+            @await Html.PartialAsync("_BreadcrumbPartial", new[] {"News List", @ViewData["Title"]!.ToString()})
+            <!-- Card breadcrumb  -->
+            <br/>
 
-            <hr style="opacity:0.5!important"/>
-
-            <h3 class="page-title" style="text-align:center">
-                Create News
-            </h3><br/>
+            <!-- Card title -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="page-title">@ViewData["Title"]</h2>
+                </div>
+            </div>
+            <br/>
+            @* <hr style="opacity:0.5!important"/> *@
+            <!-- Card title -->
 
             <form method="post" asp-action="Create">
                 <div class="row">

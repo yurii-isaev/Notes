@@ -64,12 +64,18 @@ public class NewsService : INewsService
         }
     }
 
-    public async Task<IEnumerable<NewsDto>> GetOnlyActiveNewsAsync()
+    public async Task<IEnumerable<NewsDto>> GetOnlyActiveNewsAsync(string keyword)
     {
         try
         {
-            var news = await _repository.GetOnlyActiveNewsAsync();
-            var dto = _mapper.Map<IEnumerable<NewsDto>>(news);
+            var newsList = await _repository.GetOnlyActiveNewsAsync();
+            
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                newsList = newsList.Where(emp => emp.Title!.Contains(keyword));
+            }
+            
+            var dto = _mapper.Map<IEnumerable<NewsDto>>(newsList);
             return dto;
         }
         catch (Exception ex)

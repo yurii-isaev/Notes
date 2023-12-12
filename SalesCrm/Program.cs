@@ -139,7 +139,7 @@ public class Program
 
             endpoints.MapGet("/", context =>
             {
-                context.Response.Redirect("/News");
+                context.Response.Redirect("/news");
                 return Task.CompletedTask;
             });
         });

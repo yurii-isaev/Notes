@@ -34,7 +34,7 @@ namespace SalesCrm.Pages.News
         [BindProperty] public bool IsPreviousPageAvailable { get; set; }
         [BindProperty] public bool IsNextPageAvailable { get; set; }
 
-        public async Task OnGetAsync(string keyword, int pageNumber = 1, int pageSize = 5)
+        public async Task OnGetAsync(string keyword, int pageNumber = 1, int pageSize = 4)
         {
             IEnumerable<NewsDto> news = await _newsService.GetOnlyActiveNewsAsync(keyword);
             IEnumerable<NewsDto> newsList = news.ToList();

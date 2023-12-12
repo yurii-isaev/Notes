@@ -2,19 +2,27 @@
 @model CreateModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create News";
 }
 
 <div class="col-md-12">
     <div class="card">
         <div class="card-body">
-            
-           <!-- Breadcrumb -->
-            @await Html.PartialAsync("_BreadcrumbPartial", "Create News")
-           <!-- Breadcrumb -->
 
-            <hr style="opacity:0.5!important"/>
-            <h3 class="page-title" style="text-align:center">Create News</h3><br/>
+            <!-- Card breadcrumb -->
+            @await Html.PartialAsync("_BreadcrumbPartial", new[] {"News List", @ViewData["Title"]!.ToString()})
+            <!-- Card breadcrumb  -->
+            <br/>
+
+            <!-- Card title -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="page-title">@ViewData["Title"]</h2>
+                </div>
+            </div>
+            <br/>
+            @* <hr style="opacity:0.5!important"/> *@
+            <!-- Card title -->
 
             <form method="post" asp-page-handler="Create">
                 <div class="row">
