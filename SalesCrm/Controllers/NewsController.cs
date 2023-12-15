@@ -3,6 +3,7 @@ using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using NToastNotify;
 using SalesCrm.Controllers.ViewModels;
 using SalesCrm.Services.Contracts.Services;
@@ -27,16 +28,79 @@ public class NewsController : Controller
 
     [Route("/admin/news")]
     [HttpGet]
-    public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 7)
+    public async Task<IActionResult> Index
+    (
+        int pageNumber = 1,
+        int pageSize = 7,
+        string sortOrder = "",
+        string selectedTitle = "",
+        string selectedAuthor = ""
+    )
     {
+        ViewBag.Title = String.IsNullOrEmpty(sortOrder) ? "Title_desc" : "";
+        ViewBag.Author = sortOrder == "Author" ? "Author_desc" : "Author";
+
         try
         {
-            List<NewsViewModel> list = _newsService.GetNewsListAsync()
+            IEnumerable<NewsViewModel> news = _newsService.GetNewsListAsync()
                 .Result
-                .Select(news => _mapper.Map<NewsViewModel>(news))
+                .Select(news => _mapper.Map<NewsViewModel>(news));
+
+            if (!String.IsNullOrEmpty(selectedTitle))
+            {
+                news = news.Where(s => s.Title!.Equals(selectedTitle.Trim()));
+            }
+
+            if (!String.IsNullOrEmpty(selectedAuthor))
+            {
+                news = news.Where(s => s.Author!.UserName!.Trim().Equals(selectedAuthor.Trim()));
+            }
+
+            var uniqueTitles = from s in news
+                group s by s.Title
+                into newGroup
+                where newGroup.Key != null
+                orderby newGroup.Key
+                select new {Title = newGroup.Key};
+
+            ViewBag.UniqueTitle = uniqueTitles
+                .Select(m => new SelectListItem {Value = m.Title, Text = m.Title}).ToList();
+
+            var uniqueAuthors = from s in news
+                group s by s.Author
+                into newGroup
+                where newGroup.Key != null
+                orderby newGroup.Key
+                select new {Author = newGroup.Key};
+
+            ViewBag.UniqueAuthor = uniqueAuthors
+                .Select(m => new SelectListItem {Value = m.Author.UserName, Text = m.Author.UserName})
                 .ToList();
 
-            var paginationList = PaginationList<NewsViewModel>.Create(list, pageNumber, pageSize);
+            ViewBag.SelectedTitle = selectedTitle;
+            ViewBag.SelectedAuthor = selectedAuthor;
+
+            IOrderedEnumerable<NewsViewModel> orderedNews;
+
+            switch (sortOrder)
+            {
+                case "Title_desc":
+                    orderedNews = news.ToList().OrderByDescending(s => s.Title);
+                    break;
+                case "Author":
+                    orderedNews = news.ToList().OrderBy(s => s.Author);
+                    break;
+                case "Author_desc":
+                    orderedNews = news.ToList().OrderByDescending(s => s.Author);
+                    break;
+                default:
+                    orderedNews = news.ToList().OrderBy(s => s.Title);
+                    break;
+            }
+
+            news = orderedNews.ToList();
+
+            var paginationList = PaginationList<NewsViewModel>.Create(news.ToList(), pageNumber, pageSize);
 
             return await Task.FromResult<IActionResult>(View(paginationList));
         }
@@ -58,7 +122,7 @@ public class NewsController : Controller
     public async Task<IActionResult> Create(NewsViewModel viewModel)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        
+
         if (ModelState.IsValid)
         {
             try
@@ -70,7 +134,7 @@ public class NewsController : Controller
 
                     var dto = _mapper.Map<NewsDto>(viewModel);
                     await _newsService.CreateNewsAsync(dto);
-                    
+
                     _toast.AddSuccessToastMessage("News created successfully");
                 }
             }
@@ -111,7 +175,7 @@ public class NewsController : Controller
             {
                 var dto = _mapper.Map<NewsDto>(viewModel);
                 await _newsService.UpdateNewsAsync(dto);
-                
+
                 _toast.AddSuccessToastMessage("News updated successfully");
             }
             catch
@@ -139,7 +203,7 @@ public class NewsController : Controller
             ModelState.AddModelError("", "Error deleted news");
             _toast.AddErrorToastMessage("Error deleted news");
         }
-        
+
         return RedirectToAction("Index");
     }
 

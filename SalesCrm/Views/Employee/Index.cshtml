@@ -11,16 +11,20 @@
         <div class="card">
             <div class="card-body">
 
-                @* <nav aria-label="breadcrumb"> *@
-                @*     <ol class="breadcrumb" style="padding:1px !important"> *@
-                @*         <li class="breadcrumb-item"> *@
-                @*             <a asp-controller="News" asp-action="Index">Home</a> *@
-                @*         </li> *@
-                @*         <li class="breadcrumb-item"> *@
-                @*             <a asp-action="Index">Employee List</a> *@
-                @*         </li> *@
-                @*     </ol> *@
-                @* </nav> *@
+                <!-- Card breadcrumb -->
+                @await Html.PartialAsync("_BreadcrumbPartial", new[] {@ViewData["Title"]!.ToString(), ""})
+                <!-- Card breadcrumb  -->
+                <br/>
+
+                <!-- Card title -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="page-title">@ViewData["Title"]</h2>
+                    </div>
+                </div>
+                <br/>
+                @* <hr style="opacity:0.5!important"/> *@
+                <!-- Card title -->
 
                 <div class="row">
                     <div class="col-md-4">
@@ -32,8 +36,8 @@
 
                     <div class="col-md-7" style="padding-top:30px">
                         <div class="text-md-end">
-                            <a asp-action="Create" class="btn btn-outline-success">
-                                Create new Employee
+                            <a asp-action="Create" class="btn btn-primary">
+                                Create Employee
                             </a>
                         </div>
                     </div>

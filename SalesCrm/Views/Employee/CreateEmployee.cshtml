@@ -2,17 +2,27 @@
 @model SalesCrm.Controllers.ViewModels.EmployeeViewModel
 
 @{
-    ViewData["Title"] = "Create new Employee";
+    ViewData["Title"] = "Create Employee";
 }
 
 <div class="col-md-12">
     <div class="card">
         <div class="card-body">
-             <!-- Breadcrumb -->
-            @await Html.PartialAsync("_BreadcrumbPartial", "Create Employee")
-             <!-- Breadcrumb -->
-             
-            <hr style="opacity:0.5!important"/>
+        
+            <!-- Card breadcrumb -->
+            @await Html.PartialAsync("_BreadcrumbPartial", new[] {"Employee List", @ViewData["Title"]!.ToString()})
+            <!-- Card breadcrumb  -->
+            <br/>
+
+            <!-- Card title -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="page-title">@ViewData["Title"]</h2>
+                </div>
+            </div>
+            @* <br/> *@
+            @* <hr style="opacity:0.5!important"/> *@
+            <!-- Card title -->
 
             <form method="post" enctype="multipart/form-data" asp-action="Create">
 
@@ -23,14 +33,14 @@
                         <img id="preview"
                              src="~/images/employees/user.jpg"
                              alt="Preview" width="200" height="200" style="margin-bottom:10px"/>
-                        
+
                         <div class="form-group">
-                            <input asp-for="FormFile" class="form-control" onchange="previewImage(event)" />
+                            <input asp-for="FormFile" class="form-control" onchange="previewImage(event)"/>
                             <span asp-validation-for="FormFile" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="row">
                     <div class="col-4">
                         <div class="form-group indent">
@@ -111,8 +121,8 @@
                         <div class="form-group indent">
                             <label asp-for="PaymentMethod" class="form-label"></label>
                             <select asp-for="PaymentMethod" class="form-control"
-                                    placeholder="Enter name"
-                                    asp-items="@Html.GetEnumSelectList<PaymentMethod>()">
+                                    asp-items="@Html.GetEnumSelectList<PaymentMethod>()"
+                                    placeholder="Enter name">
                             </select>
                             <span asp-validation-for="PaymentMethod" class="text-danger"></span>
                         </div>
@@ -175,7 +185,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    
+
     <script>
     function previewImage(event) {
         var input = event.target;

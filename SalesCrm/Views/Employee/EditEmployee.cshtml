@@ -8,12 +8,21 @@
 <div class="col-md-12">
     <div class="card">
         <div class="card-body">
-        
-            <!-- Breadcrumb -->
-            @await Html.PartialAsync("_BreadcrumbPartial", "Edit Employee")
-            <!-- Breadcrumb -->
 
-            <hr style="opacity:0.5!important"/>
+            <!-- Card breadcrumb -->
+            @await Html.PartialAsync("_BreadcrumbPartial", new[] {"Employee List", @ViewData["Title"]!.ToString()})
+            <!-- Card breadcrumb  -->
+            <br/>
+
+            <!-- Card title -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="page-title">@ViewData["Title"]</h2>
+                </div>
+            </div>
+            @* <br/> *@
+            @* <hr style="opacity:0.5!important"/> *@
+            <!-- Card title -->
 
             <form method="post" enctype="multipart/form-data" asp-action="EditEmployee">
 
@@ -24,18 +33,23 @@
                         <img id="preview"
                              src="@(Model.ImageName != null ? Url.Content(Model.ImageName) : Url.Content("~/images/employees/user.jpg"))"
                              alt="Preview" width="200" height="200" style="margin-bottom:10px"/>
-                                    
+
                         <input asp-for="FormFile"
                                type="file" accept="image/*" class="form-control"
                                onchange="previewImage(event)"
                                width="200" height="200"/>
-                                    
+                        
+                        
+                        <input type="hidden" id="imageName"
+                               name="imageName"
+                               value="@(Model.ImageName != null ? Model.ImageName : "user.jpg")">
+
                         <span asp-validation-for="FormFile" class="text-danger"></span>
                     </div>
                 </div>
-                
+
                 <div class="row">
-                    
+
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="Name" class="form-label"></label>
@@ -180,7 +194,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    
+
     <script>
     function previewImage(event) {
         var input = event.target;
@@ -195,4 +209,3 @@
     }
     </script>
 }
-    

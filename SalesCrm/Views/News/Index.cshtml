@@ -3,14 +3,14 @@
 @model SalesCrm.Views.Components.Pagination.PaginationList<SalesCrm.Controllers.ViewModels.NewsViewModel>
 
 @{
-    ViewData["Title"] = "News Page";
+    ViewData["Title"] = "News List";
 }
 
 <div class="row">
     <div class="col-md-12">
         <div class="card">
             <div class="card-body">
-                
+
                 <!-- Card breadcrumb -->
                 @await Html.PartialAsync("_BreadcrumbPartial", new[] {@ViewData["Title"]!.ToString(), ""})
                 <!-- Card breadcrumb  -->
@@ -45,17 +45,80 @@
             </div> <br/>
 
             <table class="table">
-                <tr>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Author</th>
-                    <th>Create date</th>
-                    <th>Publishe date</th>
-                    <th>Update date</th>
-                    <th>Activity</th>
-                    <th style="text-align:center">Actions</th>
-                </tr>
+                @using (Html.BeginForm("Index", "News", FormMethod.Get))
+                {
+                    <!-- Table Filters -->
+                    @if (ViewBag.UniqueTitle != null && ViewBag.UniqueAuthor != null && ViewBag.SelectedTitle != null && ViewBag.SelectedAuthor != null)
+                    {
+                        <tr>
+                            <th>
+                                @Html.DropDownList("SelectedTitle",
+                                    new SelectList(ViewBag.UniqueTitle, "Value", "Text", ViewBag.SelectedTitle),
+                                    "All", new
+                                    {
+                                        onchange = "form.submit();"
+                                    })
+                            </th>
 
+                            <th>
+
+                            <th>
+                                @Html.DropDownList("SelectedAuthor",
+                                    new SelectList(ViewBag.UniqueAuthor, "Value", "Text", ViewBag.SelectedAuthor),
+                                    "All", new
+                                    {
+                                        onchange = "form.submit();"
+                                    })
+                            </th>
+
+                        </tr>
+                    }
+                    else
+                    {
+                        // Handling Null Values or Missing Elements
+                        <tr>
+                            <th colspan="8">Dropdown list data is not available</th>
+                        </tr>
+                    }
+                    <!-- Table Filters -->
+
+                    <!-- Table columns -->
+                    <tr>
+                        @* <th> *@
+                        @*     @Html.ActionLink("Title", "Index", new *@
+                        @*     { *@
+                        @*         SortOrder = ViewBag.Title, *@
+                        @*         SelectedTitle = ViewBag.SelectedTitle, *@
+                        @*         SelectedAuthor = ViewBag.SelectedAuthor *@
+                        @*     }) *@
+                        @* </th> *@
+
+                        <th>Title</th>
+                        
+                        <th>Description</th>
+                        
+                        <th>Author</th>
+
+                        @* <th> *@
+                        @*     @Html.ActionLink("Author", "Index", *@
+                        @*         new *@
+                        @*         { *@
+                        @*             SortOrder = ViewBag.Author, *@
+                        @*             SelectedTitle = ViewBag.SelectedTitle, *@
+                        @*             SelectedAuthor = ViewBag.SelectedAuthor *@
+                        @*         }) *@
+                        @* </th> *@
+
+                        <th>Create date</th>
+                        <th>Publishe date</th>
+                        <th>Update date</th>
+                        <th>Activity</th>
+                        <th style="text-align:center">Actions</th>
+                    </tr>
+                }
+                <!-- Table columns -->
+
+                <!-- Table content -->
                 @foreach (var item in Model)
                 {
                     <tr>
@@ -80,10 +143,10 @@
                         </td>
                     </tr>
                 }
+                <!-- Table content -->
             </table>
         </div>
     </div>
-
 </div>
 
 @Html.Partial("../Components/Pagination/_Pagination", new PaginationViewModel
