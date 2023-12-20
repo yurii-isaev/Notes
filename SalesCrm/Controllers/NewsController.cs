@@ -32,75 +32,161 @@ public class NewsController : Controller
     (
         int pageNumber = 1,
         int pageSize = 7,
-        string sortOrder = "",
-        string selectedTitle = "",
-        string selectedAuthor = ""
+        string sortOrder           = null!,
+        string selectedTitle       = null!,
+        string selectedAuthor      = null!,
+        string selectedCreateDate  = null!,
+        string selectedPublishDate = null!,
+        string selectedUpdateDate  = null!,
+        string selectedActivity    = null!
     )
     {
-        ViewBag.Title = String.IsNullOrEmpty(sortOrder) ? "Title_desc" : "";
-        ViewBag.Author = sortOrder == "Author" ? "Author_desc" : "Author";
-
         try
         {
             IEnumerable<NewsViewModel> news = _newsService.GetNewsListAsync()
                 .Result
-                .Select(news => _mapper.Map<NewsViewModel>(news));
+                .Select(news => _mapper.Map<NewsViewModel>(news))
+                .ToList();
 
             if (!String.IsNullOrEmpty(selectedTitle))
             {
-                news = news.Where(s => s.Title!.Equals(selectedTitle.Trim()));
+                news = news.Where(vm => vm.Title!.Equals(selectedTitle.Trim())).ToList();
             }
+
+            var uniqueTitleList = news
+                .Where(vm => string.IsNullOrEmpty(selectedActivity) || vm.IsActive == bool.Parse(selectedActivity))
+                // .Where(viewModel => viewModel.Title != null)
+                .GroupBy(vm => vm.Title)
+                .OrderBy(newGroup => newGroup.Key)
+                .Select(newGroup => new {Title = newGroup.Key});
+
+            ViewBag.UniqueTitle = uniqueTitleList
+                .Select(s => new SelectListItem 
+                {
+                    Value = s.Title, Text = s.Title
+                });
+
+            ViewBag.SelectedTitle = selectedTitle;
+
+            // ...
 
             if (!String.IsNullOrEmpty(selectedAuthor))
             {
-                news = news.Where(s => s.Author!.UserName!.Trim().Equals(selectedAuthor.Trim()));
+                news = news.Where(vm => vm.Author!.UserName!.Trim().Equals(selectedAuthor.Trim())).ToList();
             }
 
-            var uniqueTitles = from s in news
-                group s by s.Title
-                into newGroup
-                where newGroup.Key != null
-                orderby newGroup.Key
-                select new {Title = newGroup.Key};
+            var uniqueAuthorList = news
+                .Where(vm => vm.Author != null)
+                .GroupBy(vm => vm.Author)
+                .OrderBy(newGroup => newGroup.Key)
+                .Select(newGroup => new {Author = newGroup.Key});
 
-            ViewBag.UniqueTitle = uniqueTitles
-                .Select(m => new SelectListItem {Value = m.Title, Text = m.Title}).ToList();
+            ViewBag.UniqueAuthor = uniqueAuthorList
+                .Select(s => new SelectListItem 
+                {
+                    Value = s.Author!.UserName, Text = s.Author.UserName
+                });
 
-            var uniqueAuthors = from s in news
-                group s by s.Author
-                into newGroup
-                where newGroup.Key != null
-                orderby newGroup.Key
-                select new {Author = newGroup.Key};
-
-            ViewBag.UniqueAuthor = uniqueAuthors
-                .Select(m => new SelectListItem {Value = m.Author.UserName, Text = m.Author.UserName})
-                .ToList();
-
-            ViewBag.SelectedTitle = selectedTitle;
             ViewBag.SelectedAuthor = selectedAuthor;
 
-            IOrderedEnumerable<NewsViewModel> orderedNews;
+            // ...
 
-            switch (sortOrder)
+            if (!String.IsNullOrEmpty(selectedCreateDate))
             {
-                case "Title_desc":
-                    orderedNews = news.ToList().OrderByDescending(s => s.Title);
-                    break;
-                case "Author":
-                    orderedNews = news.ToList().OrderBy(s => s.Author);
-                    break;
-                case "Author_desc":
-                    orderedNews = news.ToList().OrderByDescending(s => s.Author);
-                    break;
-                default:
-                    orderedNews = news.ToList().OrderBy(s => s.Title);
-                    break;
+                news = news.Where(vm => vm.CreatedAt.ToString("dd.MM.yyyy").Equals(selectedCreateDate)).ToList();
             }
 
-            news = orderedNews.ToList();
+            var uniqueCreateDateList = news
+                .Where(vm => string.IsNullOrEmpty(selectedActivity) || vm.IsActive == bool.Parse(selectedActivity))
+                .Select(vm => vm.CreatedAt.Date)
+                .Distinct()
+                .OrderByDescending(date => date)
+                .ToList();
 
-            var paginationList = PaginationList<NewsViewModel>.Create(news.ToList(), pageNumber, pageSize);
+            ViewBag.UniqueCreateDate = uniqueCreateDateList
+                .Select(date => new SelectListItem
+                {
+                    Value = date.ToString("dd.MM.yyyy"),
+                    Text = date.ToString("dd.MM.yyyy")
+                });
+
+            ViewBag.SelectedCreateDate = selectedCreateDate;
+
+            // ...
+
+            if (!String.IsNullOrEmpty(selectedPublishDate))
+            {
+                news = news.Where(vm => vm.PublishedAt.ToString("dd.MM.yyyy").Equals(selectedPublishDate)).ToList();
+            }
+
+            var uniquePublishDates = news
+                .Select(vm => vm.PublishedAt.Date)
+                .Distinct()
+                .OrderByDescending(date => date)
+                .ToList();
+
+            ViewBag.UniquePublishDate = uniquePublishDates
+                .Select(date => new SelectListItem
+                {
+                    Value = date.ToString("dd.MM.yyyy"),
+                    Text = date.ToString("dd.MM.yyyy")
+                });
+
+            ViewBag.SelectedPublishDate = selectedPublishDate;
+
+            // ...
+
+            //var filteredNews = news; // Сохраняем отфильтрованный список новостей
+
+            if (!String.IsNullOrEmpty(selectedUpdateDate))
+            {
+                news = news.Where(vm => vm.UpdatedAt.ToString("dd.MM.yyyy").Equals(selectedUpdateDate)).ToList();
+            }
+
+            var uniqueUpdateList = news
+                .Where(vm => string.IsNullOrEmpty(selectedActivity) || vm.IsActive == bool.Parse(selectedActivity))
+                .Select(vm => vm.UpdatedAt.Date)
+                .Distinct()
+                .OrderByDescending(date => date)
+                .ToList();
+
+            ViewBag.UniqueUpdateDate = uniqueUpdateList
+                .Select(date => new SelectListItem
+                {
+                    Value = date.ToString("dd.MM.yyyy"),
+                    Text = date.ToString("dd.MM.yyyy")
+                });
+
+            ViewBag.SelectedUpdateDate = selectedUpdateDate;
+
+            // ...
+
+
+            if (!String.IsNullOrEmpty(selectedActivity))
+            {
+                bool isSelectedActivity = bool.Parse(selectedActivity);
+                news = news.Where(vm => vm.IsActive == isSelectedActivity).ToList();
+            }
+
+            var uniqueActivity = news
+                .GroupBy(vm => vm.IsActive)
+                .OrderBy(newGroup => newGroup.Key)
+                .Select(newGroup => new {IsActive = newGroup.Key})
+                .Select(vm => vm.IsActive);
+
+            ViewBag.UniqueActivity = uniqueActivity
+                .Select(v => new SelectListItem
+                {
+                    Value = v.ToString().ToLower(),
+                    Text = v.ToString().ToLower()
+                });
+
+            ViewBag.SelectedActivity = selectedActivity;
+
+            // Sort the news list by the PublishAt field in descending date order
+            IOrderedEnumerable<NewsViewModel> orderedNews = news.OrderByDescending(s => s.PublishedAt);
+
+            var paginationList = PaginationList<NewsViewModel>.Create(orderedNews.ToList(), pageNumber, pageSize);
 
             return await Task.FromResult<IActionResult>(View(paginationList));
         }

@@ -48,7 +48,12 @@
                 @using (Html.BeginForm("Index", "News", FormMethod.Get))
                 {
                     <!-- Table Filters -->
-                    @if (ViewBag.UniqueTitle != null && ViewBag.UniqueAuthor != null && ViewBag.SelectedTitle != null && ViewBag.SelectedAuthor != null)
+                    @if (ViewBag.UniqueTitle != null &&
+                         ViewBag.UniqueAuthor != null &&
+                         ViewBag.UniqueCreateDate != null &&
+                         ViewBag.UniquePublishDate != null &&
+                         ViewBag.UniqueUpdateDate != null &&
+                         ViewBag.UniqueActivity != null)
                     {
                         <tr>
                             <th>
@@ -56,7 +61,7 @@
                                     new SelectList(ViewBag.UniqueTitle, "Value", "Text", ViewBag.SelectedTitle),
                                     "All", new
                                     {
-                                        onchange = "form.submit();"
+                                        onchange = "form.submit()"
                                     })
                             </th>
 
@@ -67,10 +72,45 @@
                                     new SelectList(ViewBag.UniqueAuthor, "Value", "Text", ViewBag.SelectedAuthor),
                                     "All", new
                                     {
-                                        onchange = "form.submit();"
+                                        onchange = "form.submit()"
                                     })
                             </th>
 
+                            <th>
+                                @Html.DropDownList("SelectedCreateDate",
+                                    new SelectList(ViewBag.UniqueCreateDate, "Value", "Text", ViewBag.SelectedCreateDate),
+                                    "All", new
+                                    {
+                                        onchange = "form.submit()"
+                                    })
+                            </th>
+
+                            <th>
+                                @Html.DropDownList("SelectedPublishDate",
+                                    new SelectList(ViewBag.UniquePublishDate, "Value", "Text", ViewBag.SelectedPublishDate),
+                                    "All", new
+                                    {
+                                        onchange = "form.submit()"
+                                    })
+                            </th>
+
+                            <th>
+                                @Html.DropDownList("SelectedUpdateDate",
+                                    new SelectList(ViewBag.UniqueUpdateDate, "Value", "Text", ViewBag.SelectedUpdateDate),
+                                    "All", new
+                                    {
+                                        onchange = "form.submit()"
+                                    })
+                            </th>
+
+                            <th>
+                                @Html.DropDownList("SelectedActivity",
+                                    new SelectList(ViewBag.UniqueActivity, "Value", "Text", ViewBag.SelectedActivity),
+                                    "All", new
+                                    {
+                                        onchange = "form.submit()"
+                                    })
+                            </th>
                         </tr>
                     }
                     else
@@ -84,33 +124,11 @@
 
                     <!-- Table columns -->
                     <tr>
-                        @* <th> *@
-                        @*     @Html.ActionLink("Title", "Index", new *@
-                        @*     { *@
-                        @*         SortOrder = ViewBag.Title, *@
-                        @*         SelectedTitle = ViewBag.SelectedTitle, *@
-                        @*         SelectedAuthor = ViewBag.SelectedAuthor *@
-                        @*     }) *@
-                        @* </th> *@
-
                         <th>Title</th>
-                        
                         <th>Description</th>
-                        
                         <th>Author</th>
-
-                        @* <th> *@
-                        @*     @Html.ActionLink("Author", "Index", *@
-                        @*         new *@
-                        @*         { *@
-                        @*             SortOrder = ViewBag.Author, *@
-                        @*             SelectedTitle = ViewBag.SelectedTitle, *@
-                        @*             SelectedAuthor = ViewBag.SelectedAuthor *@
-                        @*         }) *@
-                        @* </th> *@
-
                         <th>Create date</th>
-                        <th>Publishe date</th>
+                        <th>Publish date</th>
                         <th>Update date</th>
                         <th>Activity</th>
                         <th style="text-align:center">Actions</th>
