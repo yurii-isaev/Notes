@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using NToastNotify;
+using SalesCrm.Controllers.Options;
 using SalesCrm.Controllers.ViewModels;
 using SalesCrm.Services.Contracts.Services;
 using SalesCrm.Services.Input;
@@ -28,165 +29,138 @@ public class NewsController : Controller
 
     [Route("/admin/news")]
     [HttpGet]
-    public async Task<IActionResult> Index
-    (
-        int pageNumber = 1,
-        int pageSize = 7,
-        string sortOrder           = null!,
-        string selectedTitle       = null!,
-        string selectedAuthor      = null!,
-        string selectedCreateDate  = null!,
-        string selectedPublishDate = null!,
-        string selectedUpdateDate  = null!,
-        string selectedActivity    = null!
-    )
+    public async Task<IActionResult> Index(NewsParametersModel prms)
     {
         try
         {
-            IEnumerable<NewsViewModel> news = _newsService.GetNewsListAsync()
+            IEnumerable<NewsViewModel> newsList = _newsService.GetNewsListAsync()
                 .Result
                 .Select(news => _mapper.Map<NewsViewModel>(news))
                 .ToList();
 
-            if (!String.IsNullOrEmpty(selectedTitle))
-            {
-                news = news.Where(vm => vm.Title!.Equals(selectedTitle.Trim())).ToList();
-            }
+            // Unrefactorable code !!
+            // because when changing the news List,
+            // the logic of displaying the filter drop-down menu does not work in any way.
 
-            var uniqueTitleList = news
-                .Where(vm => string.IsNullOrEmpty(selectedActivity) || vm.IsActive == bool.Parse(selectedActivity))
-                // .Where(viewModel => viewModel.Title != null)
+            var filterOptions = new NewsFilterOptions
+            {
+                Title = prms.SelectedTitle,
+                Author = prms.SelectedAuthor,
+                CreateDate = prms.SelectedCreateDate,
+                PublishDate = prms.SelectedPublishDate,
+                UpdateDate = prms.SelectedUpdateDate,
+                Activity = prms.SelectedActivity
+            };
+
+            newsList = filterOptions.ApplyFilter(newsList);
+
+            var uniqueTitleList = newsList
                 .GroupBy(vm => vm.Title)
                 .OrderBy(newGroup => newGroup.Key)
                 .Select(newGroup => new {Title = newGroup.Key});
 
+            // Сlosure function !!
             ViewBag.UniqueTitle = uniqueTitleList
-                .Select(s => new SelectListItem 
-                {
-                    Value = s.Title, Text = s.Title
-                });
+                .Where(v => newsList.Any(vm => vm.Title == v.Title))
+                .Select(v => new SelectListItem {Value = v.Title, Text = v.Title});
 
-            ViewBag.SelectedTitle = selectedTitle;
+            ViewBag.SelectedTitle = prms.SelectedTitle!;
 
             // ...
 
-            if (!String.IsNullOrEmpty(selectedAuthor))
-            {
-                news = news.Where(vm => vm.Author!.UserName!.Trim().Equals(selectedAuthor.Trim())).ToList();
-            }
-
-            var uniqueAuthorList = news
+            var uniqueAuthorList = newsList
                 .Where(vm => vm.Author != null)
                 .GroupBy(vm => vm.Author)
                 .OrderBy(newGroup => newGroup.Key)
                 .Select(newGroup => new {Author = newGroup.Key});
 
+            // Сlosure function !!
             ViewBag.UniqueAuthor = uniqueAuthorList
-                .Select(s => new SelectListItem 
+                .Where(user => newsList.Any(vm => vm.Author == user.Author))
+                .Select(s => new SelectListItem
                 {
                     Value = s.Author!.UserName, Text = s.Author.UserName
                 });
 
-            ViewBag.SelectedAuthor = selectedAuthor;
+            ViewBag.SelectedAuthor = prms.SelectedAuthor!;
 
             // ...
 
-            if (!String.IsNullOrEmpty(selectedCreateDate))
-            {
-                news = news.Where(vm => vm.CreatedAt.ToString("dd.MM.yyyy").Equals(selectedCreateDate)).ToList();
-            }
-
-            var uniqueCreateDateList = news
-                .Where(vm => string.IsNullOrEmpty(selectedActivity) || vm.IsActive == bool.Parse(selectedActivity))
+            var uniqueCreateDateList = newsList
                 .Select(vm => vm.CreatedAt.Date)
                 .Distinct()
                 .OrderByDescending(date => date)
                 .ToList();
 
+            // Сlosure function !!
             ViewBag.UniqueCreateDate = uniqueCreateDateList
+                .Where(date => newsList.Any(vm => vm.CreatedAt.Date == date))
                 .Select(date => new SelectListItem
                 {
                     Value = date.ToString("dd.MM.yyyy"),
                     Text = date.ToString("dd.MM.yyyy")
                 });
 
-            ViewBag.SelectedCreateDate = selectedCreateDate;
+            ViewBag.SelectedCreateDate = prms.SelectedCreateDate!;
 
             // ...
 
-            if (!String.IsNullOrEmpty(selectedPublishDate))
-            {
-                news = news.Where(vm => vm.PublishedAt.ToString("dd.MM.yyyy").Equals(selectedPublishDate)).ToList();
-            }
-
-            var uniquePublishDates = news
+            var uniquePublishDateList = newsList
                 .Select(vm => vm.PublishedAt.Date)
                 .Distinct()
                 .OrderByDescending(date => date)
                 .ToList();
 
-            ViewBag.UniquePublishDate = uniquePublishDates
+            // Сlosure function !!
+            ViewBag.UniquePublishDate = uniquePublishDateList
+                .Where(date => newsList.Any(vm => vm.PublishedAt.Date == date))
                 .Select(date => new SelectListItem
                 {
                     Value = date.ToString("dd.MM.yyyy"),
                     Text = date.ToString("dd.MM.yyyy")
                 });
 
-            ViewBag.SelectedPublishDate = selectedPublishDate;
+            ViewBag.SelectedPublishDate = prms.SelectedPublishDate!;
 
             // ...
 
-            //var filteredNews = news; // Сохраняем отфильтрованный список новостей
-
-            if (!String.IsNullOrEmpty(selectedUpdateDate))
-            {
-                news = news.Where(vm => vm.UpdatedAt.ToString("dd.MM.yyyy").Equals(selectedUpdateDate)).ToList();
-            }
-
-            var uniqueUpdateList = news
-                .Where(vm => string.IsNullOrEmpty(selectedActivity) || vm.IsActive == bool.Parse(selectedActivity))
+            var uniqueUpdateList = newsList
+                .Where(vm =>
+                    string.IsNullOrEmpty(prms.SelectedActivity) || vm.IsActive == bool.Parse(prms.SelectedActivity))
                 .Select(vm => vm.UpdatedAt.Date)
                 .Distinct()
                 .OrderByDescending(date => date)
                 .ToList();
 
-            ViewBag.UniqueUpdateDate = uniqueUpdateList
-                .Select(date => new SelectListItem
-                {
-                    Value = date.ToString("dd.MM.yyyy"),
-                    Text = date.ToString("dd.MM.yyyy")
-                });
+            ViewBag.UniqueUpdateDate = uniqueUpdateList.Select(date => new SelectListItem
+            {
+                Value = date.ToString("dd.MM.yyyy"),
+                Text = date.ToString("dd.MM.yyyy")
+            });
 
-            ViewBag.SelectedUpdateDate = selectedUpdateDate;
+            ViewBag.SelectedUpdateDate = prms.SelectedUpdateDate!;
 
             // ...
 
-
-            if (!String.IsNullOrEmpty(selectedActivity))
-            {
-                bool isSelectedActivity = bool.Parse(selectedActivity);
-                news = news.Where(vm => vm.IsActive == isSelectedActivity).ToList();
-            }
-
-            var uniqueActivity = news
+            var uniqueActivity = newsList
                 .GroupBy(vm => vm.IsActive)
                 .OrderBy(newGroup => newGroup.Key)
                 .Select(newGroup => new {IsActive = newGroup.Key})
                 .Select(vm => vm.IsActive);
 
-            ViewBag.UniqueActivity = uniqueActivity
-                .Select(v => new SelectListItem
-                {
-                    Value = v.ToString().ToLower(),
-                    Text = v.ToString().ToLower()
-                });
+            ViewBag.UniqueActivity = uniqueActivity.Select(v => new SelectListItem
+            {
+                Value = v.ToString().ToLower(),
+                Text = v.ToString().ToLower()
+            });
 
-            ViewBag.SelectedActivity = selectedActivity;
+            ViewBag.SelectedActivity = prms.SelectedActivity!;
 
             // Sort the news list by the PublishAt field in descending date order
-            IOrderedEnumerable<NewsViewModel> orderedNews = news.OrderByDescending(s => s.PublishedAt);
+            IList<NewsViewModel> orderedNewsList = newsList.OrderByDescending(s => s.PublishedAt).ToList();
 
-            var paginationList = PaginationList<NewsViewModel>.Create(orderedNews.ToList(), pageNumber, pageSize);
+            var paginationList =
+                PaginationList<NewsViewModel>.Create(orderedNewsList, prms.PageNumber, prms.PageSize);
 
             return await Task.FromResult<IActionResult>(View(paginationList));
         }

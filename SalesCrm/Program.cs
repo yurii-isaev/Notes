@@ -72,9 +72,6 @@ public class Program
                 config.CreateMap<EmployeeDto, Employee>();
                 config.CreateMap<Employee, EmployeeDto>();
 
-                config.CreateMap<EmployeeListViewModel, Employee>();
-                config.CreateMap<Employee, EmployeeListViewModel>();
-                
                 config.CreateMap<TaxYearViewModel, TaxYearDto>();
                 config.CreateMap<TaxYearDto, TaxYearViewModel>();
                 config.CreateMap<TaxYear, TaxYearDto>();
@@ -102,7 +99,6 @@ public class Program
         {
             opts.Conventions.AddPageRoute("/Error", "/Error");
         });
-        
         #endregion
 
         #region Configure the HTTP request pipeline

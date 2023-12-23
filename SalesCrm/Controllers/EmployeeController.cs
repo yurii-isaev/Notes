@@ -1,6 +1,8 @@
+using System.Diagnostics;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
+using SalesCrm.Controllers.Options;
 using SalesCrm.Controllers.ViewModels;
 using SalesCrm.Services.Contracts.Services;
 using SalesCrm.Services.Input;
@@ -21,18 +23,27 @@ public class EmployeeController : Controller
         _toast = toast;
     }
     
-    public async Task<IActionResult> Index(string keyword, int pageNumber = 1, int pageSize = 5)
+    public async Task<IActionResult> Index(NewsParametersModel prms)
     {
-        ViewBag.keyword = keyword;
+        try
+        {
+            ViewBag.keyword = prms.Keyword!;
+
+            IList<EmployeeViewModel> employeeList = _employeeService.GetEmployeeListAsync(prms.Keyword!).Result
+                .Select(emp => _mapper.Map<EmployeeViewModel>(emp))
+                .ToList();
+
+            // Sort the news list by the PublishAt field in descending date order
+            IList<EmployeeViewModel> orderedEmployeeList = employeeList.OrderByDescending(s => s.DateJoined).ToList();
         
-        List<EmployeeListViewModel> list = _employeeService.GetEmployeeListAsync(keyword)
-            .Result
-            .Select(emp => _mapper.Map<EmployeeListViewModel>(emp))
-            .ToList();
+            var paginationList = PaginationList<EmployeeViewModel>.Create(orderedEmployeeList, prms.PageNumber, prms.PageSize);
 
-        var paginationList = PaginationList<EmployeeListViewModel>.Create(list, pageNumber, pageSize);
-
-        return await Task.FromResult<IActionResult>(View(paginationList));
+            return await Task.FromResult<IActionResult>(View(paginationList));
+        }
+        catch (Exception)
+        {
+            return RedirectToAction("Error");
+        }
     }
 
     [Route("/employee/create")]
@@ -116,5 +127,14 @@ public class EmployeeController : Controller
         }
 
         return RedirectToAction("Index");
+    }
+    
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error()
+    {
+        return View(new ErrorViewModel
+        {
+            RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+        });
     }
 }
