@@ -1,9 +1,10 @@
 @using SalesCrm.Views.Components.Pagination
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@model SalesCrm.Views.Components.Pagination.PaginationList<SalesCrm.Controllers.ViewModels.EmployeeListViewModel>
+@model SalesCrm.Views.Components.Pagination.PaginationList<SalesCrm.Controllers.ViewModels.EmployeeViewModel>
 
 @{
     ViewData["Title"] = "Employee List";
+    ViewData["Sort"] = "Sort the field alphabetically";
 }
 
 <div class="row">
@@ -47,17 +48,35 @@
             <table id="employeeTable" class="table table-striped">
                 <thead>
                 <tr>
-                    <th onclick="sortTable('Name')">
+                    <th onclick="sortTable('Name')" id="nameHeader" title="@ViewData["Sort"]">
                         Name
-                        <span id="nameFilter" class="filter-icon">&#x25B2;</span>
+                        <span id="nameFilter" class="filter-icon">&#x25BC;</span>
                     </th>
 
-                    <th>Gender</th>
+                    <th onclick="sortTable('Gender')" id="genderHeader" title="@ViewData["Sort"]">
+                        Gender
+                        <span id="genderFilter" class="filter-icon">&#x25BC;</span>
+                    </th>
+
                     <th>Photo</th>
-                    <th>Data Joined</th>
-                    <th>Designation</th>
-                    <th>City</th>
+
+                    <th onclick="sortDateTable('dataJoined')" id="dataJoinedHeader" title="@ViewData["Sort"]">
+                        Data Joined
+                        <span id="dataJoinedFilter" class="filter-icon">&#x25BC;</span>
+                    </th>
+
+                    <th onclick="sortTable('Designation')" id="designationHeader" title="@ViewData["Sort"]">
+                        Designation
+                        <span id="designationFilter" class="filter-icon">&#x25BC;</span>
+                    </th>
+
+                    <th onclick="sortTable('City')" id="cityHeader" title="@ViewData["Sort"]">
+                        City
+                        <span id="cityFilter" class="filter-icon">&#x25BC;</span>
+                    </th>
+
                     <th style="text-align:center">Actions</th>
+
                 </tr>
                 </thead>
                 <tbody>
@@ -105,59 +124,125 @@
 
 @section Scripts {
 
-    @Html.Partial("../Components/DeleteModal/_DeleteConfirmationModal")
+    @await Html.PartialAsync("../Shared/_DeleteConfirmationModal")
 
     <script>
    
        // Add filters for other fields in the table
-       var filters = {'Name': ''};
-   
+       var filters = {
+           'Name': '',
+           'Gender': '',
+           'Date Joined': '',
+           'Designation': '',
+           'City': ''
+       };
+       
+       var arrowUpSymbol   = "▼";
+       var arrowDownSymbol = "▲";
+       var table = document.getElementById("employeeTable");
+       var rows  = table.rows;
+            
+        function sortDateTable(columnName) {
+            // Clear All Filters in Column Headers
+            var filterElements = document.querySelectorAll("th span[id$='Filter']");
+            for (var i = 0; i < filterElements.length; i++) {
+                filterElements[i].innerHTML = '';
+            }
+        
+            // Define Sort Direction
+            var sortOrder = arrowDownSymbol;
+            if (columnName === table.getAttribute("data-sort-column") && table.getAttribute("data-sort-order") === arrowDownSymbol) {
+                sortOrder = arrowUpSymbol;
+            }
+        
+            // Set Filter in Column Header
+            var filterElement = document.getElementById(columnName + "Filter");
+            filterElement.innerHTML = sortOrder;
+        
+            // Save information about the current filter and sorting in table attributes
+            table.setAttribute("data-sort-column", columnName);
+            table.setAttribute("data-sort-order", sortOrder);
+        
+            // Sorting Table Rows
+            var sortIndex = filterElement.parentNode.cellIndex;
+            var sortArray = [];
+            for (var i = 1; i < rows.length; i++) {
+                var row = rows[i];
+                var cellValue = row.cells[sortIndex].textContent || row.cells[sortIndex].innerText;
+                sortArray.push([cellValue, row]);
+            }
+        
+            sortArray.sort(function(a, b) {
+                if (!isNaN(Date.parse(a[0])) && !isNaN(Date.parse(b[0]))) {
+                    // Compare dates if both values are valid dates
+                    var dateA = new Date(a[0]);
+                    var dateB = new Date(b[0]);
+                    return dateB - dateA; // Change here for descending order by default
+                } else {
+                    // Compare as strings if either value is not a valid date
+                    return a[0].localeCompare(b[0]);
+                }
+            });
+        
+            if (sortOrder === arrowUpSymbol) {
+                sortArray.reverse();
+            }
+        
+            for (var i = 0; i < sortArray.length; i++) {
+                table.tBodies[0].appendChild(sortArray[i][1]);
+            }
+        }
+      
        function sortTable(columnName) {
-           var table = document.getElementById("employeeTable");
-           var rows = table.rows;
-           var arrowUpSymbol = "&#x25B2;";
-           var arrowDownSymbol = "&#x25BC;";
-   
-           // Clear All Filters in Column Headers
+            // Clear All Filters in Column Headers
            var filterElements = document.querySelectorAll("th span[id$='Filter']");
            for (var i = 0; i < filterElements.length; i++) {
                filterElements[i].innerHTML = '';
            }
-   
+                    
            // Define Sort Direction
            var sortOrder = arrowUpSymbol;
            if (columnName === table.getAttribute("data-sort-column") && table.getAttribute("data-sort-order") === arrowUpSymbol) {
                sortOrder = arrowDownSymbol;
            }
-   
+                    
            // Set Filter in Column Header
            var filterElement = document.getElementById(columnName.toLowerCase() + "Filter");
            filterElement.innerHTML = sortOrder;
-   
+                    
            // Save information about the current filter and sorting in table attributes
            table.setAttribute("data-sort-column", columnName);
            table.setAttribute("data-sort-order", sortOrder);
-   
+                    
            // Updating Filters
            filters[columnName] = sortOrder === arrowUpSymbol ? 'asc' : 'desc';
-   
+                    
            // Sorting Table Rows
            var sortIndex = filterElement.parentNode.cellIndex;
            var sortArray = [];
+           
            for (var i = 1; i < rows.length; i++) {
                var row = rows[i];
                var cellValue = row.cells[sortIndex].textContent || row.cells[sortIndex].innerText;
                sortArray.push([cellValue, row]);
            }
-   
+                    
            sortArray.sort(function(a, b) {
-               return a[0].localeCompare(b[0]);
+               if (!isNaN(Date.parse(a[0])) && !isNaN(Date.parse(b[0]))) {
+                   // Compare dates if both values are valid dates
+                   var dateA = new Date(a[0]);
+                   var dateB = new Date(b[0]);
+                   return dateB - dateA;
+               } else {
+                   // Compare as strings if either value is not a valid date
+                   return a[0].localeCompare(b[0]);
+               }
            });
-   
+                    
            if (filters[columnName] === 'desc') {
                sortArray.reverse();
            }
-   
+                    
            for (var i = 0; i < sortArray.length; i++) {
                table.tBodies[0].appendChild(sortArray[i][1]);
            }
@@ -167,7 +252,7 @@
 
 <style>
     .filter-icon {
-       color: #5b4ea1;
+       color: #9497d9;
     }
           
     th:hover .filter-icon {

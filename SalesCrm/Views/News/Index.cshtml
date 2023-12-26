@@ -179,9 +179,7 @@
 
 @section Scripts
 {
-    @{
-        @Html.Partial("../Components/DeleteModal/_DeleteConfirmationModal")
-    }
+    @await Html.PartialAsync("../Shared/_DeleteConfirmationModal")
 }
 
 <style>
