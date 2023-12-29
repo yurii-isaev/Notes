@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NToastNotify;
+using SalesCrm.Controllers.Providers;
 using SalesCrm.Controllers.ViewModels;
 using SalesCrm.DataAccess;
 using SalesCrm.DataAccess.Repositories;
@@ -50,6 +51,7 @@ public class Program
         services.AddTransient<IPaymentRecordRepository, PaymentRecordRepository>();
         
         services.AddTransient<IRoleService, RoleService>();
+        services.AddTransient<IHttpStatusCodeDescriptionProvider, HttpStatusCodeDescriptionProvider>();
 
         services
             .AddDefaultIdentity<User>(opts => opts.SignIn.RequireConfirmedAccount = false)
@@ -84,6 +86,11 @@ public class Program
                 
                 config.CreateMap<UserViewModel, IdentityUser>();
                 config.CreateMap<IdentityUser, UserViewModel>();
+                
+                config.CreateMap<RoleViewModel, RoleDto>();
+                config.CreateMap<RoleDto, RoleViewModel>();
+                config.CreateMap<RoleDto, IdentityRole>();
+                config.CreateMap<IdentityRole, RoleDto>();
                 
                 config.CreateMap<NewsViewModel, NewsDto>();
                 config.CreateMap<NewsDto, NewsViewModel>();

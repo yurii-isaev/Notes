@@ -1,59 +1,77 @@
+using System.Net;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NToastNotify;
 using SalesCrm.Services.Contracts.Services;
+using SalesCrm.Services.Exceptions;
+using SalesCrm.Services.Input;
 
 namespace SalesCrm.Services;
 
 public class RoleService : IRoleService
 {
     private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly IMapper _mapper;
+    private readonly ILogger<RoleService> _logger;
     private readonly IToastNotification _toast;
-    private readonly ILogger<NewsService> _logger;
 
     public RoleService
     (
         RoleManager<IdentityRole> roleManager,
-        ILogger<NewsService> log,
-        IToastNotification toastNotification
+        ILogger<RoleService> log,
+        IToastNotification toastNotification, IMapper mapper
     )
     {
         _roleManager = roleManager;
         _logger = log;
         _toast = toastNotification;
+        _mapper = mapper;
     }
 
-    public Task<IEnumerable<IdentityRole>> GetRolesAsync()
+    public Task<IEnumerable<RoleDto>> GetRolesAsync()
     {
         try
         {
-            return Task.FromResult<IEnumerable<IdentityRole>>(_roleManager.Roles);
+            IQueryable<IdentityRole> list = _roleManager.Roles;
+            var roleList = _mapper.Map<IEnumerable<RoleDto>>(list);
+            return Task.FromResult(roleList);
         }
         catch (Exception ex)
         {
-            _logger.LogError("An error occurred while creating a role: " + ex.Message);
-            return null!;
+            _logger.LogError("An error occurred while getting a role: " + ex.Message);
+            return Task.FromResult<IEnumerable<RoleDto>>(null!);
         }
     }
 
-    public Task CreateRoleAsync(IdentityRole role)
+    public async Task CreateRoleAsync(RoleDto dto)
     {
         try
         {
-            if (role.Name != null && !_roleManager.RoleExistsAsync(role.Name).GetAwaiter().GetResult())
+            if (dto.Name != null)
             {
-                _roleManager.CreateAsync(new IdentityRole(role.Name)).GetAwaiter().GetResult();
+                bool roleExists = await _roleManager.RoleExistsAsync(dto.Name);
+
+                if (!roleExists)
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(dto.Name));
+                }
+                else
+                {
+                    throw new RoleExistsException("Role already exists");
+                }
             }
-
-            _toast.AddSuccessToastMessage("Role successfully created");
         }
-        catch (Exception ex)
+        catch (RoleExistsException ex)
         {
-            _logger.LogError("An error occurred while creating a role: " + ex.Message);
-            _toast.AddErrorToastMessage("Error creating role");
+            _logger.LogError("[Create Role]\n" + ex.Message + "\n\n");
+            throw new RoleExistsException(ex.Message);
         }
-
-        return Task.CompletedTask;
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError("[Create Role]\n" + ex.Message + "\n\n");
+            throw new HttpRequestException(ex.Message, ex, HttpStatusCode.InternalServerError);
+        }
     }
 
     public async Task<IdentityRole> GetRoleNameAsync(string roleId)

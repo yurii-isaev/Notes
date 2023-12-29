@@ -1,16 +1,12 @@
-using Microsoft.AspNetCore.Identity;
+using SalesCrm.Services.Input;
 
 namespace SalesCrm.Services.Contracts.Services;
 
 public interface IRoleService
 {
-    Task<IEnumerable<IdentityRole>> GetRolesAsync();
-    
-    Task CreateRoleAsync(IdentityRole role);
-    
-    Task<IdentityRole> GetRoleNameAsync(string roleId);
-    
-    Task UpdateRoleAsync(IdentityRole newRole);
-
-    Task DeleteRoleAsync(string id);
+    Task<IEnumerable<RoleDto>> GetRolesAsync();
+    Task CreateRoleAsync(RoleDto role);
+    Task<RoleDto> GetRoleNameAsync(string roleId);
+    Task UpdateRoleAsync(RoleDto newRole);
+    Task DeleteRoleAsync(string roleId);
 }
