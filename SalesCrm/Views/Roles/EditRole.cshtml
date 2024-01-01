@@ -1,32 +1,68 @@
-@model Microsoft.AspNetCore.Identity.IdentityRole
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model SalesCrm.Controllers.ViewModels.RoleViewModel
+
 @{
-    ViewData["Title"] = "Edit Role";
+    ViewData["List"] = "Roles List";
+    ViewData["Title"] = "Edit role";
 }
 
-<!-- Breadcrumb -->
-<nav aria-label="breadcrumb">
-    <a asp-action="Index" class="btn btn-secondary">< Back to list</a>
-    <br/>
-    <br/>
-</nav>
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-body">
 
-<div class="row d-flex justify-content-start">
-    <div class="col-md-8">
-        <h4>Edit role</h4>
-        <hr/>
-        <br/>
-        <form method="post" action="">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label asp-for="Name" class="control-label"></label>
-                    <input asp-for="Name" class="form-control"/>
-                    <span asp-validation-for="Name" class="text-danger"></span>
+            <!-- Card breadcrumb -->
+            @await Html.PartialAsync("_BreadcrumbPartial", new[]
+            {
+                @ViewData["List"]!.ToString(),
+                @ViewData["Title"]!.ToString()
+            })
+            <!-- Card breadcrumb  -->
+            <br/>
+
+            <!-- Card title -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="page-title">@ViewData["Title"]</h2>
                 </div>
             </div>
             <br/>
-           <button type="submit" class="btn btn-primary">Update</button>
-        </form>
+            <!-- Card title -->
+
+            <form method="post">
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="Name" class="form-label"></label>
+                                <input asp-for="Name" class="form-control" placeholder="Enter role name"/>
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                                @if (ViewData.ModelState.Any(ms => ms.Value!.Errors.Count > 0))
+                                {
+                                    <div class="text-danger">
+                                        @foreach (var error in ViewData.ModelState.SelectMany(ms => ms.Value!.Errors))
+                                        {
+                                            <p>@(error.ErrorMessage.TrimEnd('.') + ".")</p>
+                                        }
+                                    </div>
+                                }
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-3">
+                            <button type="submit" class="btn btn-rounded btn-primary">
+                                Update
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
+@section Scripts
+{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

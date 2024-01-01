@@ -33,7 +33,6 @@ public class RolesController : Controller
         _httpStatusProvider = httpStatusProvider;
     }
 
-
     [HttpGet]
     [Route("/roles")]
     public async Task<IActionResult> Index()
@@ -97,10 +96,7 @@ public class RolesController : Controller
                 {
                     // Handle the case where StatusCode is null.
                     // For example, you might want to use a default status code.
-                    return RedirectToAction("Error", new
-                    {
-                        message = 500
-                    });
+                    return RedirectToAction("Error", new {message = 500});
                 }
             }
         }
@@ -112,15 +108,66 @@ public class RolesController : Controller
     [Route("/roles/edit/{id}")]
     public async Task<IActionResult> EditRole(string id)
     {
-        var role = await _roleService.GetRoleNameAsync(id);
-        return View(role);
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                var role = await _roleService.GetRoleNameAsync(id);
+                var viewModel = _mapper.Map<RoleViewModel>(role);
+                return await Task.FromResult<IActionResult>(View(viewModel));
+            }
+            catch
+            {
+                return RedirectToAction("Error");
+            }
+        }
+
+        return RedirectToAction("Index");
     }
 
     [HttpPost]
     [Route("/roles/edit/{id}")]
-    public async Task<IActionResult> Edit(RoleViewModel role)
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(RoleViewModel viewModel)
     {
-        await _roleService.UpdateRoleAsync(role);
+        if (ModelState.IsValid)
+        {
+            try
+            {
+                var dto = _mapper.Map<RoleDto>(viewModel);
+                await _roleService.UpdateRoleAsync(dto);
+                _toast.AddSuccessToastMessage("Role updated successfully");
+            }
+            catch (RoleExistsException ex)
+            {
+                _toast.AddErrorToastMessage("Error updating role");
+                ModelState.AddModelError("", ex.Message);
+                return View("EditRole");
+            }
+            catch (HttpRequestException ex)
+            {
+                _toast.AddErrorToastMessage("Error updating role");
+                int? statusCode = (int?) ex.StatusCode;
+
+                if (statusCode.HasValue)
+                {
+                    string statusDescription = _httpStatusProvider.GetStatusDescription(statusCode.Value)!;
+
+                    return RedirectToAction("Error", new
+                    {
+                        statusCode = statusCode.Value,
+                        message = statusDescription
+                    });
+                }
+                else
+                {
+                    // Handle the case where StatusCode is null.
+                    // For example, you might want to use a default status code.
+                    return RedirectToAction("Error", new {message = 500});
+                }
+            }
+        }
+
         return RedirectToAction("Index");
     }
 

@@ -1,7 +1,6 @@
 using System.Net;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using NToastNotify;
 using SalesCrm.Services.Contracts.Services;
 using SalesCrm.Services.Exceptions;
@@ -20,7 +19,8 @@ public class RoleService : IRoleService
     (
         RoleManager<IdentityRole> roleManager,
         ILogger<RoleService> log,
-        IToastNotification toastNotification, IMapper mapper
+        IToastNotification toastNotification,
+        IMapper mapper
     )
     {
         _roleManager = roleManager;
@@ -74,41 +74,48 @@ public class RoleService : IRoleService
         }
     }
 
-    public async Task<IdentityRole> GetRoleNameAsync(string roleId)
+    // For role edit view
+    public async Task<RoleDto> GetRoleNameAsync(string roleId)
     {
-        return (await _roleManager.FindByIdAsync(roleId))!;
+        var role = await _roleManager.FindByIdAsync(roleId);
+        var dto = _mapper.Map<RoleDto>(role);
+        return dto;
     }
 
-    public async Task UpdateRoleAsync(IdentityRole newRole)
+    // For role edit view update method
+    public async Task UpdateRoleAsync(RoleDto newRole)
     {
-        var roleToUpdate = await _roleManager.FindByIdAsync(newRole.Id);
-
-        if (roleToUpdate == null)
-        {
-            _toast.AddErrorToastMessage("not found");
-        }
-
-        roleToUpdate!.Name = newRole.Name;
-
         try
         {
-            var updateResult = await _roleManager.UpdateAsync(roleToUpdate);
+            if (newRole.Name != null)
+            {
+                bool roleExists = await _roleManager.RoleExistsAsync(newRole.Name);
 
-            if (updateResult.Succeeded)
-            {
-                _toast.AddSuccessToastMessage("Role successfully created");
-            }
-            else
-            {
-                _toast.AddErrorToastMessage("Error updating role name");
+                if (!roleExists)
+                {
+                    var roleToUpdate = await _roleManager.FindByIdAsync(newRole.Id);
+
+                    if (roleToUpdate?.Name != null)
+                    {
+                        roleToUpdate.Name = newRole.Name;
+                        await _roleManager.UpdateAsync(roleToUpdate);
+                    }
+                }
+                else
+                {
+                    throw new RoleExistsException("Role already exists");
+                }
             }
         }
-
-        catch (DbUpdateConcurrencyException ex)
+        catch (RoleExistsException ex)
         {
-            _logger.LogError(ex, "Exception occurred during role update");
-            _toast.AddErrorToastMessage("Exception occurred during role update");
-            throw;
+            _logger.LogError("[Update Role]\n" + ex.Message + "\n\n");
+            throw new RoleExistsException(ex.Message);
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError("[Update Role]\n" + ex.Message + "\n\n");
+            throw new HttpRequestException(ex.Message, ex, HttpStatusCode.InternalServerError);
         }
     }
 
