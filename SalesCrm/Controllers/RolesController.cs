@@ -14,10 +14,10 @@ namespace SalesCrm.Controllers;
 [Authorize(Roles = "Admin")]
 public class RolesController : Controller
 {
-    private readonly IRoleService _roleService;
-    private readonly IMapper _mapper;
-    private readonly IToastNotification _toast;
-    private readonly IHttpStatusCodeDescriptionProvider _httpStatusProvider;
+    readonly IRoleService _roleService;
+    readonly IMapper _mapper;
+    readonly IToastNotification _toast;
+    readonly IHttpStatusCodeDescriptionProvider _httpStatusProvider;
 
     public RolesController
     (
@@ -61,6 +61,7 @@ public class RolesController : Controller
 
     [HttpPost]
     [Route("/roles/create")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(RoleViewModel viewModel)
     {
         if (ModelState.IsValid)
@@ -94,9 +95,7 @@ public class RolesController : Controller
                 }
                 else
                 {
-                    // Handle the case where StatusCode is null.
-                    // For example, you might want to use a default status code.
-                    return RedirectToAction("Error", new {message = 500});
+                    return RedirectToAction("Error");
                 }
             }
         }
@@ -161,9 +160,7 @@ public class RolesController : Controller
                 }
                 else
                 {
-                    // Handle the case where StatusCode is null.
-                    // For example, you might want to use a default status code.
-                    return RedirectToAction("Error", new {message = 500});
+                    return RedirectToAction("Error");
                 }
             }
         }
@@ -175,7 +172,17 @@ public class RolesController : Controller
     [Route("/roles/delete/{id}")]
     public async Task<IActionResult> DeleteRole(string id)
     {
-        await _roleService.DeleteRoleAsync(id);
+        try
+        {
+            _toast.AddSuccessToastMessage("Role delete successfully");
+            await _roleService.DeleteRoleAsync(id);
+        }
+        catch
+        {
+            _toast.AddErrorToastMessage("Error deleting role");
+            return RedirectToAction("Error");
+        }
+
         return RedirectToAction("Index");
     }
 
@@ -184,9 +191,9 @@ public class RolesController : Controller
     {
         return View(new ErrorViewModel
         {
-            RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+            RequestId  = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
             StatusCode = statusCode ?? 500,
-            Message = message
+            Message    = message ?? "Internal Server Error"
         });
     }
 }

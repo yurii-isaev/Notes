@@ -1,7 +1,6 @@
 using System.Net;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using NToastNotify;
 using SalesCrm.Services.Contracts.Services;
 using SalesCrm.Services.Exceptions;
 using SalesCrm.Services.Input;
@@ -10,22 +9,14 @@ namespace SalesCrm.Services;
 
 public class RoleService : IRoleService
 {
-    private readonly RoleManager<IdentityRole> _roleManager;
-    private readonly IMapper _mapper;
-    private readonly ILogger<RoleService> _logger;
-    private readonly IToastNotification _toast;
+    readonly RoleManager<IdentityRole> _roleManager;
+    readonly IMapper _mapper;
+    readonly ILogger<RoleService> _logger;
 
-    public RoleService
-    (
-        RoleManager<IdentityRole> roleManager,
-        ILogger<RoleService> log,
-        IToastNotification toastNotification,
-        IMapper mapper
-    )
+    public RoleService(RoleManager<IdentityRole> roleManager, ILogger<RoleService> log, IMapper mapper)
     {
         _roleManager = roleManager;
         _logger = log;
-        _toast = toastNotification;
         _mapper = mapper;
     }
 
@@ -125,26 +116,15 @@ public class RoleService : IRoleService
         {
             var role = await _roleManager.FindByIdAsync(id);
 
-            // Удаляем роль
             if (role != null)
             {
-                var result = await _roleManager.DeleteAsync(role);
-
-                if (result.Succeeded)
-                {
-                    _toast.AddSuccessToastMessage("Role successfully deleted");
-                }
-                else
-                {
-                    _toast.AddErrorToastMessage("Error deleting role name");
-                }
+                await _roleManager.DeleteAsync(role);
             }
         }
-        catch (Exception ex)
+        catch (HttpRequestException ex)
         {
-            _logger.LogError("An error occurred while deleting role: " + ex.Message);
-            _toast.AddErrorToastMessage("Exception deleting role");
-            throw;
+            _logger.LogError("[Delete Role]\n" + ex.Message + "\n\n");
+            throw new HttpRequestException(ex.Message, ex, HttpStatusCode.InternalServerError);
         }
     }
 }

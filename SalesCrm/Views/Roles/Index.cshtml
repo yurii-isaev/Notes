@@ -1,7 +1,7 @@
 ﻿@model List<SalesCrm.Controllers.ViewModels.RoleViewModel>
 
 @{
-    ViewData["Title"] = "Application Roles";
+    ViewData["Title"] = "Roles list";
 }
 
 <div class="row">
@@ -11,7 +11,6 @@
 
                 <!-- Card breadcrumb -->
                 @await Html.PartialAsync("_BreadcrumbPartial", new[] {@ViewData["Title"]!.ToString(), ""})
-                <!-- Card breadcrumb  -->
                 <br/>
 
                 <!-- Card title -->
@@ -31,91 +30,87 @@
                         </div>
                     </div>
                 </div>
-            </div>
+                @* </div> *@
 
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th style="text-align:center">Actions</th>
-                </tr>
-                </thead>
-
-                <tbody>
-                @foreach (var item in Model)
-                {
+                <!-- Role table -->
+                <table>
+                    <thead>
                     <tr>
-                        <td>@Html.DisplayFor(role => item.Id)</td>
-                        <td>@Html.DisplayFor(role => item.Name)</td>
-                        <td>
-                            <a class="btn btn-outline-primary button"
-                                    asp-action="EditRole" asp-route-id="@item.Id">
-                                edit
-                            </a>
-                            @* <button class="btn btn-outline-primary button" *@
-                            @*         onclick="location.href='@Url.Action("EditRole", new {id = item.Id})'"> *@
-                            @*     edit *@
-                            @* </button> *@
-                            
-                            <button class="btn btn-outline-danger button"
-                                    onclick="showConfirmationDialog(event,
-                                     'Are you sure you want to delete this news?',
-                                     '@Url.Action("DeleteRole", new {id = item.Id})')">
-                                delete
-                            </button>
-                        </td>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Actions</th>
                     </tr>
-                }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.Name</td>
+                            <td>
+                                <a class="btn btn-outline-primary button"
+                                   asp-action="EditRole"
+                                   asp-route-id="@item.Id">
+                                    edit
+                                </a>
+                                <button class="btn btn-outline-danger button"
+                                        onclick="showConfirmationDialog(event,
+                                     'Are you sure you want to delete this news?',
+                                     '@Url.Action("DeleteRole", new {@item.Id})')">
+                                    delete
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 
-
 @await Html.PartialAsync("../Shared/_DeleteConfirmationModal")
 
-
 <style>
-    .table-container {
-        max-width: 1000px; /* Adjust the maximum width as needed */
-        margin: auto;
-    }
+    /*.table-container {*/
+    /*    max-width: 1000px; !* Adjust the maximum width as needed *!*/
+    /*    margin: auto;*/
+    /*}*/
     
-     .button {
-        padding:0 0.9rem
-     }
-
-    .table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-
-    th, td {
-        border: 1px solid #dddddd;
-        text-align: center;
-        padding: 12px;
-    }
-
-    th {
-        background-color: #f2f2f2;
-    }
-
-    td {
-        max-width: 200px; /* Limit the maximum width of cells */
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    a {
-        text-decoration: none;
-    }
-    
-    a:hover {
-        color: #0319eb;
-        /*text-decoration: underline;*/
-    }
+       table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 20px;
+       }
+     
+        .button {
+            padding:0 0.9rem
+        }
+        
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: center;
+            padding: 12px;
+        }
+        
+        th {
+            background-color: #e9eaf5;
+        }
+        
+        td {
+            max-width: 200px; /* Limit the maximum width of cells */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        a {
+            text-decoration: none;
+        }
+            
+        a:hover {
+            color: #0319eb;
+            /*text-decoration: underline;*/
+        }
 </style>

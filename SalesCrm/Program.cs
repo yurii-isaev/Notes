@@ -28,7 +28,7 @@ public class Program
             new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
         var services = builder.Services;
-        
+
         services.AddDbContext<AuthDbContext>(opts => opts.UseNpgsql(connectionString));
         services.AddDbContext<NewsDbContext>(opts => opts.UseNpgsql(connectionString));
         services.AddDbContext<EmployeeDbContext>(opts => opts.UseNpgsql(connectionString));
@@ -37,19 +37,19 @@ public class Program
 
         services.AddTransient<INewsService, NewsService>();
         services.AddTransient<INewsRepository, NewsRepository>();
-        
+
         services.AddTransient<IUserService, UserService>();
         services.AddTransient<IUserRepository, UserRepository>();
-        
+
         services.AddTransient<IEmployeeService, EmployeeService>();
         services.AddTransient<IEmployeeRepository, EmployeeRepository>();
-        
+
         services.AddTransient<ITaxYearService, TaxYearService>();
         services.AddTransient<ITaxYearRepository, TaxYearRepository>();
-        
+
         services.AddTransient<IPaymentRecordService, PaymentRecordService>();
         services.AddTransient<IPaymentRecordRepository, PaymentRecordRepository>();
-        
+
         services.AddTransient<IRoleService, RoleService>();
         services.AddTransient<IHttpStatusCodeDescriptionProvider, HttpStatusCodeDescriptionProvider>();
 
@@ -58,11 +58,14 @@ public class Program
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<AuthDbContext>();
 
-        services.AddMvc().AddNToastNotifyToastr(new ToastrOptions()
-        {
-            ProgressBar = true,
-            PositionClass = ToastPositions.BottomRight
-        });
+        services
+            .AddMvc()
+            .AddRazorPagesOptions(opts => opts.Conventions.AddPageRoute("/Error", "/Error"))
+            .AddNToastNotifyToastr(new ToastrOptions()
+            {
+                ProgressBar = true,
+                PositionClass = ToastPositions.BottomRight
+            });
 
         services.AddAutoMapper(config =>
             {
@@ -78,34 +81,33 @@ public class Program
                 config.CreateMap<TaxYearDto, TaxYearViewModel>();
                 config.CreateMap<TaxYear, TaxYearDto>();
                 config.CreateMap<TaxYearDto, TaxYear>();
-                
+
                 config.CreateMap<PaymentRecordViewModel, PaymentRecordDto>();
                 config.CreateMap<PaymentRecordDto, PaymentRecordViewModel>();
                 config.CreateMap<PaymentRecord, PaymentRecordDto>();
                 config.CreateMap<PaymentRecordDto, PaymentRecord>();
-                
+
                 config.CreateMap<UserViewModel, IdentityUser>();
                 config.CreateMap<IdentityUser, UserViewModel>();
-                
+
                 config.CreateMap<RoleViewModel, RoleDto>();
                 config.CreateMap<RoleDto, RoleViewModel>();
                 config.CreateMap<RoleDto, IdentityRole>();
                 config.CreateMap<IdentityRole, RoleDto>();
-                
+
                 config.CreateMap<NewsViewModel, NewsDto>();
                 config.CreateMap<NewsDto, NewsViewModel>();
                 config.CreateMap<News, NewsDto>();
                 config.CreateMap<NewsDto, News>();
             },
-            AppDomain.CurrentDomain.GetAssemblies());
-        
+            AppDomain.CurrentDomain.GetAssemblies()
+        );
+
         services.AddAutoMapper(typeof(MappingProfile));
-        
+
         services.AddRazorPages();
-        services.AddMvc().AddRazorPagesOptions(opts =>
-        {
-            opts.Conventions.AddPageRoute("/Error", "/Error");
-        });
+
+        services.AddAntiforgery(options => options.HeaderName = "X-CSRF-TOKEN");
         #endregion
 
         #region Configure the HTTP request pipeline
@@ -124,7 +126,7 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseStaticFiles();
-        
+
         app.UseStatusCodePagesWithReExecute("/Error");
 
         app.UseRouting();
@@ -135,7 +137,7 @@ public class Program
             name: "default",
             pattern: "{controller=News}/{action=Index}/{id?}"
         );
-        
+
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapRazorPages();
