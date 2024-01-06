@@ -1,12 +1,12 @@
-using Microsoft.AspNetCore.Identity;
+using SalesCrm.Services.Input;
 
 namespace SalesCrm.Services.Contracts.Services;
 
 public interface IUserService
 {
-    Task<IEnumerable<IdentityUser>> GetUsersAsync();
-    
-    Task BlockUsersAsync(string id);
-    
-    Task UnBlockUsersAsync(string id);
+    Task<IEnumerable<UserDto>> GetUserListAsync();
+
+    Task BlockUserAsync(string id);
+
+    Task UnBlockUserAsync(string id);
 }

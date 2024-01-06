@@ -2,7 +2,7 @@ namespace SalesCrm.Services.Exceptions;
 
 public class RoleExistsException : Exception
 {
-    public RoleExistsException() : base()
+    public RoleExistsException()
     {}
 
     public RoleExistsException(string message) : base(message)

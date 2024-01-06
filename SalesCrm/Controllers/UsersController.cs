@@ -9,8 +9,8 @@ namespace SalesCrm.Controllers;
 [Authorize(Roles = "Admin")]
 public class UsersController : Controller
 {
-    private readonly IUserService _userService;
-    private readonly IMapper _mapper;
+    readonly IMapper _mapper;
+    readonly IUserService _userService;
 
     public UsersController(IUserService userService, IMapper mapper)
     {
@@ -19,27 +19,28 @@ public class UsersController : Controller
     }
 
     [HttpGet]
+    [Route("/users")]
     public async Task<IActionResult> Index()
     {
-        List<UserViewModel> list = _userService.GetUsersAsync()
+        List<UserViewModel> list = _userService.GetUserListAsync()
             .Result
             .Select(user => _mapper.Map<UserViewModel>(user))
             .ToList();
-        
+
         return await Task.FromResult<IActionResult>(View(list));
     }
 
     [Route("/users/block/{id}")]
-    public async Task<IActionResult> BlockUsers(string id)
+    public async Task<IActionResult> BlockUser(string id)
     {
-        await _userService.BlockUsersAsync(id);
+        await _userService.BlockUserAsync(id);
         return RedirectToAction(nameof(Index));
     }
 
     [Route("/users/unblock/{id}")]
-    public async Task<IActionResult> UnBlockUsers(string id)
+    public async Task<IActionResult> UnBlockUser(string id)
     {
-        await _userService.UnBlockUsersAsync(id);
+        await _userService.UnBlockUserAsync(id);
         return RedirectToAction(nameof(Index));
     }
 }

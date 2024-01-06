@@ -16,15 +16,6 @@ public class AuthDbContext : IdentityDbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // modelBuilder.Entity<IdentityUser>()
-        //     .Property(e => e.Created)
-        //     .HasDefaultValueSql("now()");
-        
-        // Configure additional properties for AspNetUsers table
-        // modelBuilder.Entity<IdentityUser>()
-        //     .Property(u => u.Created)
-        //     .HasColumnType("datetime");
-        
         modelBuilder.Entity<User>()
             .Property(e => e.Created)
             .HasDefaultValueSql("now()");
@@ -35,4 +26,3 @@ public class AuthDbContext : IdentityDbContext
             .HasForeignKey(n => n.AuthorId);
     }
 }
-

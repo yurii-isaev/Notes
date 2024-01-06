@@ -17,22 +17,28 @@ public class NewsDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<User>().ToTable("AspNetUsers");
+        modelBuilder
+            .Entity<User>()
+            .ToTable("AspNetUsers");
 
         modelBuilder
             .Entity<News>()
-            .Property(e => e.PublishedAt).HasDefaultValueSql("now()");
+            .Property(e => e.PublishedAt)
+            .HasDefaultValueSql("now()");
 
         modelBuilder
             .Entity<News>()
-            .Property(e => e.CreatedAt).HasDefaultValueSql("now()");
+            .Property(e => e.CreatedAt)
+            .HasDefaultValueSql("now()");
 
         modelBuilder
             .Entity<News>()
-            .Property(e => e.UpdatedAt).HasDefaultValueSql("now()");
+            .Property(e => e.UpdatedAt)
+            .HasDefaultValueSql("now()");
         
         modelBuilder
             .Entity<News>()
-            .Property(e => e.IsActive).HasDefaultValue(true);
+            .Property(e => e.IsActive)
+            .HasDefaultValue(true);
     }
 }

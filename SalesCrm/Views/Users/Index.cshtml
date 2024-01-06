@@ -1,56 +1,113 @@
-﻿
-@model IEnumerable<SalesCrm.Controllers.ViewModels.UserViewModel>
+﻿@model IEnumerable<SalesCrm.Controllers.ViewModels.UserViewModel>
 
 @{
-    ViewData["Title"] = "Users";
+    ViewData["Title"] = "User list";
 }
 
-<div>
-    <div class="text-center">
-        <h1 class="display-4">Users</h1>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+
+                <!-- Card breadcrumb -->
+                @await Html.PartialAsync("_BreadcrumbPartial", new[] {@ViewData["Title"]!.ToString(), ""})
+                <br/>
+
+                <!-- Card title -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="page-title">@ViewData["Title"]</h2>
+                    </div>
+                </div>
+                
+                <!-- Role table -->
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Role</th>
+                        <th>Login</th>
+                        <th>Created</th>
+                        <th>Email</th>
+                        <th>LockoutEnd</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                     <tbody>
+                            @if (Model.Count() == 0)
+                            {
+                                <tr>
+                                    <td style="padding:30px" colspan="6">
+                                        The user table is empty.
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@string.Join(", ", item.Roles!)</td>
+                                        <td>@item.UserName</td>
+                                        <td>@item.Created.ToString("dd.MM.yyyy")</td>
+                                        <td>@item.Email</td>
+                                        <td>@item.LockoutEnd.ToString()</td>
+                                        <td>
+                                            <button class="btn btn-outline-primary button"
+                                                    asp-action="BlockUser"
+                                                    asp-route-id="@item.Id">
+                                                block
+                                            </button>
+                                            <button class="btn btn-outline-danger button"
+                                                    asp-action="UnBlockUser"
+                                                    asp-route-id="@item.Id">
+                                                unblock
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
+        </div>
     </div>
-
-    <br/>
-    <hr/>
-    <br/>
-
-    <table>
-        <tr>
-            @* <th>Id</th> *@
-            <th>UserName</th>
-            <th>Created</th>
-            <th>Email</th>
-            @* <th>PhoneNumber</th> *@
-            <th>LockoutEnd</th>
-            <th></th>
-            <th></th>
-        </tr>
-        
-        @foreach (var item in Model)
-        {
-            <tr>
-                @* <td>@item.Id</td> *@
-                <td>@item.UserName</td>
-                <td>@item.Created.ToString("dd.MM.yyyy HH:mm")</td>
-                <td>@item.Email</td>
-                @* <td>@item.PhoneNumber</td> *@
-                <td>@item.LockoutEnd?.ToString("dd.MM.yyyy HH:mm")</td>
-                <td>
-                    <a href="/users/block/@item.Id">Block</a>
-                </td>
-                <td>
-                    <a href="/users/unblock/@item.Id">Unblock</a>
-                </td>
-            </tr>
-        }
-    </table>
 </div>
 
 <style>
     table {
-      padding: 10px;
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
     }
-    td, th {
-      padding: 10px;
+    
+    th, td {
+        border: 1px solid #dddddd;
+        text-align: center;
+        padding: 12px;
     }
+    
+    th {
+        background-color: #e9eaf5;
+    }
+    
+    td {
+        max-width: 200px; /* Limit the maximum width of cells */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+    a {
+        text-decoration: none;
+    }
+        
+    a:hover {
+        color: #0319eb;
+        /*text-decoration: underline;*/
+    }
+    
+     .button {
+        padding:0 0.9rem
+     }
 </style>

@@ -99,14 +99,17 @@ public class Program
                 config.CreateMap<NewsDto, NewsViewModel>();
                 config.CreateMap<News, NewsDto>();
                 config.CreateMap<NewsDto, News>();
+                
+                config.CreateMap<UserViewModel, UserDto>();
+                config.CreateMap<UserDto, UserViewModel>();
+                config.CreateMap<UserRole, UserDto>();
+                config.CreateMap<UserDto, UserRole>();
             },
             AppDomain.CurrentDomain.GetAssemblies()
         );
 
         services.AddAutoMapper(typeof(MappingProfile));
-
         services.AddRazorPages();
-
         services.AddAntiforgery(options => options.HeaderName = "X-CSRF-TOKEN");
         #endregion
 
