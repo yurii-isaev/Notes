@@ -1,21 +1,19 @@
-using System.Net;
 using AutoMapper;
 using SalesCrm.Services.Contracts.Repositories;
 using SalesCrm.Services.Contracts.Services;
 using SalesCrm.Services.Input;
+using SalesCrm.Utils.Logg;
 
 namespace SalesCrm.Services;
 
 public class UserService : IUserService
 {
     readonly IUserRepository _repository;
-    readonly ILogger<NewsService> _logger;
     readonly IMapper _mapper;
 
-    public UserService(IUserRepository repository, ILogger<NewsService> logger, IMapper mapper)
+    public UserService(IUserRepository repository, IMapper mapper)
     {
         _repository = repository;
-        _logger = logger;
         _mapper = mapper;
     }
 
@@ -29,18 +27,34 @@ public class UserService : IUserService
         }
         catch (HttpRequestException ex)
         {
-            _logger.LogError("[Get Users]\n" + ex.Message + "\n\n");
-            throw new HttpRequestException(ex.Message, ex, HttpStatusCode.InternalServerError);
+            Logger.LogError(ex);
+            throw;
         }
     }
 
     public async Task BlockUserAsync(string id)
     {
-        await _repository.BlockUsersAsync(id);
+        try
+        {
+            await _repository.BlockUsersAsync(id);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex);
+            throw;
+        }
     }
 
     public async Task UnBlockUserAsync(string id)
     {
-        await _repository.UnBlockUsersAsync(id);
+        try
+        {
+            await _repository.UnBlockUsersAsync(id);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex);
+            throw;
+        }
     }
 }

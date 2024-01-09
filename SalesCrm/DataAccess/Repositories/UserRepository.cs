@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SalesCrm.Domains.Entities;
 using SalesCrm.Domains.Identities;
 using SalesCrm.Services.Contracts.Repositories;
+using SalesCrm.Utils.Logg;
 
 namespace SalesCrm.DataAccess.Repositories;
 
@@ -43,23 +44,38 @@ public class UserRepository : IUserRepository
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Logger.LogError(e);
             throw;
         }
     }
 
-
     public async Task BlockUsersAsync(string userId)
     {
-        var item = await _context.Users.FirstAsync(x => x.Id == userId);
-        item.LockoutEnd = DateTime.UtcNow.AddYears(1000);
-        await _context.SaveChangesAsync();
+        try
+        {
+            var item = await _context.Users.FirstAsync(x => x.Id == userId);
+            item.LockoutEnd = DateTime.UtcNow.AddYears(1000);
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e);
+            throw;
+        }
     }
 
     public async Task UnBlockUsersAsync(string userId)
     {
-        var item = await _context.Users.FirstAsync(x => x.Id == userId);
-        item.LockoutEnd = null;
-        await _context.SaveChangesAsync();
+        try
+        {
+            var item = await _context.Users.FirstAsync(x => x.Id == userId);
+            item.LockoutEnd = null;
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e);
+            throw;
+        }
     }
 }

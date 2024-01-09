@@ -69,41 +69,41 @@ public class Program
 
         services.AddAutoMapper(config =>
             {
-                config.CreateMap<EmployeeViewModel, Employee>();
-                config.CreateMap<Employee, EmployeeViewModel>();
+                // EmployeeViewModel -- EmployeeDto -- Employee
                 config.CreateMap<EmployeeViewModel, EmployeeDto>();
                 config.CreateMap<EmployeeDto, EmployeeViewModel>();
-
                 config.CreateMap<EmployeeDto, Employee>();
                 config.CreateMap<Employee, EmployeeDto>();
 
+                // TaxYearViewModel -- TaxYearDto -- TaxYear
                 config.CreateMap<TaxYearViewModel, TaxYearDto>();
                 config.CreateMap<TaxYearDto, TaxYearViewModel>();
                 config.CreateMap<TaxYear, TaxYearDto>();
                 config.CreateMap<TaxYearDto, TaxYear>();
 
+                // PaymentRecordViewModel -- PaymentRecordDto -- PaymentRecord
                 config.CreateMap<PaymentRecordViewModel, PaymentRecordDto>();
                 config.CreateMap<PaymentRecordDto, PaymentRecordViewModel>();
-                config.CreateMap<PaymentRecord, PaymentRecordDto>();
                 config.CreateMap<PaymentRecordDto, PaymentRecord>();
+                config.CreateMap<PaymentRecord, PaymentRecordDto>();
 
-                config.CreateMap<UserViewModel, IdentityUser>();
-                config.CreateMap<IdentityUser, UserViewModel>();
-
+                // RoleViewModel -- RoleDto -- IdentityRole
                 config.CreateMap<RoleViewModel, RoleDto>();
                 config.CreateMap<RoleDto, RoleViewModel>();
                 config.CreateMap<RoleDto, IdentityRole>();
                 config.CreateMap<IdentityRole, RoleDto>();
 
+                // NewsViewModel -- NewsDto -- News
                 config.CreateMap<NewsViewModel, NewsDto>();
                 config.CreateMap<NewsDto, NewsViewModel>();
-                config.CreateMap<News, NewsDto>();
                 config.CreateMap<NewsDto, News>();
+                config.CreateMap<News, NewsDto>();
                 
+                // UserViewModel -- UserDto -- UserRole
                 config.CreateMap<UserViewModel, UserDto>();
                 config.CreateMap<UserDto, UserViewModel>();
-                config.CreateMap<UserRole, UserDto>();
                 config.CreateMap<UserDto, UserRole>();
+                config.CreateMap<UserRole, UserDto>();
             },
             AppDomain.CurrentDomain.GetAssemblies()
         );
