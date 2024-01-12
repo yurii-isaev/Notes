@@ -99,11 +99,13 @@ public class Program
                 config.CreateMap<NewsDto, News>();
                 config.CreateMap<News, NewsDto>();
                 
-                // UserViewModel -- UserDto -- UserRole
+                // UserViewModel -- UserDto -- UserRole -- User
                 config.CreateMap<UserViewModel, UserDto>();
                 config.CreateMap<UserDto, UserViewModel>();
                 config.CreateMap<UserDto, UserRole>();
                 config.CreateMap<UserRole, UserDto>();
+                config.CreateMap<UserRole, User>();
+                config.CreateMap<User, UserRole>();
             },
             AppDomain.CurrentDomain.GetAssemblies()
         );

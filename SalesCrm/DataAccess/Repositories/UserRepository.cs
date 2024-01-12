@@ -3,18 +3,20 @@ using Microsoft.EntityFrameworkCore;
 using SalesCrm.Domains.Entities;
 using SalesCrm.Domains.Identities;
 using SalesCrm.Services.Contracts.Repositories;
-using SalesCrm.Utils.Logg;
+using SalesCrm.Utils.Reports;
 
 namespace SalesCrm.DataAccess.Repositories;
 
 public class UserRepository : IUserRepository
 {
     readonly AuthDbContext _context;
+    readonly RoleManager<IdentityRole> _roleManager;
     readonly UserManager<User> _userManager;
 
-    public UserRepository(AuthDbContext context, UserManager<User> userManager)
+    public UserRepository(AuthDbContext context, RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
     {
         _context = context;
+        _roleManager = roleManager;
         _userManager = userManager;
     }
 
@@ -77,5 +79,23 @@ public class UserRepository : IUserRepository
             Logger.LogError(e);
             throw;
         }
+    }
+
+    public async Task<UserRole> GetUserByIdAsync(string userId)
+    {
+        User user = (await _userManager.FindByIdAsync(userId))!;
+        IList<string> roles = await _userManager.GetRolesAsync(user);
+        List<IdentityRole> appRoles = await _roleManager.Roles.ToListAsync();
+
+        return new UserRole
+        {
+            Id = user.Id,
+            UserName = user.UserName,
+            Created = user.Created,
+            Email = user.Email,
+            LockoutEnd = user.LockoutEnd,
+            Roles = roles.ToList(),
+            ApplicationRoles = appRoles.ToList()
+        };
     }
 }

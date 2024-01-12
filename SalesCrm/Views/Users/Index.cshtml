@@ -27,7 +27,6 @@
                         <th>Role</th>
                         <th>Login</th>
                         <th>Created</th>
-                        <th>Email</th>
                         <th>LockoutEnd</th>
                         <th>Actions</th>
                     </tr>
@@ -49,10 +48,7 @@
                                 <td>@string.Join(", ", item.Roles!)</td>
                                 <td>@item.UserName</td>
                                 <td>@item.Created.ToString("dd.MM.yyyy")</td>
-                                <td>@item.Email</td>
-                                <td>
-                                    @item.LockoutEnd?.ToString("dd.MM.yyyy HH:mm")
-                                </td>
+                                <td>@item.LockoutEnd?.ToString("dd.MM.yyyy HH:mm")</td>
                                 <td>
                                     <a class="btn btn-outline-primary button"
                                        value="@item.Id"
@@ -65,6 +61,12 @@
                                        asp-action="UnBlockUser"
                                        asp-route-id="@item.Id">
                                         unblock
+                                    </a>
+                                    <a class="btn btn-outline-info button"
+                                       value="@item.Id"
+                                       asp-action="EditUser"
+                                       asp-route-id="@item.Id">
+                                        edit
                                     </a>
                                 </td>
                             </tr>

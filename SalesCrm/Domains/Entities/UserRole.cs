@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Identity;
+
 namespace SalesCrm.Domains.Entities;
 
 public class UserRole
@@ -5,6 +7,8 @@ public class UserRole
     public string? Id { get; set; }
 
     public List<string>? Roles { get; set; }
+    
+    public List<IdentityRole>? ApplicationRoles { get; set; }
 
     public string? UserName { get; set; }
 

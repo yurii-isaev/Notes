@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace SalesCrm.Utils.Logg;
+namespace SalesCrm.Utils.Reports;
 
 public class Logger
 {

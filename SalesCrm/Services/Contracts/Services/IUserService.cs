@@ -9,4 +9,8 @@ public interface IUserService
     Task BlockUserAsync(string id);
 
     Task UnBlockUserAsync(string id);
+    
+    Task<UserDto> GetUserByIdAsync(string id);
+
+    Task UpdateUserAsync(UserDto dto);
 }

@@ -6,6 +6,8 @@ public class UserViewModel
 
     public List<string>? Roles { get; set; }
 
+    public List<string>? ApplicationRoles { get; set; }
+
     public string? UserName { get; set; } 
     
     public DateTime Created { get; set; } 
