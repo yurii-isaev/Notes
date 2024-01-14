@@ -1,4 +1,5 @@
 using AutoMapper;
+using SalesCrm.Domains.Entities;
 using SalesCrm.Services.Contracts.Repositories;
 using SalesCrm.Services.Contracts.Services;
 using SalesCrm.Services.Input;
@@ -34,14 +35,31 @@ public class UserService : IUserService
 
     public async Task<UserDto> GetUserByIdAsync(string userId)
     {
-        var user = await _repository.GetUserByIdAsync(userId);
-        var dto = _mapper.Map<UserDto>(user);
-        return dto;
+        try
+        {
+            var user = await _repository.GetUserByIdAsync(userId);
+            var dto = _mapper.Map<UserDto>(user);
+            return dto;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex);
+            throw;
+        }
     }
 
     public async Task UpdateUserAsync(UserDto dto)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var user = _mapper.Map<UserRole>(dto);
+            await _repository.UpdateUserAsync(user);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex);
+            throw;
+        }
     }
 
     public async Task BlockUserAsync(string id)

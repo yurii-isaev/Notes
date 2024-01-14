@@ -1,6 +1,7 @@
 @model SalesCrm.Controllers.ViewModels.UserViewModel
 
 @{
+    ViewData["List"] = "User list";
     ViewData["Title"] = "Edit user";
 }
 
@@ -9,7 +10,11 @@
         <div class="card-body">
 
             <!-- Card breadcrumb -->
-            @await Html.PartialAsync("_BreadcrumbPartial", new[] {"Employee List", @ViewData["Title"]!.ToString()})
+            @await Html.PartialAsync("_BreadcrumbPartial", new[]
+            {
+                @ViewData["List"]!.ToString(),
+                @ViewData["Title"]!.ToString()
+            })
             <br/>
 
             <!-- Card title -->
@@ -20,7 +25,6 @@
             </div>
 
             <form method="post">
-
                 <div class="row">
                     <div class="col-4">
                         <div class="form-group indent">
@@ -46,51 +50,54 @@
                         </div>
                     </div>
 
+
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="LockoutEnd" class="form-label"></label>
-                            <input asp-for="LockoutEnd" class="form-control" placeholder="Enter name"/>
+                            <input asp-for="LockoutEnd!.Value.DateTime" class="form-control" placeholder="Enter name"/>
                             <span asp-validation-for="LockoutEnd" class="text-danger"></span>
                         </div>
                     </div>
 
-                    <div class="col-4">
-                        <div class="form-group indent">
-                            <label class="form-label">Change role</label>
+                    <fieldset>
+                        <div class="col-4">
+                            <div class="form-group indent">
+                                <label class="form-label">Change role</label>
 
-                            <div class="role-list">
-                                <!-- Empty checkboxes for all application roles -->
-                                @foreach (var role in Model.ApplicationRoles!)
-                                {
-                                    <div class="role-item">
-                                        <input type="checkbox" id="@($"role_{role}")"
-                                               name="roles"
-                                               value="@role"
-                                               @(Model.Roles!.Contains(role) ? "checked=\"checked\"" : "")/>
-                                        <label for="@($"role_{role}")">
-                                            @role
-                                        </label>
-                                    </div>
-                                }
-                                <!-- Checkboxes for other user roles -->
-                                @foreach (var role in Model.Roles!)
-                                {
-                                    if (role != "Admin" && role != "Manager")
+                                <div class="role-list">
+                                    <!-- Empty checkboxes for all application roles -->
+                                    @foreach (var role in Model.ApplicationRoles!)
                                     {
                                         <div class="role-item">
                                             <input type="checkbox" id="@($"role_{role}")"
                                                    name="roles"
                                                    value="@role"
-                                                   @(Model.Roles.Contains(role) ? "checked=\"checked\"" : "")/>
+                                                   @(Model.Roles!.Contains(role) ? "checked=\"checked\"" : "")/>
                                             <label for="@($"role_{role}")">
                                                 @role
                                             </label>
                                         </div>
                                     }
-                                }
+                                    <!-- Checkboxes for other user roles -->
+                                    @foreach (var role in Model.Roles!)
+                                    {
+                                        if (role != "Admin" && role != "Manager")
+                                        {
+                                            <div class="role-item">
+                                                <input type="checkbox" id="@($"role_{role}")"
+                                                       name="roles"
+                                                       value="@role"
+                                                       @(Model.Roles.Contains(role) ? "checked=\"checked\"" : "")/>
+                                                <label for="@($"role_{role}")">
+                                                    @role
+                                                </label>
+                                            </div>
+                                        }
+                                    }
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </fieldset>
                 </div>
                 <br/>
 
@@ -102,11 +109,18 @@
                         </button>
                     </div>
                 </div>
-                
             </form>
+
         </div>
     </div>
 </div>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
 
 <style>
     .role-list {

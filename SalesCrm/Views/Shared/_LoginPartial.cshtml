@@ -1,7 +1,6 @@
 ﻿@using SalesCrm.Domains.Identities
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-
 @inject SignInManager<User> SignInManager
 
 <ul class="navbar-nav">
@@ -10,7 +9,7 @@
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="Identity"
                asp-page="/Account/Manage/Index" title="Manage">
-                Hello @User.Identity?.Name!
+                Hello, <strong>@User.Identity?.Name</strong>
             </a>
         </li>
         <li class="nav-item">

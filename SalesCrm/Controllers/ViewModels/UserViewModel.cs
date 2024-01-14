@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace SalesCrm.Controllers.ViewModels;
 
 public class UserViewModel
@@ -8,11 +10,13 @@ public class UserViewModel
 
     public List<string>? ApplicationRoles { get; set; }
 
-    public string? UserName { get; set; } 
-    
-    public DateTime Created { get; set; } 
-    
+    [Required(ErrorMessage = "User Name is required")]
+    public string? UserName { get; set; }
+
+    public DateTime Created { get; set; }
+
+    [Required(ErrorMessage = "Email is required")]
     public string? Email { get; set; }
-    
+
     public DateTimeOffset? LockoutEnd { get; set; }
 }

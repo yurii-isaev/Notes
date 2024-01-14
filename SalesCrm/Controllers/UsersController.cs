@@ -73,9 +73,12 @@ public class UsersController : Controller
         try
         {
             var dto = await _userService.GetUserByIdAsync(id);
-            //var roles = await _userService.GetUserByIdAsync(id);
             var viewModel = _mapper.Map<UserViewModel>(dto);
-            return await Task.FromResult<IActionResult>(View(viewModel));
+
+            string date = viewModel.Created.ToString("dd.MM.yyyy HH:mm");
+            viewModel.Created = Convert.ToDateTime(date);
+
+            return View(viewModel);
         }
         catch (HttpRequestException ex)
         {
@@ -96,8 +99,12 @@ public class UsersController : Controller
                 return RedirectToAction(nameof(Error));
             }
         }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
-    
+
     [Route("/user/edit/{id}")]
     [HttpPost]
     public async Task<IActionResult> Edit(UserViewModel viewModel)

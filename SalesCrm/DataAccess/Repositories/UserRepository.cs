@@ -55,8 +55,8 @@ public class UserRepository : IUserRepository
     {
         try
         {
-            var item = await _context.Users.FirstAsync(x => x.Id == userId);
-            item.LockoutEnd = DateTime.UtcNow.AddYears(1000);
+            var item = await _context.Users.FirstAsync(user => user.Id == userId);
+            item.LockoutEnd = DateTime.UtcNow;
             await _context.SaveChangesAsync();
         }
         catch (Exception e)
@@ -70,7 +70,7 @@ public class UserRepository : IUserRepository
     {
         try
         {
-            var item = await _context.Users.FirstAsync(x => x.Id == userId);
+            var item = await _context.Users.FirstAsync(user => user.Id == userId);
             item.LockoutEnd = null;
             await _context.SaveChangesAsync();
         }
@@ -85,7 +85,7 @@ public class UserRepository : IUserRepository
     {
         User user = (await _userManager.FindByIdAsync(userId))!;
         IList<string> roles = await _userManager.GetRolesAsync(user);
-        List<IdentityRole> appRoles = await _roleManager.Roles.ToListAsync();
+        IList<IdentityRole> appRoles = await _roleManager.Roles.ToListAsync();
 
         return new UserRole
         {
@@ -97,5 +97,48 @@ public class UserRepository : IUserRepository
             Roles = roles.ToList(),
             ApplicationRoles = appRoles.ToList()
         };
+    }
+
+    public async Task UpdateUserAsync(UserRole user)
+    {
+        try
+        {
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == user.Id);
+
+            if (existingUser != null)
+            {
+                existingUser.UserName = user.UserName;
+                existingUser.Email = user.Email;
+                existingUser.LockoutEnd = user.LockoutEnd;
+
+                await UpdateUserRole(user.Id!, user.Roles!);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new InvalidOperationException($"User with id {user.Id} not found.");
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Error updating user.", ex);
+        }
+    }
+
+    public async Task UpdateUserRole(string userId, List<string> selectedRoleIds)
+    {
+        // Get the user and their current roles
+        var user = await _userManager.FindByIdAsync(userId);
+        var currentRoles = await _userManager.GetRolesAsync(user!);
+
+        // Calculate the roles to be added and removed
+        var rolesToAdd = selectedRoleIds.Except(currentRoles);
+        var rolesToRemove = currentRoles.Except(selectedRoleIds);
+
+        // Add new roles
+        await _userManager.AddToRolesAsync(user!, rolesToAdd);
+
+        // Remove deprecated roles
+        await _userManager.RemoveFromRolesAsync(user!, rolesToRemove);
     }
 }
