@@ -3,37 +3,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using SalesCrm.Domains.Entities;
 using SalesCrm.Services.Contracts.Repositories;
 using SalesCrm.Services.Contracts.Services;
+using SalesCrm.Services.Exceptions;
 using SalesCrm.Services.Input;
+using SalesCrm.Utils.Reports;
 
 namespace SalesCrm.Services;
 
 public class TaxYearService : ITaxYearService
 {
-    private readonly ILogger<TaxYearService> _logger;
-    private readonly IMapper _mapper;
-    private readonly ITaxYearRepository _repository;
+    readonly IMapper _mapper;
+    readonly ITaxYearRepository _repository;
 
-    public TaxYearService(ITaxYearRepository repository, IMapper mapper, ILogger<TaxYearService> logger)
+    public TaxYearService(ITaxYearRepository repository, IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;
-        _logger = logger;
     }
-
-    public async Task CreateTaxYearAsync(TaxYearDto dto)
-    {
-        try
-        {
-            var taxYear = _mapper.Map<TaxYear>(dto);
-            await _repository.CreateTaxYearAsync(taxYear);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("[Exception create Tax Year]: " + ex.Message);
-            throw;
-        }
-    }
-
+    
     public async Task<IEnumerable<TaxYearDto>> GetTaxYearList()
     {
         try
@@ -43,7 +29,7 @@ public class TaxYearService : ITaxYearService
         }
         catch (Exception ex)
         {
-            _logger.LogError("[Get tax year list]: " + ex.Message);
+            Logger.LogError(ex);
             return Enumerable.Empty<TaxYearDto>();
         }
     }

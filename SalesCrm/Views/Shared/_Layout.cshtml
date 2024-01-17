@@ -36,6 +36,7 @@
         <div class="h-100" id="leftside-menu-container" data-simplebar>
             <!--- Sidemenu -->
             <ul class="side-nav">
+                <!-- News controller-->
                 <li class="side-nav-item">
                     <a href="/news" class="side-nav-link">
                         <i class="uil-rss"></i>
@@ -43,14 +44,20 @@
                     </a>
                 </li>
                 <!-- Employee controller-->
-                 <li class="side-nav-item">
-                     <a class="side-nav-link" asp-area="" asp-controller="Employee" asp-action="Index">
-                     <i class="uil-rss"></i>
-                     <span> Employees </span>
-                     </a>
-                 </li>
+                <li class="side-nav-item">
+                    <a class="side-nav-link" asp-area="" asp-controller="Employee" asp-action="Index">
+                        <i class="uil-rss"></i>
+                        <span> Employees </span>
+                    </a>
+                </li>
+                 <!-- Employee controller-->
+                <li class="side-nav-item">
+                    <a class="side-nav-link" asp-area="" asp-controller="TaxYear" asp-action="Index">
+                        <i class="uil-rss"></i>
+                        <span> Tax Years </span>
+                    </a>
+                </li>
             </ul>
-
             <!-- End Sidebar -->
             <div class="clearfix"></div>
         </div>
@@ -102,16 +109,7 @@
                                     Users
                                 </a>
                             </li>
-                            <!-- ============================================================== -->
-                            
-                            <!-- TaxYear controller-->
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="TaxYear" asp-action="Index">
-                                    Tax-Year
-                                </a>
-                            </li>
-
-                            <!-- ============================================================== -->
+                           
                             <!-- PaymentSlip controller-->
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="PaymentSlip" asp-action="CreatePaymentSlip">

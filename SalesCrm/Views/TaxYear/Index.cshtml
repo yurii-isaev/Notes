@@ -1,47 +1,106 @@
 ﻿@model IEnumerable<SalesCrm.Controllers.ViewModels.TaxYearViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Tax Year";
 }
 
-<h1>Tax Year List</h1>
-
 <div class="row">
-    <div class="col-12">
-        <a asp-action="CreateTaxYear" class="btn btn-xs btn-outline-success float-md-end">
-            Create new Tax Year
-        </a>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+
+                <!-- Card breadcrumb -->
+                @await Html.PartialAsync("_BreadcrumbPartial", new[] {@ViewData["Title"]!.ToString(), ""})
+                <br/>
+
+                <!-- Card title -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="page-title">@ViewData["Title"]</h2>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6" style="padding-top:30px">
+                        <div class="text-md-start">
+                            <a class="btn btn-primary" role="button" asp-action="CreateTaxYear">
+                                Create new Tax Year
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Role table -->
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Year Of Tax</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.YearOfTax</td>
+                            <td>
+                                <button class="btn btn-outline-danger button"
+                                        onclick="showConfirmationDialog(event,
+                                            'Are you sure you want to delete this year of tax?',
+                                            '@Url.Action("Delete", new {@item.Id})')">
+                                    delete
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+
+                    <tfoot></tfoot>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 
-<table class="table">
-    <thead>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Id)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.YearOfTax)
-        </th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.YearOfTax)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new {/* id=item.PrimaryKey */}) |
-                @Html.ActionLink("Details", "Details", new {/* id=item.PrimaryKey */}) |
-                @Html.ActionLink("Delete", "Delete", new {/* id=item.PrimaryKey */})
-            </td>
-        </tr>
+@await Html.PartialAsync("../Shared/_DeleteConfirmationModal")
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
     }
-    </tbody>
-</table>
+    
+    th, td {
+        border: 1px solid #dddddd;
+        text-align: center;
+        padding: 12px;
+    }
+    
+    th {
+        background-color: #e9eaf5;
+    }
+    
+    td {
+        max-width: 200px; /* Limit the maximum width of cells */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+    a {
+        text-decoration: none;
+    }
+        
+    a:hover {
+        color: #0319eb;
+        /*text-decoration: underline;*/
+    }
+    
+     .button {
+        padding:0 0.9rem
+     }
+</style>

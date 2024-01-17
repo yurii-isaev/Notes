@@ -21,7 +21,7 @@ public class Logger
         _writer.Flush();
     }
 
-    private const string LogFilePath = "/Utils/Logg/error.log";
+    private const string LogFilePath = "/Utils/Reports/error.log";
 
     public static void LogError(Exception e)
     {

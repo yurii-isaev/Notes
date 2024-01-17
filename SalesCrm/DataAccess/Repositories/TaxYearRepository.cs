@@ -7,7 +7,7 @@ namespace SalesCrm.DataAccess.Repositories;
 
 public class TaxYearRepository : ITaxYearRepository
 {
-    private EmployeeDbContext _context;
+    readonly EmployeeDbContext _context;
 
     public TaxYearRepository(EmployeeDbContext context) => _context = context;
 
@@ -36,7 +36,8 @@ public class TaxYearRepository : ITaxYearRepository
             {
                 Text = taxYear.YearOfTax,
                 Value = taxYear.Id.ToString()
-            }).ToList()
+            })
+            .ToList()
         );
     }
 }

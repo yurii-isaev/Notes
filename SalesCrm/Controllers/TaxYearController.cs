@@ -1,54 +1,84 @@
+using System.Diagnostics;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
+using SalesCrm.Controllers.Providers;
 using SalesCrm.Controllers.ViewModels;
 using SalesCrm.Services.Contracts.Services;
+using SalesCrm.Services.Exceptions;
 using SalesCrm.Services.Input;
+using SalesCrm.Utils.Reports;
 
 namespace SalesCrm.Controllers
 {
     public class TaxYearController : Controller
     {
-        private readonly ILogger<TaxYearController> _logger;
-        private readonly IMapper _mapper;
-        private readonly ITaxYearService _taxService;
-        private readonly IToastNotification _toast;
+        readonly IHttpStatusCodeDescriptionProvider _httpStatusProvider;
+        readonly IMapper _mapper;
+        readonly ITaxYearService _taxService;
+        readonly IToastNotification _toast;
 
         public TaxYearController
         (
-            ILogger<TaxYearController> logger,
+            IHttpStatusCodeDescriptionProvider httpStatusProvider,
             IMapper mapper,
             ITaxYearService taxService,
             IToastNotification toast
         )
         {
-            _logger = logger;
+            _httpStatusProvider = httpStatusProvider;
             _mapper = mapper;
             _taxService = taxService;
             _toast = toast;
         }
 
         [HttpGet]
-        public Task<IActionResult> Index()
+        [Route("/tax-year")]
+        public async Task<IActionResult> Index()
         {
-            var taxYear = _taxService.GetTaxYearList().Result.Select(tax => _mapper.Map<TaxYearViewModel>(tax));
-            
-            return Task.FromResult<IActionResult>(View(taxYear));
-        }
+            try
+            {
+                var taxYear = _taxService.GetTaxYearList()
+                    .Result
+                    .Select(tax => _mapper.Map<TaxYearViewModel>(tax));
 
-        // GET: TaxYear/Details/5
-        public ActionResult Details(int id)
-        {
-            return RedirectToAction(nameof(Index));
+                return await Task.FromResult<IActionResult>(View(taxYear));
+            }
+            catch (HttpRequestException ex)
+            {
+                int? statusCode = (int?) ex.StatusCode;
+
+                if (statusCode.HasValue)
+                {
+                    string statusDescription = _httpStatusProvider.GetStatusDescription(statusCode.Value)!;
+
+                    return RedirectToAction("Error", new
+                    {
+                        statusCode = statusCode.Value,
+                        message = statusDescription
+                    });
+                }
+                else
+                {
+                    return RedirectToAction(nameof(Error));
+                }
+            }
+            catch (Exception ex) // Unexpected Exception 
+            {
+                Logger.LogError(ex);
+                return RedirectToAction(nameof(Error));
+            }
         }
 
         [HttpGet]
+        [Route("/tax-year/create")]
         public ActionResult CreateTaxYear()
         {
             return View(new TaxYearViewModel());
         }
 
         [HttpPost]
+        [Route("/tax-year/create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(TaxYearViewModel viewModel)
         {
@@ -59,14 +89,12 @@ namespace SalesCrm.Controllers
                     var dto = _mapper.Map<TaxYearDto>(viewModel);
                     await _taxService.CreateTaxYearAsync(dto);
                     _toast.AddSuccessToastMessage("Tax Year successfully created");
-                    // return RedirectToAction("Index");
                 }
             }
-
-            catch (Exception ex)
+            catch (TaxYearExistsException ex)
             {
-                _logger.LogError("[Exception create Tax Year]: " + ex.Message);
-                _toast.AddErrorToastMessage("Error creating new Tax Year");
+                ModelState.AddModelError("", ex.Message);
+                return View("CreateTaxYear");
             }
 
             return RedirectToAction(nameof(Index));
@@ -112,6 +140,17 @@ namespace SalesCrm.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error(int? statusCode, string? message)
+        {
+            return View(new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+                StatusCode = statusCode ?? 500,
+                Message = message ?? "Internal Server Error"
+            });
         }
     }
 }
