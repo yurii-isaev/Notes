@@ -1,8 +1,7 @@
-using System.Diagnostics;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
-using SalesCrm.Controllers.Providers;
 using SalesCrm.Controllers.ViewModels;
 using SalesCrm.Services.Contracts.Services;
 using SalesCrm.Services.Exceptions;
@@ -11,22 +10,20 @@ using SalesCrm.Utils.Reports;
 
 namespace SalesCrm.Controllers
 {
-    public class TaxYearController : Controller
+    [Authorize(Roles = "Admin, Manager")]
+    public class TaxYearController : BaseController
     {
-        readonly IHttpStatusCodeDescriptionProvider _httpStatusProvider;
         readonly IMapper _mapper;
         readonly ITaxYearService _taxService;
         readonly IToastNotification _toast;
 
         public TaxYearController
         (
-            IHttpStatusCodeDescriptionProvider httpStatusProvider,
             IMapper mapper,
             ITaxYearService taxService,
             IToastNotification toast
         )
         {
-            _httpStatusProvider = httpStatusProvider;
             _mapper = mapper;
             _taxService = taxService;
             _toast = toast;
@@ -44,26 +41,7 @@ namespace SalesCrm.Controllers
 
                 return await Task.FromResult<IActionResult>(View(taxYear));
             }
-            catch (HttpRequestException ex)
-            {
-                int? statusCode = (int?) ex.StatusCode;
-
-                if (statusCode.HasValue)
-                {
-                    string statusDescription = _httpStatusProvider.GetStatusDescription(statusCode.Value)!;
-
-                    return RedirectToAction("Error", new
-                    {
-                        statusCode = statusCode.Value,
-                        message = statusDescription
-                    });
-                }
-                else
-                {
-                    return RedirectToAction(nameof(Error));
-                }
-            }
-            catch (Exception ex) // Unexpected Exception 
+            catch (Exception ex)
             {
                 Logger.LogError(ex);
                 return RedirectToAction(nameof(Error));
@@ -96,61 +74,31 @@ namespace SalesCrm.Controllers
                 ModelState.AddModelError("", ex.Message);
                 return View("CreateTaxYear");
             }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex);
+                return RedirectToAction(nameof(Error));
+            }
 
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: TaxYear/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return RedirectToAction(nameof(Index));
-        }
-
-        // POST: TaxYear/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [HttpGet]
+        [Route("/tax-year/delete/{id}")]
+        public async Task<IActionResult> DeleteTaxYear(Guid id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                await _taxService.DeleteTaxYearAsync(id);
+                _toast.AddSuccessToastMessage("Tax Year successfully deleted");
             }
-            catch
+            catch (Exception ex)
             {
-                return RedirectToAction(nameof(Index));
+                Logger.LogError(ex);
+                return RedirectToAction(nameof(Error));
             }
-        }
 
-        // GET: TaxYear/Delete/5
-        public ActionResult Delete(int id)
-        {
             return RedirectToAction(nameof(Index));
-        }
-
-        // POST: TaxYear/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return RedirectToAction(nameof(Index));
-            }
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error(int? statusCode, string? message)
-        {
-            return View(new ErrorViewModel
-            {
-                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
-                StatusCode = statusCode ?? 500,
-                Message = message ?? "Internal Server Error"
-            });
         }
     }
 }

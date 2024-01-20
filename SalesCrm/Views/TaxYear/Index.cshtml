@@ -50,7 +50,7 @@
                                 <button class="btn btn-outline-danger button"
                                         onclick="showConfirmationDialog(event,
                                             'Are you sure you want to delete this year of tax?',
-                                            '@Url.Action("Delete", new {@item.Id})')">
+                                            '@Url.Action("DeleteTaxYear", new {@item.Id})')">
                                     delete
                                 </button>
                             </td>
@@ -65,7 +65,10 @@
     </div>
 </div>
 
-@await Html.PartialAsync("../Shared/_DeleteConfirmationModal")
+@section Scripts
+{
+    @await Html.PartialAsync("../Shared/_DeleteConfirmationModal")
+}
 
 <style>
     table {

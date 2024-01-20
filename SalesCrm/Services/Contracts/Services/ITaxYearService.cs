@@ -9,4 +9,5 @@ public interface ITaxYearService
     Task<IEnumerable<TaxYearDto>> GetTaxYearList();
     Task<IEnumerable<SelectListItem>> GetSelectTaxListAsync();
     decimal GetTotalTax(decimal totalEarnings);
+    Task DeleteTaxYearAsync(Guid id);
 }

@@ -21,6 +21,7 @@
                 <div class="col-md-4">
 
                     <form method="post">
+                         @Html.AntiForgeryToken()
                         <!-- Create form -->
                         <div class="form-group">
                             <label asp-for="YearOfTax" class="control-label">Enter a new tax year</label>

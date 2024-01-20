@@ -30,7 +30,7 @@ public class TaxYearService : ITaxYearService
         catch (Exception ex)
         {
             Logger.LogError(ex);
-            return Enumerable.Empty<TaxYearDto>();
+            throw;
         }
     }
 
@@ -52,6 +52,19 @@ public class TaxYearService : ITaxYearService
             }
         }
         catch (TaxYearExistsException ex)
+        {
+            Logger.LogError(ex);
+            throw;
+        }
+    }
+    
+    public async Task DeleteTaxYearAsync(Guid id)
+    {
+        try
+        {
+            await _repository.DeleteTaxYearAsync(id);
+        }
+        catch (Exception ex)
         {
             Logger.LogError(ex);
             throw;

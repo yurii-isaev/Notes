@@ -10,4 +10,5 @@ public interface ITaxYearRepository
     Task<TaxYear> GetTaxYearByIdAsync(Guid id);
     Task<IEnumerable<SelectListItem>> GetSelectTaxYearListAsync();
     bool IsTaxYearExists(string dtoYearOfTax);
+    Task DeleteTaxYearAsync(Guid id);
 }
