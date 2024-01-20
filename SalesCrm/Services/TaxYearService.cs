@@ -34,9 +34,28 @@ public class TaxYearService : ITaxYearService
         }
     }
 
-    public Task<TaxYear> GetTaxYearByIdAsync(Guid id)
+    public async Task CreateTaxYearAsync(TaxYearDto dto)
     {
-        throw new NotImplementedException();
+        try
+        {
+            if (dto.YearOfTax != null)
+            {
+                if (!_repository.IsTaxYearExists(dto.YearOfTax))
+                {
+                    var taxYear = _mapper.Map<TaxYear>(dto);
+                    await _repository.CreateTaxYearAsync(taxYear);
+                }
+                else
+                {
+                    throw new TaxYearExistsException("Tax Year exists");
+                }
+            }
+        }
+        catch (TaxYearExistsException ex)
+        {
+            Logger.LogError(ex);
+            throw;
+        }
     }
 
     public async Task<IEnumerable<SelectListItem>> GetSelectTaxListAsync()
@@ -47,7 +66,7 @@ public class TaxYearService : ITaxYearService
         }
         catch (Exception ex)
         {
-            _logger.LogError("[Get Select Tax Year]: " + ex.Message);
+            Logger.LogError(ex);
             throw;
         }
     }

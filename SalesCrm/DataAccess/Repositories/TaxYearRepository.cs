@@ -40,4 +40,9 @@ public class TaxYearRepository : ITaxYearRepository
             .ToList()
         );
     }
+    
+    public bool IsTaxYearExists(string name)
+    {
+        return _context.TaxYears.Any(t => t.YearOfTax == name);
+    }
 }
