@@ -36,13 +36,13 @@
         <div class="h-100" id="leftside-menu-container" data-simplebar>
             <!--- Sidemenu -->
             <ul class="side-nav">
-                <!-- News controller-->
-                <li class="side-nav-item">
-                    <a href="/news" class="side-nav-link">
-                        <i class="uil-rss"></i>
-                        <span> News </span>
-                    </a>
-                </li>
+                <!-- News page-->
+               <li class="side-nav-item">
+                   <a class="side-nav-link" asp-page="/News">
+                       <i class="uil-rss"></i>
+                       <span> News </span>
+                   </a>
+               </li>
                 <!-- Employee controller-->
                 <li class="side-nav-item">
                     <a class="side-nav-link" asp-area="" asp-controller="Employee" asp-action="Index">
@@ -50,11 +50,18 @@
                         <span> Employees </span>
                     </a>
                 </li>
-                 <!-- Employee controller-->
+                 <!-- Tax Years controller-->
                 <li class="side-nav-item">
                     <a class="side-nav-link" asp-area="" asp-controller="TaxYear" asp-action="Index">
                         <i class="uil-rss"></i>
                         <span> Tax Years </span>
+                    </a>
+                </li>
+                <!-- Payment Slip controller-->
+                <li class="side-nav-item">
+                    <a class="side-nav-link" asp-area="" asp-controller="PaymentSlip" asp-action="Index">
+                        <i class="uil-rss"></i>
+                        <span> Payment Slip </span>
                     </a>
                 </li>
             </ul>
@@ -93,7 +100,6 @@
                                     News
                                 </a>
                             </li>
-                            <!-- ============================================================== -->
 
                             <!-- Roles controller-->
                             <li class="nav-item">
@@ -101,19 +107,11 @@
                                     Roles
                                 </a>
                             </li>
-                            <!-- ============================================================== -->
 
-                            <!-- Roles controller-->
+                            <!-- Users controller-->
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">
                                     Users
-                                </a>
-                            </li>
-                           
-                            <!-- PaymentSlip controller-->
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="PaymentSlip" asp-action="CreatePaymentSlip">
-                                    Payment-Slip
                                 </a>
                             </li>
 

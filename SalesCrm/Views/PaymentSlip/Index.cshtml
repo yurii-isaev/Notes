@@ -1,6 +1,7 @@
 @model IEnumerable<SalesCrm.Controllers.ViewModels.PaymentRecordViewModel>
+
 @{
-    ViewData["Title"] = "Payment Record List";
+    ViewData["List"] = "Payment Record List";
 }
 
 <div class="row">
@@ -8,22 +9,25 @@
         <div class="card">
             <div class="card-body">
 
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb" style="padding:1px !important">
-                        <li class="breadcrumb-item">
-                            <a asp-controller="News" asp-action="Index">Home</a>
-                        </li>
-                        <li class="breadcrumb-item">
-                            <a asp-action="Index">Payment Record List</a>
-                        </li>
-                    </ol>
-                </nav>
+                <!-- Breadcrumbs -->
+                @await Html.PartialAsync("_BreadcrumbPartial", new[] {@ViewData["List"]!.ToString(), ""})
+                <br/>
+
+                <!-- Title -->
+                <div class="row">
+                    <div class="col-md-12 table-responsive-md">
+                        <h2 class="page-title">@ViewData["List"]</h2>
+                    </div>
+                </div>
+                <br/>
 
                 <div class="row">
-                    <div class="col-12 table-responsive-md">
-                        <a asp-action="Create" class="btn btn-xs btn-outline-success float-md-end">
-                            Create new Payment Record
-                        </a>
+                    <div class="col-md-6" style="padding-top:30px">
+                        <div class="text-md-start">
+                            <a class="btn btn-primary" role="button" asp-action="CreatePaymentSlip">
+                                Create new Payment Record
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -38,11 +42,11 @@
                     <th>Total Earnings</th>
                     <th>Total Deduction</th>
                     <th>Net Payment</th>
-                    <th class="text-warning">Actions</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
+                
                 <tbody>
-
                 @foreach (var item in Model)
                 {
                     <tr>
@@ -51,16 +55,62 @@
                         <td>@item.PayMonth</td>
                         <td>@item.TaxYear?.YearOfTax</td>
                         <td>@item.TotalEarnings.ToString("C")</td>
-                        <td>@item.TotalDeduction.ToString("c")</td>
+                        <td>@item.TotalDeduction.ToString("C")</td>
                         <td>@item.NetPayment.ToString("C")</td>
                         <td>
-                            @Html.ActionLink("info | ", "Create", new {id = item.Id})
-                            @Html.ActionLink("pdf", "GenerateInvoicePdf", new { PaymentRecordId  = item.Id })
+                            <a class="btn btn-outline-primary button"
+                                    href='@Url.Action("GenerateInvoicePdf", new { PaymentRecordId  = item.Id })'>
+                                pdf
+                            </a>
                         </td>
                     </tr>
                 }
                 </tbody>
+                
             </table>
         </div>
     </div>
 </div>
+
+<style>
+    /*.table-container {*/
+    /*    max-width: 1000px; !* Adjust the maximum width as needed *!*/
+    /*    margin: auto;*/
+    /*}*/
+    
+       table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 20px;
+       }
+     
+        .button {
+            padding:0 0.9rem
+        }
+        
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: center;
+            padding: 12px;
+        }
+        
+        th {
+            background-color: #e9eaf5;
+        }
+        
+        td {
+            max-width: 200px; /* Limit the maximum width of cells */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        a {
+            text-decoration: none;
+        }
+            
+        a:hover {
+            color: #0319eb;
+            /*text-decoration: underline;*/
+        }
+</style>

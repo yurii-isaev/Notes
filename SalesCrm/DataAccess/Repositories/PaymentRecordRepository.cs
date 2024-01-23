@@ -6,7 +6,7 @@ namespace SalesCrm.DataAccess.Repositories;
 
 public class PaymentRecordRepository : IPaymentRecordRepository
 {
-    private EmployeeDbContext _context;
+    readonly EmployeeDbContext _context;
 
     public PaymentRecordRepository(EmployeeDbContext context) => _context = context;
 
@@ -24,7 +24,7 @@ public class PaymentRecordRepository : IPaymentRecordRepository
             .ToListAsync();
     }
 
-    public async Task<PaymentRecord> GetEmployeePaymentRecordAsync(Guid paymentRecordId)
+    public async Task<PaymentRecord> GetPaymentRecordAsync(Guid paymentRecordId)
     {
         return await _context.PaymentRecords
             .Include(pr => pr.Employee)

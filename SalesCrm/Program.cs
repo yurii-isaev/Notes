@@ -49,6 +49,9 @@ public class Program
 
         services.AddTransient<IPaymentRecordService, PaymentRecordService>();
         services.AddTransient<IPaymentRecordRepository, PaymentRecordRepository>();
+        
+        services.AddTransient<IPaymentSlipService, PaymentSlipService>(); 
+        services.AddTransient<InvoiceService>();
 
         services.AddTransient<IRoleService, RoleService>();
         services.AddTransient<IHttpStatusCodeDescriptionProvider, HttpStatusCodeDescriptionProvider>();
