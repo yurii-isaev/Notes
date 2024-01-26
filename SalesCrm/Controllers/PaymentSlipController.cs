@@ -1,8 +1,10 @@
+using System.Net;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using NToastNotify;
+using SalesCrm.Controllers.Providers;
 using SalesCrm.Controllers.ViewModels;
 using SalesCrm.Services;
 using SalesCrm.Services.Contracts.Services;
@@ -20,6 +22,8 @@ namespace SalesCrm.Controllers
         readonly ITaxYearService _taxYearService;
         readonly IToastNotification _toast;
         readonly InvoiceService _invoiceService;
+        readonly IHttpStatusCodeDescriptionProvider _httpStatusProvider;
+
 
         public PaymentSlipController
         (
@@ -29,7 +33,8 @@ namespace SalesCrm.Controllers
             ITaxYearService taxYearService,
             IToastNotification toast,
             IPaymentSlipService paymentSlipService,
-            InvoiceService invoiceService
+            InvoiceService invoiceService,
+            IHttpStatusCodeDescriptionProvider httpStatusProvider
         )
         {
             _employeeService = employeeService;
@@ -39,6 +44,7 @@ namespace SalesCrm.Controllers
             _toast = toast;
             _paymentSlipService = paymentSlipService;
             _invoiceService = invoiceService;
+            _httpStatusProvider = httpStatusProvider;
         }
 
         [HttpGet]
@@ -95,10 +101,10 @@ namespace SalesCrm.Controllers
 
                     var transfer = _mapper.Map<PaymentRecordDto>(viewModel);
                     await _paymentRecordService.CreatePaymentRecord(transfer);
+                    _toast.AddSuccessToastMessage("Payment Record created successfully");
                 }
                 catch (Exception)
                 {
-                    ModelState.AddModelError("", "Error creating new Payment Record");
                     _toast.AddErrorToastMessage("Error creating new Payment Record");
                 }
             }
@@ -125,10 +131,38 @@ namespace SalesCrm.Controllers
             vm.NetPayment = await _paymentSlipService.GetNetPaymentAsync(vm.TotalEarnings, vm.TotalDeduction);
         }
 
-        // Method to generate a PDF invoice document
         public async Task<IActionResult> GenerateInvoicePdf(Guid paymentRecordId)
         {
-            return await _invoiceService.GenerateInvoicePdf(paymentRecordId);
+            try
+            {
+                if (paymentRecordId != Guid.Empty)
+                {
+                    return await _invoiceService.GenerateInvoicePdf(paymentRecordId);
+                }
+                else
+                {
+                    throw new HttpRequestException("Invalid params", null, HttpStatusCode.BadRequest);
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                int? statusCode = (int?) ex.StatusCode;
+
+                if (statusCode.HasValue)
+                {
+                    string statusDescription = _httpStatusProvider.GetStatusDescription(statusCode.Value)!;
+
+                    return RedirectToAction("Error", new
+                    {
+                        statusCode = statusCode.Value,
+                        message = statusDescription
+                    });
+                }
+                else
+                {
+                    return RedirectToAction(nameof(Error));
+                }
+            }
         }
     }
 }

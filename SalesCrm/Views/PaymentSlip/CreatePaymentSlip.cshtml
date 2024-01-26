@@ -1,50 +1,51 @@
-﻿@model SalesCrm.Controllers.ViewModels.PaymentRecordViewModel
+﻿@using SalesCrm.Domains.Enums
+@model SalesCrm.Controllers.ViewModels.PaymentRecordViewModel
 
 @{
-    ViewData["Title"] = "CreatePaymentSlip";
+    ViewData["List"] = "Payment Record List";
+    ViewData["Title"] = "Create Payment Slip";
 }
 
 <div class="col-md-12">
     <div class="card">
         <div class="card-body">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb"
-                    style="margin:0!important;padding:1px;">
-                    <li class="breadcrumb-item">
-                        <a asp-controller="News" asp-action="Index">Home</a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a asp-action="Index">Payment Record list</a>
-                    </li>
-                    <li class="breadcrumb-item active">
-                        <a aria-current="page">New Record</a>
-                    </li>
-                </ol>
-            </nav>
-            <hr style="opacity:0.5!important"/> <br/>
 
-            <form method="post" enctype="multipart/form-data" asp-action="Create">
+            <!-- Breadcrumbs -->
+            @await Html.PartialAsync("_BreadcrumbPartial", new[]
+            {
+                @ViewData["List"]!.ToString(),
+                @ViewData["Title"]!.ToString()
+            }) <br/>
 
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
+            <!-- Create form -->
+            <form method="post" id="paymentRecordForm">
+                @Html.AntiForgeryToken()
                 <div class="row">
                     <div class="col-6">
                         <div class="form-group indent">
-                            <label asp-for="EmployeeId" class="form-label"></label>
-                            <select asp-for="EmployeeId" asp-items="@ViewBag.Employees" class="form-control">
-                                <option>Please select employee</option>
+                            <label asp-for="EmployeeId"
+                                   class="form-label"></label>
+                            <select asp-for="EmployeeId"
+                                    asp-items="@ViewBag.Employees"
+                                    class="form-control" id="employeeSelect">
+                                <option value="">-- Please select employee --</option>
+                                <option>Test</option>
                             </select>
-                            <span asp-validation-for="EmployeeId" class="text-danger"></span>
+                            <span id="employeeSelectError" class="text-danger"></span>
+                            @* <span asp-validation-for="EmployeeId" class="text-danger"></span> *@
                         </div>
                     </div>
-
                     <div class="col-6">
                         <div class="form-group indent">
-                            <label asp-for="TaxYearId" class="form-label"></label>
-                            <select asp-for="TaxYearId" asp-items="@ViewBag.TaxYear" class="form-control">
-                                <option>Select Tax Year</option>
+                            <label asp-for="TaxYearId"
+                                   class="form-label"></label>
+                            <select asp-for="TaxYearId"
+                                    asp-items="@ViewBag.TaxYear"
+                                    class="form-control" id="taxYearSelect">
+                                <option value="">-- Select Tax Year --</option>
                             </select>
-                            <span asp-validation-for="TaxYearId" class="text-danger"></span>
+                            <span id="taxYearSelectError" class="text-danger"></span>
+                            @* <span asp-validation-for="TaxYearId" class="text-danger"></span> *@
                         </div>
                     </div>
                 </div>
@@ -52,45 +53,38 @@
                 <div class="row">
                     <div class="col-4">
                         <div class="form-group indent">
-                            <label asp-for="PayMonth" class="form-label"></label>
-                            <select asp-for="PayMonth" class="form-control">
-                                <option selected>-- Select Month --</option>
-                                <option>January</option>
-                                <option>February</option>
-                                <option>March</option>
-                                <option>April</option>
-                                <option>May</option>
-                                <option>June</option>
-                                <option>July</option>
-                                <option>August</option>
-                                <option>September</option>
-                                <option>October</option>
-                                <option>November</option>
-                                <option>December</option>
+                            <label asp-for="PayMonth"
+                                   class="form-label"></label>
+                            <select asp-for="PayMonth"
+                                    class="form-control"
+                                    id="payMonthSelect">
+                                <option value="">-- Select Month --</option>
+                                @foreach (var month in Enum.GetValues(typeof(Month)))
+                                {
+                                    <option value="@month">@month</option>
+                                }
                             </select>
-                            <span asp-validation-for="PayMonth" class="text-danger"></span>
+                            <span id="payMonthSelectError" class="text-danger"></span>
+                            @* <span asp-validation-for="PayMonth" class="text-danger"></span> *@
                         </div>
                     </div>
-
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="HourlyRate" class="form-label"></label>
-                            <input asp-for="HourlyRate" class="form-control" placeholder="Enter name"/>
+                            <input asp-for="HourlyRate" class="form-control"/>
                             <span asp-validation-for="HourlyRate" class="text-danger"></span>
                         </div>
                     </div>
-
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="HoursWorked" class="form-label"></label>
-                            <input asp-for="HoursWorked" class="form-control" placeholder="Enter name"/>
+                            <input asp-for="HoursWorked" class="form-control"/>
                             <span asp-validation-for="HoursWorked" class="text-danger"></span>
                         </div>
                     </div>
-                </div>
-                <br/>
-                <!-- ============================================================== -->
-                <!-- Edit button -->
+                </div> <br/>
+
+                <!-- Create button -->
                 <div class="row mt-2">
                     <div class="col-3">
                         <button type="submit" class="btn btn-rounded btn-primary">
@@ -98,8 +92,8 @@
                         </button>
                     </div>
                 </div>
-                <!-- ============================================================== -->
             </form>
+
         </div>
     </div>
 </div>
@@ -111,5 +105,41 @@
 </style>
 
 @section Scripts {
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.getElementById("paymentRecordForm").addEventListener("submit", function(event) {
+            var employeeSelect = document.getElementById("employeeSelect");
+            var employeeSelectError = document.getElementById("employeeSelectError");
+            if (!employeeSelect.value) {
+                event.preventDefault();
+                employeeSelectError.textContent = "Please select an Employee.";
+            } else {
+                employeeSelectError.textContent = "";
+            }
+        });
+         document.getElementById("paymentRecordForm").addEventListener("submit", function(event) {
+             var employeeSelect = document.getElementById("taxYearSelect");
+             var employeeSelectError = document.getElementById("taxYearSelectError");
+             if (!employeeSelect.value) {
+                 event.preventDefault();
+                 employeeSelectError.textContent = "Please select an Tax Year.";
+             } else {
+                 employeeSelectError.textContent = "";
+             }
+         });
+          document.getElementById("paymentRecordForm").addEventListener("submit", function(event) {
+              var employeeSelect = document.getElementById("payMonthSelect");
+              var employeeSelectError = document.getElementById("payMonthSelectError");
+              if (!employeeSelect.value) {
+                  event.preventDefault();
+                  employeeSelectError.textContent = "Please select an Pay Month.";
+              } else {
+                  employeeSelectError.textContent = "";
+              }
+          });   
+    </script>
 }

@@ -7,10 +7,11 @@ public interface IHttpStatusCodeDescriptionProvider
 
 public class HttpStatusCodeDescriptionProvider : IHttpStatusCodeDescriptionProvider
 {
-    private static readonly Dictionary<int, string?> HttpStatusCodes = new()
+    static readonly Dictionary<int, string?> HttpStatusCodes = new()
     {
         {100, "Continue"},
         {101, "Switching Protocols"},
+        {400, "Bad Request"},
         {500, "Internal Server Error"},
         {501, "Not Implemented"},
         {502, "Bad Gateway"},
@@ -21,11 +22,8 @@ public class HttpStatusCodeDescriptionProvider : IHttpStatusCodeDescriptionProvi
 
     public string? GetStatusDescription(int statusCode)
     {
-        if (HttpStatusCodes.TryGetValue(statusCode, out string? statusDescription))
-        {
-            return statusDescription;
-        }
-
-        return "Unknown error";
+        return HttpStatusCodes.TryGetValue(statusCode, out string? statusDescription)
+            ? statusDescription
+            : "Unknown error";
     }
 }
