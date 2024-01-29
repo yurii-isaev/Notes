@@ -19,11 +19,18 @@
                         <h2 class="page-title">@ViewData["List"]</h2>
                     </div>
                 </div>
-                <br />
+                <br/>
 
+                <!-- Name Searcher -->
                 <div class="row">
-                    <div class="col-md-6" style="padding-top:30px">
-                        <div class="text-md-start">
+                    <div class="col-md-4">
+                        @using (Html.BeginForm("Index", "PaymentSlip", FormMethod.Get))
+                        {
+                            @await Html.PartialAsync("_SearcherPartial")
+                        }
+                    </div>
+                    <div class="col-md-7" style="padding-top:30px">
+                        <div class="text-md-end">
                             <a class="btn btn-primary" role="button" asp-action="CreatePaymentSlip">
                                 Create new Payment Record
                             </a>
@@ -34,43 +41,43 @@
 
             <table class="table table-striped">
                 <thead>
-                    <tr>
-                        <th>Employee</th>
-                        <th>Pay Date</th>
-                        <th>Pay Month</th>
-                        <th>Tax Year</th>
-                        <th>Total Earnings</th>
-                        <th>Total Deduction</th>
-                        <th>Net Payment</th>
-                        <th>Actions</th>
-                    </tr>
+                <tr>
+                    <th>Employee</th>
+                    <th>Pay Date</th>
+                    <th>Pay Month</th>
+                    <th>Tax Year</th>
+                    <th>Total Earnings</th>
+                    <th>Total Deduction</th>
+                    <th>Net Payment</th>
+                    <th>Actions</th>
+                </tr>
                 </thead>
 
                 <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>@item.Employee?.Name</td>
-                            <td>@item.PayDate.ToString("dd/MM/yyyy")</td>
-                            <td>@item.PayMonth</td>
-                            <td>@item.TaxYear?.YearOfTax</td>
-                            <td>@item.TotalEarnings.ToString("C")</td>
-                            <td>@item.TotalDeduction.ToString("C")</td>
-                            <td>@item.NetPayment.ToString("C")</td>
-                            <td>
-                                <a class="btn btn-outline-primary button"
-                                    href='@Url.Action("GenerateInvoicePdf", new {PaymentRecordId = item.Id})'>
-                                    pdf
-                                </a>
-                                <button class="btn btn-outline-danger button"
-                                        onclick="showConfirmationDialog(event,
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Employee?.Name</td>
+                        <td>@item.PayDate.ToString("dd/MM/yyyy")</td>
+                        <td>@item.PayMonth</td>
+                        <td>@item.TaxYear?.YearOfTax</td>
+                        <td>@item.TotalEarnings.ToString("C")</td>
+                        <td>@item.TotalDeduction.ToString("C")</td>
+                        <td>@item.NetPayment.ToString("C")</td>
+                        <td>
+                            <a class="btn btn-outline-primary button"
+                               href='@Url.Action("GenerateInvoicePdf", new {PaymentRecordId = item.Id})'>
+                                pdf
+                            </a>
+                            <button class="btn btn-outline-danger button"
+                                    onclick="showConfirmationDialog(event,
                                         'Are you sure you want to delete this Record?',
-                                        '@Url.Action("DeletePaymentRecord", new { id = item.Id})')">
-                                    delete
-                                </button>
-                            </td>
-                        </tr>
-                    }
+                                        '@Url.Action("DeletePaymentRecord", new {id = item.Id})')">
+                                delete
+                            </button>
+                        </td>
+                    </tr>
+                }
                 </tbody>
                 <tfoot></tfoot>
             </table>

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using NToastNotify;
+using SalesCrm.Controllers.Options;
 using SalesCrm.Controllers.Providers;
 using SalesCrm.Controllers.ViewModels;
 using SalesCrm.Services;
@@ -50,16 +51,18 @@ namespace SalesCrm.Controllers
 
         [HttpGet]
         [Route("/payment-slip")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(SearchModel searcher)
         {
+            string keyword = ViewBag.keyword = searcher.Keyword!;
+            
             try
             {
-                var list = _paymentRecordService.GetPaymentRecordList()
+                var paymentRecordList = _paymentRecordService.GetPaymentRecordListAsync(keyword)
                     .Result
                     .Select(dto => _mapper.Map<PaymentRecordViewModel>(dto))
                     .ToList();
 
-                return await Task.FromResult<IActionResult>(View(list));
+                return await Task.FromResult<IActionResult>(View(paymentRecordList));
             }
             catch (Exception ex)
             {
@@ -74,8 +77,14 @@ namespace SalesCrm.Controllers
         {
             try
             {
-                ViewBag.Employees = new SelectList(await _employeeService.GetEmployeeListAsync(), "Id", "Name");
-                ViewBag.TaxYear = new SelectList(await _taxYearService.GetTaxYearList(), "Id", "YearOfTax");
+                ViewBag.Employees = new SelectList(
+                    await _employeeService.GetEmployeeListAsync(), "Id", "Name"
+                );
+                
+                ViewBag.TaxYear = new SelectList(
+                    await _taxYearService.GetTaxYearList(), "Id", "YearOfTax"
+                );
+                
                 var viewModel = new PaymentRecordViewModel();
                 return await Task.FromResult<IActionResult>(View(viewModel));
             }

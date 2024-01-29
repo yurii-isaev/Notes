@@ -23,11 +23,17 @@ public class PaymentRecordService : IPaymentRecordService
         await _repository.CreatePaymentRecordAsync(paymentRecord);
     }
 
-    public async Task<IEnumerable<PaymentRecordDto>> GetPaymentRecordList()
+    public async Task<IEnumerable<PaymentRecordDto>> GetPaymentRecordListAsync(string keyword)
     {
         try
         {
             var taxYearList = await _repository.GetPaymentRecordList();
+            
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                taxYearList = taxYearList.Where(rec => rec.Employee!.Name!.Contains(keyword));
+            }
+            
             return _mapper.Map<IEnumerable<PaymentRecordDto>>(taxYearList);
         }
         catch (Exception)
