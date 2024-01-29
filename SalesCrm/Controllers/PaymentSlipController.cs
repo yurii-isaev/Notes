@@ -9,6 +9,7 @@ using SalesCrm.Controllers.ViewModels;
 using SalesCrm.Services;
 using SalesCrm.Services.Contracts.Services;
 using SalesCrm.Services.Input;
+using SalesCrm.Utils.Reports;
 
 namespace SalesCrm.Controllers
 {
@@ -109,8 +110,6 @@ namespace SalesCrm.Controllers
                 }
             }
 
-            ViewBag.Employees = new SelectList(await _employeeService.GetEmployeeListAsync(), "Id", "Name");
-            ViewBag.TaxYear = new SelectList(await _taxYearService.GetTaxYearList(), "Id", "YearOfTax");
             return RedirectToAction(nameof(Index));
         }
 
@@ -163,6 +162,24 @@ namespace SalesCrm.Controllers
                     return RedirectToAction(nameof(Error));
                 }
             }
+        }
+
+        [HttpGet]
+        [Route("/payment-slip/delete/{id}")]
+        public async Task<IActionResult> DeletePaymentRecord(Guid id)
+        {
+            try
+            {
+                await _paymentRecordService.DeletePaymentRecordAsync(id);
+                _toast.AddSuccessToastMessage("Payment Record created successfully");
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex);
+                _toast.AddErrorToastMessage("Error deleted Payment Record");
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -21,7 +21,7 @@ public class PaymentRecordRepository : IPaymentRecordRepository
         return await _context.PaymentRecords
             .Include(n => n.Employee)
             .Include(m => m.TaxYear)
-            .ToListAsync();
+            .ToListAsync() ?? throw new InvalidOperationException();
     }
 
     public async Task<PaymentRecord> GetPaymentRecordAsync(Guid paymentRecordId)
@@ -31,5 +31,15 @@ public class PaymentRecordRepository : IPaymentRecordRepository
             .Include(pr => pr.TaxYear)
             .Where(pr => pr.Id == paymentRecordId)
             .FirstOrDefaultAsync() ?? throw new InvalidOperationException();
+    }
+
+    public async Task DeletePaymentRecordAsync(Guid paymentRecordId)
+    {
+        var paymentRecord = await _context.PaymentRecords
+            .Where(n => n.Id == paymentRecordId)
+            .FirstOrDefaultAsync() ?? throw new InvalidOperationException();
+        
+        _context.PaymentRecords.Remove(paymentRecord);
+        await _context.SaveChangesAsync();
     }
 }

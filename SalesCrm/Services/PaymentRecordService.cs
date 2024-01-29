@@ -8,28 +8,19 @@ namespace SalesCrm.Services;
 
 public class PaymentRecordService : IPaymentRecordService
 {
-    private readonly ILogger<TaxYearService> _logger;
-    private readonly IMapper _mapper;
-    private readonly IPaymentRecordRepository _repository;
+    readonly IMapper _mapper;
+    readonly IPaymentRecordRepository _repository;
 
-    public PaymentRecordService(IPaymentRecordRepository repository, IMapper mapper, ILogger<TaxYearService> logger)
+    public PaymentRecordService(IMapper mapper, IPaymentRecordRepository repository)
     {
-        _repository = repository;
         _mapper = mapper;
-        _logger = logger;
+        _repository = repository;
     }
 
     public async Task CreatePaymentRecord(PaymentRecordDto dto)
     {
-        try
-        {
-            var paymentRecord = _mapper.Map<PaymentRecord>(dto);
-            await _repository.CreatePaymentRecordAsync(paymentRecord);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("[Exception create Payment Record]: " + ex.Message);
-        }
+        var paymentRecord = _mapper.Map<PaymentRecord>(dto);
+        await _repository.CreatePaymentRecordAsync(paymentRecord);
     }
 
     public async Task<IEnumerable<PaymentRecordDto>> GetPaymentRecordList()
@@ -39,24 +30,20 @@ public class PaymentRecordService : IPaymentRecordService
             var taxYearList = await _repository.GetPaymentRecordList();
             return _mapper.Map<IEnumerable<PaymentRecordDto>>(taxYearList);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            _logger.LogError("[Get Payment Record List]: " + ex.Message);
             return Enumerable.Empty<PaymentRecordDto>();
         }
     }
 
     public async Task<PaymentRecordDto> GetPaymentRecordByIdAsync(Guid paymentRecordId)
     {
-        try
-        {
-            var paymentRecord = await _repository.GetPaymentRecordAsync(paymentRecordId);
-            return _mapper.Map<PaymentRecordDto>(paymentRecord);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("[Get Employee Payment Record]: " + ex.Message);
-            throw;
-        }
+        var paymentRecord = await _repository.GetPaymentRecordAsync(paymentRecordId);
+        return _mapper.Map<PaymentRecordDto>(paymentRecord);
+    }
+
+    public async Task DeletePaymentRecordAsync(Guid paymentRecordId)
+    {
+        await _repository.DeletePaymentRecordAsync(paymentRecordId);
     }
 }
