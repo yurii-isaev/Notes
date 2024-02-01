@@ -51,7 +51,7 @@ namespace SalesCrm.Controllers
 
         [HttpGet]
         [Route("/payment-slip")]
-        public async Task<IActionResult> Index(SearchModel searcher)
+        public async Task<IActionResult> Index(SearchOptions searcher)
         {
             string keyword = ViewBag.keyword = searcher.Keyword!;
             

@@ -3,7 +3,7 @@
 @model SalesCrm.Views.Components.Pagination.PaginationList<SalesCrm.Controllers.ViewModels.EmployeeViewModel>
 
 @{
-    ViewData["Title"] = "Employee List";
+    ViewData["List"] = "Employee List";
     ViewData["Sort"] = "Sort the field alphabetically";
 }
 
@@ -12,15 +12,14 @@
         <div class="card">
             <div class="card-body">
 
-                <!-- Card breadcrumb -->
-                @await Html.PartialAsync("_BreadcrumbPartial", new[] {@ViewData["Title"]!.ToString()})
-                <!-- Card breadcrumb  -->
+                <!-- Breadcrumb -->
+                @await Html.PartialAsync("_BreadcrumbPartial", new[] {@ViewData["List"]!.ToString(), ""})
                 <br/>
 
-                <!-- Card title -->
+                <!-- Title -->
                 <div class="row">
                     <div class="col-md-12">
-                        <h2 class="page-title">@ViewData["Title"]</h2>
+                        <h2 class="page-title">@ViewData["List"]</h2>
                     </div>
                 </div>
                 <br/>
@@ -76,11 +75,10 @@
                     </th>
 
                     <th style="text-align:center">Actions</th>
-
                 </tr>
                 </thead>
+                
                 <tbody>
-
                 @foreach (var item in Model)
                 {
                     <tr>
@@ -99,7 +97,8 @@
                                 edit
                             </button>
                             <button class="btn btn-outline-danger button"
-                                    onclick="showConfirmationDialog(event, 'Are you sure you want to delete this news?',
+                                    onclick="showConfirmationDialog(event,
+                                     'Are you sure you want to delete this employee ?',
                                     '@Url.Action("DeleteEmployee", new {id = item.Id})')">
                                 delete
                             </button>
@@ -107,6 +106,7 @@
                     </tr>
                 }
                 </tbody>
+                
             </table>
         </div>
     </div>

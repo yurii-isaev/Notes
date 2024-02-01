@@ -29,7 +29,7 @@ public class NewsController : Controller
 
     [Route("/admin/news")]
     [HttpGet]
-    public async Task<IActionResult> Index(NewsParametersModel prms)
+    public async Task<IActionResult> Index(NewsSelectedOptions options, PaginationOptions pagination)
     {
         try
         {
@@ -44,12 +44,12 @@ public class NewsController : Controller
 
             var filterOptions = new NewsFilterOptions
             {
-                Title = prms.SelectedTitle,
-                Author = prms.SelectedAuthor,
-                CreateDate = prms.SelectedCreateDate,
-                PublishDate = prms.SelectedPublishDate,
-                UpdateDate = prms.SelectedUpdateDate,
-                Activity = prms.SelectedActivity
+                Title = options.SelectedTitle,
+                Author = options.SelectedAuthor,
+                CreateDate = options.SelectedCreateDate,
+                PublishDate = options.SelectedPublishDate,
+                UpdateDate = options.SelectedUpdateDate,
+                Activity = options.SelectedActivity
             };
 
             newsList = filterOptions.ApplyFilter(newsList);
@@ -64,7 +64,7 @@ public class NewsController : Controller
                 .Where(v => newsList.Any(vm => vm.Title == v.Title))
                 .Select(v => new SelectListItem {Value = v.Title, Text = v.Title});
 
-            ViewBag.SelectedTitle = prms.SelectedTitle!;
+            ViewBag.SelectedTitle = options.SelectedTitle!;
 
             // ...
 
@@ -82,7 +82,7 @@ public class NewsController : Controller
                     Value = s.Author!.UserName, Text = s.Author.UserName
                 });
 
-            ViewBag.SelectedAuthor = prms.SelectedAuthor!;
+            ViewBag.SelectedAuthor = options.SelectedAuthor!;
 
             // ...
 
@@ -101,7 +101,7 @@ public class NewsController : Controller
                     Text = date.ToString("dd.MM.yyyy")
                 });
 
-            ViewBag.SelectedCreateDate = prms.SelectedCreateDate!;
+            ViewBag.SelectedCreateDate = options.SelectedCreateDate!;
 
             // ...
 
@@ -120,13 +120,13 @@ public class NewsController : Controller
                     Text = date.ToString("dd.MM.yyyy")
                 });
 
-            ViewBag.SelectedPublishDate = prms.SelectedPublishDate!;
+            ViewBag.SelectedPublishDate = options.SelectedPublishDate!;
 
             // ...
 
             var uniqueUpdateList = newsList
                 .Where(vm =>
-                    string.IsNullOrEmpty(prms.SelectedActivity) || vm.IsActive == bool.Parse(prms.SelectedActivity))
+                    string.IsNullOrEmpty(options.SelectedActivity) || vm.IsActive == bool.Parse(options.SelectedActivity))
                 .Select(vm => vm.UpdatedAt.Date)
                 .Distinct()
                 .OrderByDescending(date => date)
@@ -138,7 +138,7 @@ public class NewsController : Controller
                 Text = date.ToString("dd.MM.yyyy")
             });
 
-            ViewBag.SelectedUpdateDate = prms.SelectedUpdateDate!;
+            ViewBag.SelectedUpdateDate = options.SelectedUpdateDate!;
 
             // ...
 
@@ -154,13 +154,13 @@ public class NewsController : Controller
                 Text = v.ToString().ToLower()
             });
 
-            ViewBag.SelectedActivity = prms.SelectedActivity!;
+            ViewBag.SelectedActivity = options.SelectedActivity!;
 
             // Sort the news list by the PublishAt field in descending date order
             IList<NewsViewModel> orderedNewsList = newsList.OrderByDescending(s => s.PublishedAt).ToList();
 
-            var paginationList =
-                PaginationList<NewsViewModel>.Create(orderedNewsList, prms.PageNumber, prms.PageSize);
+            var paginationList = PaginationList<NewsViewModel>
+                .Create(orderedNewsList, pagination.PageNumber, pagination.PageSize);
 
             return await Task.FromResult<IActionResult>(View(paginationList));
         }

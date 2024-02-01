@@ -23,20 +23,25 @@ public class EmployeeController : Controller
         _toast = toast;
     }
     
-    public async Task<IActionResult> Index(NewsParametersModel prms)
+    [HttpGet]
+    [Route("/employee")]
+    public async Task<IActionResult> Index(SearchOptions? searcher, PaginationOptions pagination)
     {
         try
         {
-            ViewBag.keyword = prms.Keyword!;
+            string keyword = searcher!.Keyword!;
 
-            IList<EmployeeViewModel> employeeList = _employeeService.GetEmployeeListAsync(prms.Keyword!).Result
+            var employeeList = _employeeService.GetEmployeeListAsync(keyword)
+                .Result
                 .Select(emp => _mapper.Map<EmployeeViewModel>(emp))
                 .ToList();
 
-            // Sort the news list by the PublishAt field in descending date order
-            IList<EmployeeViewModel> orderedEmployeeList = employeeList.OrderByDescending(s => s.DateJoined).ToList();
-        
-            var paginationList = PaginationList<EmployeeViewModel>.Create(orderedEmployeeList, prms.PageNumber, prms.PageSize);
+            var orderedEmployeeList = employeeList
+                .OrderByDescending(s => s.DateJoined)
+                .ToList();
+            
+            var paginationList = PaginationList<EmployeeViewModel>
+                .Create(orderedEmployeeList, pagination.PageNumber, pagination.PageSize);
 
             return await Task.FromResult<IActionResult>(View(paginationList));
         }

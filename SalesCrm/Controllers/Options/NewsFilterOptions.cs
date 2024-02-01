@@ -10,8 +10,7 @@ public class NewsFilterOptions
     public string? PublishDate { get; set; }
     public string? UpdateDate { get; set; }
     public string? Activity { get; set; }
-    
-    
+
     public IEnumerable<NewsViewModel> ApplyFilter(IEnumerable<NewsViewModel> newsList)
     {
         if (!String.IsNullOrEmpty(Title))
