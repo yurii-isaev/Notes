@@ -37,31 +37,18 @@ public class RoleService : IRoleService
 
     public async Task CreateRoleAsync(RoleDto dto)
     {
-        try
+        if (dto.Name != null)
         {
-            if (dto.Name != null)
-            {
-                bool roleExists = await _roleManager.RoleExistsAsync(dto.Name);
+            bool roleExists = await _roleManager.RoleExistsAsync(dto.Name);
 
-                if (!roleExists)
-                {
-                    await _roleManager.CreateAsync(new IdentityRole(dto.Name));
-                }
-                else
-                {
-                    throw new RoleExistsException("Role already exists");
-                }
+            if (!roleExists)
+            {
+                await _roleManager.CreateAsync(new IdentityRole(dto.Name));
             }
-        }
-        catch (RoleExistsException ex)
-        {
-            _logger.LogError("[Create Role]\n" + ex.Message + "\n\n");
-            throw new RoleExistsException(ex.Message);
-        }
-        catch (HttpRequestException ex)
-        {
-            _logger.LogError("[Create Role]\n" + ex.Message + "\n\n");
-            throw new HttpRequestException(ex.Message, ex, HttpStatusCode.InternalServerError);
+            else
+            {
+                throw new RoleExistsException("Role already exists");
+            }
         }
     }
 

@@ -82,15 +82,15 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td>@Html.DisplayFor(eml => item.Name)</td>
-                        <td>@Html.DisplayFor(eml => item.Gender)</td>
+                        <td>@item.Name</td>
+                        <td>@item.Gender</td>
                         <td>
                             <img alt="Image" src="@Url.Content(item.ImageName)" width="40" height="40"
                                  style="border-radius:10px"/>
                         </td>
-                        <td>@Html.DisplayFor(eml => item.DateJoined)</td>
-                        <td>@Html.DisplayFor(eml => item.Designation)</td>
-                        <td>@Html.DisplayFor(eml => item.City)</td>
+                        <td>@item.DateJoined</td>
+                        <td>@item.Designation</td>
+                        <td>@item.City</td>
                         <td style="text-align:center">
                             <button class="btn btn-outline-primary button"
                                     onclick="location.href='@Url.Action("edit", new {id = item.Id, imageName = item.ImageName})'">

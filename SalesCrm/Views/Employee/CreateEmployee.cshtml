@@ -2,32 +2,31 @@
 @model SalesCrm.Controllers.ViewModels.EmployeeViewModel
 
 @{
+    ViewData["List"] = "Employee List";
     ViewData["Title"] = "Create Employee";
 }
 
 <div class="col-md-12">
     <div class="card">
         <div class="card-body">
-        
-            <!-- Card breadcrumb -->
-            @await Html.PartialAsync("_BreadcrumbPartial", new[] {"Employee List", @ViewData["Title"]!.ToString()})
-            <!-- Card breadcrumb  -->
+
+            <!-- Breadcrumbs -->
+            @await Html.PartialAsync("_BreadcrumbPartial", new[]
+            {
+                @ViewData["List"]!.ToString(),
+                @ViewData["Title"]!.ToString()
+            })
             <br/>
 
-            <!-- Card title -->
+            <!-- Title -->
             <div class="row">
                 <div class="col-md-12">
                     <h2 class="page-title">@ViewData["Title"]</h2>
                 </div>
             </div>
-            @* <br/> *@
-            @* <hr style="opacity:0.5!important"/> *@
-            <!-- Card title -->
 
-            <form method="post" enctype="multipart/form-data" asp-action="Create">
-
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
+            <form method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
                 <div class="col-4">
                     <div class="form-group indent">
                         <img id="preview"
@@ -40,16 +39,23 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="Name" class="form-label"></label>
                             <input asp-for="Name" class="form-control" placeholder="Enter name"/>
                             <span asp-validation-for="Name" class="text-danger"></span>
+                            @if (ViewData.ModelState.Any(ms => ms.Value!.Errors.Count > 0))
+                            {
+                                <div class="text-danger">
+                                    @foreach (var error in ViewData.ModelState.SelectMany(ms => ms.Value!.Errors))
+                                    {
+                                        <p>@(error.ErrorMessage.TrimEnd('.') + ".")</p>
+                                    }
+                                </div>
+                            }
                         </div>
                     </div>
-
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="Email" class="form-label"></label>
@@ -57,7 +63,6 @@
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                     </div>
-
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="Phone" class="form-label"></label>
@@ -65,7 +70,6 @@
                             <span asp-validation-for="Phone" class="text-danger"></span>
                         </div>
                     </div>
-
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="DateOfBirth" class="form-label"></label>
@@ -73,7 +77,6 @@
                             <span asp-validation-for="DateOfBirth" class="text-danger"></span>
                         </div>
                     </div>
-
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="Gender" class="form-label"></label>
@@ -84,7 +87,6 @@
                             <span asp-validation-for="Gender" class="text-danger"></span>
                         </div>
                     </div>
-
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="City" class="form-label"></label>
@@ -92,7 +94,6 @@
                             <span asp-validation-for="City" class="text-danger"></span>
                         </div>
                     </div>
-
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="Postcode" class="form-label"></label>
@@ -100,7 +101,6 @@
                             <span asp-validation-for="Postcode" class="text-danger"></span>
                         </div>
                     </div>
-
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="Address" class="form-label"></label>
@@ -108,7 +108,6 @@
                             <span asp-validation-for="Address" class="text-danger"></span>
                         </div>
                     </div>
-
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="Designation" class="form-label"></label>
@@ -116,7 +115,6 @@
                             <span asp-validation-for="Designation" class="text-danger"></span>
                         </div>
                     </div>
-
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="PaymentMethod" class="form-label"></label>
@@ -127,7 +125,6 @@
                             <span asp-validation-for="PaymentMethod" class="text-danger"></span>
                         </div>
                     </div>
-
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="StudentLoanStatus" class="form-label"></label>
@@ -138,7 +135,6 @@
                             <span asp-validation-for="StudentLoanStatus" class="text-danger"></span>
                         </div>
                     </div>
-
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="UnionMemberStatus" class="form-label"></label>
@@ -149,7 +145,6 @@
                             <span asp-validation-for="UnionMemberStatus" class="text-danger"></span>
                         </div>
                     </div>
-
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="InsuranceNumber" class="form-label"></label>
@@ -159,8 +154,8 @@
                     </div>
                 </div>
                 <br/>
-                <!-- ============================================================== -->
-                <!-- Edit button -->
+
+                <!-- Create button -->
                 <div class="row mt-2">
                     <div class="col-3">
                         <button type="submit" class="btn btn-rounded btn-primary">
@@ -168,7 +163,6 @@
                         </button>
                     </div>
                 </div>
-                <!-- ============================================================== -->
             </form>
         </div>
     </div>

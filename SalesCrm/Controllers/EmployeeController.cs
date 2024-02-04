@@ -1,20 +1,23 @@
-using System.Diagnostics;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
 using SalesCrm.Controllers.Options;
 using SalesCrm.Controllers.ViewModels;
 using SalesCrm.Services.Contracts.Services;
+using SalesCrm.Services.Exceptions;
 using SalesCrm.Services.Input;
+using SalesCrm.Utils.Reports;
 using SalesCrm.Views.Components.Pagination;
 
 namespace SalesCrm.Controllers;
 
-public class EmployeeController : Controller
+[Authorize(Roles = "Admin, Manager")]
+public class EmployeeController : BaseController
 {
-    private readonly IEmployeeService _employeeService;
-    private readonly IMapper _mapper;
-    private readonly IToastNotification _toast;
+    readonly IEmployeeService _employeeService;
+    readonly IMapper _mapper;
+    readonly IToastNotification _toast;
 
     public EmployeeController(IEmployeeService service, IMapper mapper, IToastNotification toast)
     {
@@ -22,7 +25,7 @@ public class EmployeeController : Controller
         _mapper = mapper;
         _toast = toast;
     }
-    
+
     [HttpGet]
     [Route("/employee")]
     public async Task<IActionResult> Index(SearchOptions? searcher, PaginationOptions pagination)
@@ -39,27 +42,28 @@ public class EmployeeController : Controller
             var orderedEmployeeList = employeeList
                 .OrderByDescending(s => s.DateJoined)
                 .ToList();
-            
+
             var paginationList = PaginationList<EmployeeViewModel>
                 .Create(orderedEmployeeList, pagination.PageNumber, pagination.PageSize);
 
             return await Task.FromResult<IActionResult>(View(paginationList));
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return RedirectToAction("Error");
+            Logger.LogError(ex);
+            return RedirectToAction(nameof(Error));
         }
     }
 
-    [Route("/employee/create")]
     [HttpGet]
+    [Route("/employee/create")]
     public async Task<IActionResult> CreateEmployee()
     {
         return await Task.FromResult<IActionResult>(View());
     }
 
-    [Route("/employee/create")]
     [HttpPost]
+    [Route("/employee/create")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(EmployeeViewModel viewModel)
     {
@@ -71,18 +75,19 @@ public class EmployeeController : Controller
                 await _employeeService.CreateEmployeeAsync(dto);
                 _toast.AddSuccessToastMessage("Employee successfully created");
             }
-            catch (Exception)
+            catch (EmployeeExistsException ex)
             {
-                ModelState.AddModelError("", "Error creating new employee");
                 _toast.AddErrorToastMessage("Error creating new employee");
+                ModelState.AddModelError("", ex.Message);
+                return View("CreateEmployee");
             }
         }
 
-        return RedirectToAction("Index");
+        return RedirectToAction(nameof(Index));
     }
 
-    [Route("/employee/edit/{id}")]
     [HttpGet]
+    [Route("/employee/edit/{id}")]
     public async Task<IActionResult> EditEmployee(Guid id)
     {
         var dto = await _employeeService.GetEmployeeByIdAsync(id);
@@ -90,8 +95,8 @@ public class EmployeeController : Controller
         return await Task.FromResult<IActionResult>(View(viewModel));
     }
 
-    [Route("/employee/edit/{id}")]
     [HttpPost]
+    [Route("/employee/edit/{id}")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(EmployeeViewModel viewModel)
     {
@@ -103,18 +108,19 @@ public class EmployeeController : Controller
                 await _employeeService.UpdateEmployeeAsync(dto);
                 _toast.AddSuccessToastMessage("Employee successfully updated");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                ModelState.AddModelError("", "Error updated employee");
+                Logger.LogError(ex);
                 _toast.AddErrorToastMessage("Error updated employee");
+                return RedirectToAction(nameof(Error));
             }
         }
 
-        return RedirectToAction("Index");
+        return RedirectToAction(nameof(Index));
     }
 
-    [Route("/employee/delete/{id}")]
     [HttpGet]
+    [Route("/employee/delete/{id}")]
     public async Task<IActionResult> DeleteEmployee(Guid id)
     {
         if (ModelState.IsValid)
@@ -124,22 +130,14 @@ public class EmployeeController : Controller
                 await _employeeService.DeleteEmployeeByIdAsync(id);
                 _toast.AddSuccessToastMessage("Employee successfully deleted");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                ModelState.AddModelError("", "Error deleted employee");
+                Logger.LogError(ex);
                 _toast.AddErrorToastMessage("Error deleted employee");
+                return RedirectToAction(nameof(Error));
             }
         }
 
-        return RedirectToAction("Index");
-    }
-    
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel
-        {
-            RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
-        });
+        return RedirectToAction(nameof(Index));
     }
 }

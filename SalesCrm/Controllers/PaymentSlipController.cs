@@ -78,7 +78,7 @@ namespace SalesCrm.Controllers
             try
             {
                 ViewBag.Employees = new SelectList(
-                    await _employeeService.GetEmployeeListAsync(), "Id", "Name"
+                    await _employeeService.GetEmployeeListAsync(null!), "Id", "Name"
                 );
                 
                 ViewBag.TaxYear = new SelectList(

@@ -6,13 +6,15 @@ namespace SalesCrm.DataAccess.Repositories;
 
 public class EmployeeRepository : IEmployeeRepository
 {
-    private EmployeeDbContext _context;
+    readonly EmployeeDbContext _context;
 
-    public EmployeeRepository(EmployeeDbContext ctx) => _context = ctx;
+    public EmployeeRepository(EmployeeDbContext context) => _context = context;
 
     public async Task<IEnumerable<Employee>> GetEmployeeListAsync()
     {
-        return await _context.Employees.AsNoTracking().OrderBy(n => n.Name).ToListAsync();
+        return await _context.Employees.AsNoTracking()
+            .OrderBy(n => n.Name)
+            .ToListAsync() ?? throw new InvalidOperationException();
     }
 
     public async Task<Employee> CreateEmployeeAsync(Employee employee)
@@ -31,13 +33,15 @@ public class EmployeeRepository : IEmployeeRepository
     // with the same key value for {'Id'} is already being tracked.
     // When attaching existing entities, ensure that only one entity instance with a given key value is attached.
     public async Task<Employee> GetEmployeeByIdAsync(Guid employeeId)
-    { 
+    {
         // waiting return async-type awaitable,
         // Employee - sync-type,
         // Task.FromResult(employee) - async-type
-        return (await _context.Employees.AsNoTracking().Where(emp => emp.Id == employeeId).FirstOrDefaultAsync())!;
+        return await _context.Employees.AsNoTracking()
+            .Where(emp => emp.Id == employeeId)
+            .FirstOrDefaultAsync() ?? throw new InvalidOperationException();
     }
-   
+
     public async Task UpdateEmployeeAsync(Employee employee)
     {
         _context.Employees.Update(employee);
@@ -46,8 +50,23 @@ public class EmployeeRepository : IEmployeeRepository
 
     public async Task DeleteEmployeeAsync(Guid employeeId)
     {
-        var employee = await _context.Employees.Where(emp => emp.Id == employeeId).FirstOrDefaultAsync();
-        _context.Employees.Remove(employee ?? throw new InvalidOperationException());
+        var employee = await _context.Employees
+            .Where(emp => emp.Id == employeeId)
+            .FirstOrDefaultAsync() ?? throw new InvalidOperationException();
+
+        _context.Employees.Remove(employee);
         await _context.SaveChangesAsync();
+    }
+    
+    public async Task<bool> EmployeeNameExistsAsync(string employeeName)
+    {
+        // Преобразуем имя в нижний регистр для более надежного сравнения (регистронезависимость)
+        string lowerEmployeeName = employeeName.ToLower();
+
+        // Проверяем наличие сотрудника с указанным именем в базе данных
+        bool employeeExists = await _context.Employees
+            .AnyAsync(e => e.Name!.ToLower() == lowerEmployeeName);
+
+        return employeeExists;
     }
 }
