@@ -82,6 +82,14 @@ public class EmployeeController : BaseController
                 return View("CreateEmployee");
             }
         }
+        else
+        {
+            return RedirectToAction(nameof(Error), new
+            {
+                statusCode = 400,
+                message = "Bad Request"
+            });
+        }
 
         return RedirectToAction(nameof(Index));
     }
@@ -105,6 +113,14 @@ public class EmployeeController : BaseController
             try
             {
                 var dto = _mapper.Map<EmployeeDto>(viewModel);
+                
+                // Checking if a new image has been uploaded
+                if (dto.FormFile == null)
+                {
+                    // If not, create a new FormFile using Model.ImageName
+                    dto.FormFile = new FormFile(new MemoryStream(), 0, 0, "FormFile", viewModel.ImageName!);
+                }
+                
                 await _employeeService.UpdateEmployeeAsync(dto);
                 _toast.AddSuccessToastMessage("Employee successfully updated");
             }
@@ -114,6 +130,14 @@ public class EmployeeController : BaseController
                 _toast.AddErrorToastMessage("Error updated employee");
                 return RedirectToAction(nameof(Error));
             }
+        }
+        else
+        {
+            return RedirectToAction(nameof(Error), new
+            {
+                statusCode = 400,
+                message = "Bad Request"
+            });
         }
 
         return RedirectToAction(nameof(Index));

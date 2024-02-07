@@ -1,6 +1,12 @@
+using System.ComponentModel;
+
 namespace SalesCrm.Domains.Enums;
 
 public enum UnionMemberStatus
 {
-    True, False
+    [Description("True")]
+    True,
+    
+    [Description("False")]
+    False
 }

@@ -28,23 +28,16 @@
 
             <form method="post" enctype="multipart/form-data">
                 @Html.AntiForgeryToken()
-                @* <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
-
                 <div class="col-4">
                     <div class="form-group indent">
                         <img id="preview"
-                             src="@(Model.ImageName != null
-                                      ? Url.Content(Model.ImageName)
-                                      : Url.Content("~/images/employees/user.jpg"))"
+                             src="@(Model.ImageName != null ? Url.Content(Model.ImageName) : Url.Content("~/images/employees/user.jpg"))"
                              alt="Preview" width="200" height="200" style="margin-bottom:10px"/>
 
-                        <input asp-for="FormFile"
-                               type="file" accept="image/*" class="form-control"
-                               onchange="previewImage(event)"
-                               width="200" height="200"/>
+                        <input asp-for="FormFile" type="file" accept="image/*" class="form-control"
+                               onchange="previewImage(event)" width="200" height="200"/>
 
-                        <input type="hidden" id="imageName"
-                               name="imageName"
+                        <input type="hidden" id="imageName" name="imageName"
                                value="@(Model.ImageName != null ? Model.ImageName : "user.jpg")">
 
                         <span asp-validation-for="FormFile" class="text-danger"></span>
@@ -62,28 +55,28 @@
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="Email" class="form-label"></label>
-                            <input asp-for="Email" class="form-control" placeholder="Enter name"/>
+                            <input asp-for="Email" class="form-control" placeholder="Enter email"/>
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="Phone" class="form-label"></label>
-                            <input asp-for="Phone" class="form-control" placeholder="Enter name"/>
+                            <input asp-for="Phone" class="form-control" placeholder="Enter phone"/>
                             <span asp-validation-for="Phone" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="DateOfBirth" class="form-label"></label>
-                            <input asp-for="DateOfBirth" class="form-control" placeholder="Enter name"/>
+                            <input asp-for="DateOfBirth" class="form-control" placeholder="Enter date"/>
                             <span asp-validation-for="DateOfBirth" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="Gender" class="form-label"></label>
-                            <select asp-for="Gender" class="form-control" placeholder="Enter name">
+                            <select asp-for="Gender" class="form-control" placeholder="Enter gender">
                                 <option>Male</option>
                                 <option>Female</option>
                             </select>
@@ -93,28 +86,28 @@
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="City" class="form-label"></label>
-                            <input asp-for="City" class="form-control" placeholder="Enter name"/>
+                            <input asp-for="City" class="form-control" placeholder="Enter city"/>
                             <span asp-validation-for="City" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="Postcode" class="form-label"></label>
-                            <input asp-for="Postcode" class="form-control" placeholder="Enter name"/>
+                            <input asp-for="Postcode" class="form-control" placeholder="Enter postcode"/>
                             <span asp-validation-for="Postcode" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="Address" class="form-label"></label>
-                            <textarea asp-for="Address" class="form-control" placeholder="Enter name"></textarea>
+                            <textarea asp-for="Address" class="form-control" placeholder="Enter address"></textarea>
                             <span asp-validation-for="Address" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="Designation" class="form-label"></label>
-                            <input asp-for="Designation" class="form-control" placeholder="Enter name"/>
+                            <input asp-for="Designation" class="form-control" placeholder="Enter designation"/>
                             <span asp-validation-for="Designation" class="text-danger"></span>
                         </div>
                     </div>
@@ -122,7 +115,6 @@
                         <div class="form-group indent">
                             <label asp-for="PaymentMethod" class="form-label"></label>
                             <select asp-for="PaymentMethod" class="form-control"
-                                    placeholder="Enter name"
                                     asp-items="@Html.GetEnumSelectList<PaymentMethod>()">
                             </select>
                             <span asp-validation-for="PaymentMethod" class="text-danger"></span>
@@ -131,7 +123,8 @@
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="StudentLoanStatus" class="form-label"></label>
-                            <select asp-for="StudentLoanStatus" class="form-control" placeholder="Enter name">
+                            <select asp-for="StudentLoanStatus" class="form-control">
+                                <option value="">-- Select option --</option>
                                 <option>True</option>
                                 <option>False</option>
                             </select>
@@ -141,7 +134,8 @@
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="UnionMemberStatus" class="form-label"></label>
-                            <select asp-for="UnionMemberStatus" class="form-control" placeholder="Enter name">
+                            <select asp-for="UnionMemberStatus" class="form-control">
+                                <option value="">-- Select option --</option>
                                 <option>True</option>
                                 <option>False</option>
                             </select>
@@ -151,7 +145,8 @@
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="InsuranceNumber" class="form-label"></label>
-                            <input asp-for="InsuranceNumber" class="form-control" placeholder="Number"/>
+                            <input asp-for="InsuranceNumber" class="form-control"
+                                   placeholder="Enter insurance number"/>
                             <span asp-validation-for="InsuranceNumber" class="text-danger"></span>
                         </div>
                     </div>
@@ -161,20 +156,25 @@
                 <!-- Edit button -->
                 <div class="row mt-2">
                     <div class="col-3">
-                        <button type="submit" class="btn btn-rounded btn-primary">
+                        <button type="submit" class="btn btn-rounded btn-primary" disabled id="editButton">
                             Edit
                         </button>
                     </div>
                 </div>
             </form>
-            
+
         </div>
     </div>
 </div>
 
 <style>
     .indent {
-        margin-top: 20px!important;
+        margin-top: 20px !important;
+    }
+
+    label.form-label {
+        color: #9497d9;
+        font-weight: bold;
     }
 </style>
 
@@ -185,16 +185,30 @@
     }
 
     <script>
-    function previewImage(event) {
-        var input = event.target;
-        var preview = document.getElementById('preview');
-        var reader = new FileReader();
-    
-        reader.onload = function () {
-            preview.src = reader.result;
-        };
-    
-        reader.readAsDataURL(input.files[0]);
-    }
+        function previewImage(event) {
+            var input = event.target;
+            var preview = document.getElementById('preview');
+            var reader = new FileReader();
+
+            reader.onload = function () {
+                preview.src = reader.result;
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var inputs = document.querySelectorAll('input, select, textarea');
+
+            function validateForm() {
+                var isValid = document.querySelector('form').checkValidity();
+                document.getElementById('editButton').disabled = !isValid;
+            }
+
+            inputs.forEach(function (input) {
+                input.addEventListener('input', validateForm);
+                input.addEventListener('change', validateForm);
+            });
+        });
     </script>
 }

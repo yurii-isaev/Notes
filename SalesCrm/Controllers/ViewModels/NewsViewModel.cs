@@ -7,8 +7,10 @@ public class NewsViewModel
 {
     public Guid Id { get; set; }
 
-    [Required(ErrorMessage = "Title is required"),
-     StringLength(50, MinimumLength = 2, ErrorMessage = "Invalid Title length")]
+    [
+        Required, 
+        StringLength(50, MinimumLength = 2, ErrorMessage = "Invalid Title length")
+    ]
     public string? Title { get; set; }
 
     [Required(ErrorMessage = "Text is required")]

@@ -13,8 +13,8 @@
             <!-- Breadcrumbs -->
             @await Html.PartialAsync("_BreadcrumbPartial", new[]
             {
-                @ViewData["List"]!.ToString(),
-                @ViewData["Title"]!.ToString()
+                @ViewData["List"],
+                @ViewData["Title"]
             })
             <br/>
 
@@ -29,9 +29,8 @@
                 @Html.AntiForgeryToken()
                 <div class="col-4">
                     <div class="form-group indent">
-                        <img id="preview"
-                             src="~/images/employees/user.jpg"
-                             alt="Preview" width="200" height="200" style="margin-bottom:10px"/>
+                        <img id="preview" src="~/images/employees/user.jpg" alt="Preview" width="200" height="200"
+                             style="margin-bottom:10px"/>
 
                         <div class="form-group">
                             <input asp-for="FormFile" class="form-control" onchange="previewImage(event)"/>
@@ -59,28 +58,29 @@
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="Email" class="form-label"></label>
-                            <input asp-for="Email" class="form-control" placeholder="Enter name"/>
+                            <input asp-for="Email" class="form-control" placeholder="Enter email"/>
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="Phone" class="form-label"></label>
-                            <input asp-for="Phone" class="form-control" placeholder="Enter name"/>
+                            <input asp-for="Phone" class="form-control" placeholder="Enter phone"/>
                             <span asp-validation-for="Phone" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="DateOfBirth" class="form-label"></label>
-                            <input asp-for="DateOfBirth" class="form-control" placeholder="Enter name"/>
+                            <input asp-for="DateOfBirth" class="form-control" placeholder="Enter date"/>
                             <span asp-validation-for="DateOfBirth" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="Gender" class="form-label"></label>
-                            <select asp-for="Gender" class="form-control" placeholder="Enter name">
+                            <select asp-for="Gender" class="form-control">
+                                <option value="">-- Select option --</option>
                                 <option>Male</option>
                                 <option>Female</option>
                             </select>
@@ -90,28 +90,28 @@
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="City" class="form-label"></label>
-                            <input asp-for="City" class="form-control" placeholder="Enter name"/>
+                            <input asp-for="City" class="form-control" placeholder="Enter city"/>
                             <span asp-validation-for="City" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="Postcode" class="form-label"></label>
-                            <input asp-for="Postcode" class="form-control" placeholder="Enter name"/>
+                            <input asp-for="Postcode" class="form-control" placeholder="Enter postcode"/>
                             <span asp-validation-for="Postcode" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="Address" class="form-label"></label>
-                            <textarea asp-for="Address" class="form-control" placeholder="Enter name"></textarea>
+                            <textarea asp-for="Address" class="form-control" placeholder="Enter address"></textarea>
                             <span asp-validation-for="Address" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="Designation" class="form-label"></label>
-                            <input asp-for="Designation" class="form-control" placeholder="Enter name"/>
+                            <input asp-for="Designation" class="form-control" placeholder="Enter designation"/>
                             <span asp-validation-for="Designation" class="text-danger"></span>
                         </div>
                     </div>
@@ -119,8 +119,8 @@
                         <div class="form-group indent">
                             <label asp-for="PaymentMethod" class="form-label"></label>
                             <select asp-for="PaymentMethod" class="form-control"
-                                    asp-items="@Html.GetEnumSelectList<PaymentMethod>()"
-                                    placeholder="Enter name">
+                                    asp-items="@Html.GetEnumSelectList<PaymentMethod>()">
+                                <option value="">-- Select option --</option>
                             </select>
                             <span asp-validation-for="PaymentMethod" class="text-danger"></span>
                         </div>
@@ -128,7 +128,8 @@
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="StudentLoanStatus" class="form-label"></label>
-                            <select asp-for="StudentLoanStatus" class="form-control" placeholder="Enter name">
+                            <select asp-for="StudentLoanStatus" class="form-control">
+                                <option value="">-- Select option --</option>
                                 <option>True</option>
                                 <option>False</option>
                             </select>
@@ -138,7 +139,8 @@
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="UnionMemberStatus" class="form-label"></label>
-                            <select asp-for="UnionMemberStatus" class="form-control" placeholder="Enter name">
+                            <select asp-for="UnionMemberStatus" class="form-control">
+                                <option value="">-- Select option --</option>
                                 <option>True</option>
                                 <option>False</option>
                             </select>
@@ -148,13 +150,13 @@
                     <div class="col-4">
                         <div class="form-group indent">
                             <label asp-for="InsuranceNumber" class="form-label"></label>
-                            <input asp-for="InsuranceNumber" class="form-control" placeholder="Number"/>
+                            <input asp-for="InsuranceNumber" class="form-control"
+                                   placeholder="Enter insurance number"/>
                             <span asp-validation-for="InsuranceNumber" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
                 <br/>
-
                 <!-- Create button -->
                 <div class="row mt-2">
                     <div class="col-3">
@@ -170,7 +172,12 @@
 
 <style>
     .indent {
-        margin-top: 20px!important;
+        margin-top: 20px !important;
+    }
+
+    label.form-label {
+        color: #9497d9;
+        font-weight: bold;
     }
 </style>
 
@@ -181,16 +188,16 @@
     }
 
     <script>
-    function previewImage(event) {
-        var input = event.target;
-        var preview = document.getElementById('preview');
-        var reader = new FileReader();
+        function previewImage(event) {
+            var input = event.target;
+            var preview = document.getElementById('preview');
+            var reader = new FileReader();
 
-        reader.onload = function () {
-            preview.src = reader.result;
-        };
+            reader.onload = function () {
+                preview.src = reader.result;
+            };
 
-        reader.readAsDataURL(input.files[0]);
-    }
+            reader.readAsDataURL(input.files[0]);
+        }
     </script>
 }

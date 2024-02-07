@@ -13,7 +13,8 @@ public class EmployeeService : IEmployeeService
     readonly IMapper _mapper;
     readonly IWebHostEnvironment _environment;
 
-    private const string UploadDir = @"images/employees/";
+    const string UploadDir = @"images/employees/";
+    const string DefaultPhotoPath = @"/images/employees/user.jpg";
 
     public EmployeeService(IEmployeeRepository repository, IMapper mapper, IWebHostEnvironment environment)
     {
@@ -38,6 +39,10 @@ public class EmployeeService : IEmployeeService
         {
             await AddEmployeePhoto(dto, employee);
         }
+        else
+        {
+            await AddEmployeeDefaultPhoto(dto);
+        }
 
         if (employee.Name != null)
         {
@@ -54,26 +59,53 @@ public class EmployeeService : IEmployeeService
         }
     }
 
+    private Task AddEmployeeDefaultPhoto(EmployeeDto dto)
+    {
+        var filename = "user.jpg";
+        var filePath = Path.Combine(_environment.WebRootPath, UploadDir, filename);
+        var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+        var fileInfo = new FileInfo(filePath);
+        dto.FormFile = new FormFile(fileStream, 0, fileInfo.Length, "FormFile", Path.GetFileName(fileInfo.Name));
+        dto.ImageName = $"/{UploadDir}{filename}";
+        return Task.CompletedTask;
+    }
+
     private async Task AddEmployeePhoto(EmployeeDto dto, Employee employee)
     {
-        // Get the image file extension
-        var fileExtension = Path.GetExtension(dto.FormFile!.FileName);
+        if (dto.FormFile != null)
+        {
+            // Get the image file extension
+            var fileExtension = Path.GetExtension(dto.FormFile.FileName);
 
-        // Form the file name using the name from the DTO and the file extension 
-        var filename = $"{dto.Name}{fileExtension}";
+            // Form the file name using the name from the DTO and the file extension 
+            var filename = $"{dto.Name}{fileExtension}";
 
-        // Concatenates these path strings, taking into account the correct path separation for the operating system
-        var path = Path.Combine(_environment.WebRootPath, UploadDir, filename);
+            // Concatenate the path to the upload directory with the filename
+            var path = Path.Combine(_environment.WebRootPath, UploadDir, filename);
 
-        // Open the file for writing if it exists and create a new file if it doesn't exist
-        await using var stream =
-            new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 4096, useAsync: true);
+            // Check if the file already exists and delete it if necessary
+            if (File.Exists(path)) File.Delete(path);
 
-        // Performs an asynchronous copy of the contents of the file at the specified URL to a new file submitted by FileStream
-        await dto.FormFile!.CopyToAsync(stream);
+            // Open the file for writing and create a new file
+            await using var stream = new FileStream(path,
+                FileMode.Create,
+                FileAccess.Write, FileShare.None,
+                bufferSize: 4096,
+                useAsync: true
+            );
 
-        // Assign a file name with a path to the corresponding property of the employee
-        employee.ImageName = $"/{UploadDir}{filename}";
+            // Perform an asynchronous copy of the contents of the file from the DTO to the new file created by FileStream
+            await dto.FormFile.CopyToAsync(stream);
+
+            // Assign the filename with a path to the corresponding property of the employee
+            employee.ImageName = $"/{UploadDir}{filename}";
+        }
+        else if (employee.ImageName != DefaultPhotoPath)
+        {
+            // If no new image is selected, keep the existing image unchanged
+            // You may need to adjust the path to match the location of your default image
+            employee.ImageName = DefaultPhotoPath;
+        }
     }
 
     public async Task<IEnumerable<EmployeeDto>> GetEmployeeListAsync(string keyword)
@@ -133,8 +165,8 @@ public class EmployeeService : IEmployeeService
             var employeeObj = await _repository.GetEmployeeByIdAsync(dto.Id);
             var employeePhoto = employeeObj.ImageName;
 
-            // Delete the old photo, if it exists
-            if (!string.IsNullOrEmpty(employeePhoto))
+            // Delete the old photo, if it exists and it's not the default static image
+            if (!string.IsNullOrEmpty(employeePhoto) && employeePhoto != DefaultPhotoPath)
             {
                 var oldEmployeePhoto = Path.Combine(_environment.WebRootPath, employeePhoto.TrimStart('/'));
 
@@ -160,7 +192,6 @@ public class EmployeeService : IEmployeeService
     public async Task DeleteEmployeeByIdAsync(Guid employeeId)
     {
         var dto = await GetEmployeeByIdAsync(employeeId);
-
 
         if (dto.ImageName != null && dto.ImageName.Length > 0)
         {
