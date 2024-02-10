@@ -8,14 +8,12 @@ namespace SalesCrm.Services;
 
 public class NewsService : INewsService
 {
-    private readonly INewsRepository _repository;
-    private readonly ILogger<NewsService> _logger;
-    private readonly IMapper _mapper;
+    readonly INewsRepository _repository;
+    readonly IMapper _mapper;
 
-    public NewsService(INewsRepository repository, ILogger<NewsService> log, IMapper mapper)
+    public NewsService(INewsRepository repository, IMapper mapper)
     {
         _repository = repository;
-        _logger = log;
         _mapper = mapper;
     }
 
@@ -24,91 +22,48 @@ public class NewsService : INewsService
         try
         {
             var newsList = await _repository.GetNewsListAsync();
-            var newsTransferList = _mapper.Map<IEnumerable<NewsDto>>(newsList);
-
-            return newsTransferList;
+            return _mapper.Map<IEnumerable<NewsDto>>(newsList);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            _logger.LogError("[NewsService .. Get News List]: " + ex.Message);
             return Enumerable.Empty<NewsDto>();
         }
     }
 
     public async Task CreateNewsAsync(NewsDto dto)
     {
-        try
-        {
-            var entity = _mapper.Map<News>(dto);
-            await _repository.CreateNewsAsync(entity);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("[NewsService .. Create News]: " + ex.Message);
-            throw;
-        }
+        var entity = _mapper.Map<News>(dto);
+        await _repository.CreateNewsAsync(entity);
     }
 
     public async Task<NewsDto> GetNewsItemAsync(Guid id)
     {
-        try
-        {
-            var news = await _repository.GetOneNewsAsync(id);
-            var dto = _mapper.Map<NewsDto>(news);
-            return dto;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("[NewsService .. Get News Item]: " + ex.Message);
-            throw;
-        }
+        var news = await _repository.GetOneNewsAsync(id);
+        var dto = _mapper.Map<NewsDto>(news);
+        return dto;
     }
 
     public async Task<IEnumerable<NewsDto>> GetOnlyActiveNewsAsync(string keyword)
     {
-        try
+        var newsList = await _repository.GetOnlyActiveNewsAsync();
+
+        if (!string.IsNullOrEmpty(keyword))
         {
-            var newsList = await _repository.GetOnlyActiveNewsAsync();
-            
-            if (!string.IsNullOrEmpty(keyword))
-            {
-                newsList = newsList.Where(emp => emp.Title!.Contains(keyword));
-            }
-            
-            var dto = _mapper.Map<IEnumerable<NewsDto>>(newsList);
-            return dto;
+            newsList = newsList.Where(emp => emp.Title!.Contains(keyword));
         }
-        catch (Exception ex)
-        {
-            _logger.LogError("[NewsService .. Get Only Active News Async]: " + ex.Message);
-            throw;
-        }
+
+        var dto = _mapper.Map<IEnumerable<NewsDto>>(newsList);
+        return dto;
     }
 
     public async Task UpdateNewsAsync(NewsDto dto)
     {
-        try
-        {
-            var news = _mapper.Map<News>(dto);
-            await _repository.UpdateNewsAsync(news);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("[NewsService .. Update News]: " + ex.Message);
-            throw;
-        }
+        var news = _mapper.Map<News>(dto);
+        await _repository.UpdateNewsAsync(news);
     }
 
     public async Task DeleteNewsAsync(Guid id)
     {
-        try
-        {
-            await _repository.DeleteNewsAsync(id);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("[NewsService .. Delete News]: " + ex.Message);
-            throw;
-        }
+        await _repository.DeleteNewsAsync(id);
     }
 }

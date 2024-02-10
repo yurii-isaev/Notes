@@ -9,20 +9,20 @@
     <div class="card">
         <div class="card-body">
 
-            <!-- Card breadcrumb -->
-            @await Html.PartialAsync("_BreadcrumbPartial", new[] {"News List", @ViewData["Title"]!.ToString()})
-            <!-- Card breadcrumb  -->
-            <br/>
+            <!-- Breadcrumb -->
+            @await Html.PartialAsync("_BreadcrumbPartial", new[]
+            {
+                @ViewData["List"],
+                @ViewData["Title"]
+            }) <br/>
 
-            <!-- Card title -->
+            <!-- Title -->
             <div class="row">
                 <div class="col-md-12">
                     <h2 class="page-title">@ViewData["Title"]</h2>
                 </div>
             </div>
             <br/>
-            @* <hr style="opacity:0.5!important"/> *@
-            <!-- Card title -->
 
             <form method="post" asp-page-handler="Create">
                 <div class="row">

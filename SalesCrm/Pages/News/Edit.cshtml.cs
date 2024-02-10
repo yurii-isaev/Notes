@@ -6,21 +6,20 @@ using NToastNotify;
 using SalesCrm.Controllers.ViewModels;
 using SalesCrm.Services.Contracts.Services;
 using SalesCrm.Services.Input;
+using SalesCrm.Utils.Reports;
 
 namespace SalesCrm.Pages.News;
 
-[Authorize(Roles = "Manager")]
+[Authorize(Roles = "Admin, Manager")]
 public class EditModel : PageModel
 {
-    private readonly INewsService _newsService;
-    private readonly ILogger<EditModel> _logger;
-    private readonly IMapper _mapper;
-    private readonly IToastNotification _toast;
+    readonly INewsService _newsService;
+    readonly IMapper _mapper;
+    readonly IToastNotification _toast;
 
-    public EditModel(INewsService service, ILogger<EditModel> logger, IMapper mapper, IToastNotification toast)
+    public EditModel(INewsService service, IMapper mapper, IToastNotification toast)
     {
         _newsService = service;
-        _logger = logger;
         _mapper = mapper;
         _toast = toast;
     }
@@ -30,7 +29,6 @@ public class EditModel : PageModel
     
     [BindProperty]
     public NewsViewModel News { get; set; } = null!;
-
 
     public async Task<IActionResult> OnGetAsync(Guid newsId)
     {
@@ -48,7 +46,7 @@ public class EditModel : PageModel
         }
         catch (Exception ex)
         {
-            _logger.LogError("[EditModel .. On Get Async]: " + ex.Message);
+            Logger.LogError(ex);
             return NotFound();
         }
         

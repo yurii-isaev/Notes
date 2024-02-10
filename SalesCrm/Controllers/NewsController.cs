@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,16 +8,17 @@ using SalesCrm.Controllers.Options;
 using SalesCrm.Controllers.ViewModels;
 using SalesCrm.Services.Contracts.Services;
 using SalesCrm.Services.Input;
-using SalesCrm.Views.Components.Pagination;
+using SalesCrm.Utils.Reports;
+using SalesCrm.Views.Shared.Pagination;
 
 namespace SalesCrm.Controllers;
 
 [Authorize(Roles = "Admin")]
-public class NewsController : Controller
+public class NewsController : BaseController
 {
-    private readonly INewsService _newsService;
-    private readonly IMapper _mapper;
-    private readonly IToastNotification _toast;
+    readonly INewsService _newsService;
+    readonly IMapper _mapper;
+    readonly IToastNotification _toast;
 
     public NewsController(INewsService newsService, IMapper mapper, IToastNotification toast)
     {
@@ -27,8 +27,8 @@ public class NewsController : Controller
         _toast = toast;
     }
 
-    [Route("/admin/news")]
     [HttpGet]
+    [Route("/admin/news")]
     public async Task<IActionResult> Index(NewsSelectedOptions options, PaginationOptions pagination)
     {
         try
@@ -126,7 +126,8 @@ public class NewsController : Controller
 
             var uniqueUpdateList = newsList
                 .Where(vm =>
-                    string.IsNullOrEmpty(options.SelectedActivity) || vm.IsActive == bool.Parse(options.SelectedActivity))
+                    string.IsNullOrEmpty(options.SelectedActivity) ||
+                    vm.IsActive == bool.Parse(options.SelectedActivity))
                 .Select(vm => vm.UpdatedAt.Date)
                 .Distinct()
                 .OrderByDescending(date => date)
@@ -164,21 +165,23 @@ public class NewsController : Controller
 
             return await Task.FromResult<IActionResult>(View(paginationList));
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return RedirectToAction("Error");
+            Logger.LogError(ex);
+            return RedirectToAction(nameof(Error));
         }
     }
 
-    [Route("/admin/news/create")]
     [HttpGet]
+    [Route("/admin/news/create")]
     public async Task<IActionResult> CreateNews()
     {
         return await Task.FromResult<IActionResult>(View());
     }
 
-    [Route("/admin/news/create")]
     [HttpPost]
+    [Route("/admin/news/create")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(NewsViewModel viewModel)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -198,18 +201,19 @@ public class NewsController : Controller
                     _toast.AddSuccessToastMessage("News created successfully");
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                ModelState.AddModelError("", "Error creating news");
+                Logger.LogError(ex);
                 _toast.AddErrorToastMessage("Error creating news");
+                return RedirectToAction(nameof(Error));
             }
         }
 
-        return RedirectToAction("Index");
+        return RedirectToAction(nameof(Index));
     }
 
-    [Route("/admin/news/edit/{id}")]
     [HttpGet]
+    [Route("/admin/news/edit/{id}")]
     public async Task<IActionResult> EditNews(Guid id)
     {
         try
@@ -218,14 +222,15 @@ public class NewsController : Controller
             var viewModel = _mapper.Map<NewsViewModel>(dto);
             return await Task.FromResult<IActionResult>(View(viewModel));
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return RedirectToAction("Error");
+            Logger.LogError(ex);
+            return RedirectToAction(nameof(Error));
         }
     }
 
-    [Route("/admin/news/edit/{id}")]
     [HttpPost]
+    [Route("/admin/news/edit/{id}")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(NewsViewModel viewModel)
     {
@@ -238,19 +243,19 @@ public class NewsController : Controller
 
                 _toast.AddSuccessToastMessage("News updated successfully");
             }
-            catch
+            catch (Exception ex)
             {
-                ModelState.AddModelError("", "Error updated news");
+                Logger.LogError(ex);
                 _toast.AddErrorToastMessage("Error updated news");
-                return RedirectToAction("Error");
+                return RedirectToAction(nameof(Error));
             }
         }
 
-        return RedirectToAction("Index");
+        return RedirectToAction(nameof(Index));
     }
 
-    [Route("/admin/news/delete/{id}")]
     [HttpGet]
+    [Route("/admin/news/delete/{id}")]
     public async Task<IActionResult> DeleteNews(Guid id)
     {
         try
@@ -258,21 +263,13 @@ public class NewsController : Controller
             await _newsService.DeleteNewsAsync(id);
             _toast.AddSuccessToastMessage("News deleted successfully");
         }
-        catch
+        catch (Exception ex)
         {
-            ModelState.AddModelError("", "Error deleted news");
+            Logger.LogError(ex);
             _toast.AddErrorToastMessage("Error deleted news");
+            return RedirectToAction(nameof(Error));
         }
 
-        return RedirectToAction("Index");
-    }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel
-        {
-            RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
-        });
+        return RedirectToAction(nameof(Index));
     }
 }

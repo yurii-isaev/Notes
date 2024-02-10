@@ -6,18 +6,22 @@ namespace SalesCrm.DataAccess.Repositories;
 
 public class NewsRepository : INewsRepository
 {
-    private NewsDbContext _context;
+    readonly NewsDbContext _context;
 
     public NewsRepository(NewsDbContext ctx) => _context = ctx;
 
     public async Task<IEnumerable<News>> GetNewsListAsync()
     {
-        return await _context.News.Include(n => n.Author).ToListAsync();
+        return await _context.News
+            .Include(n => n.Author)
+            .ToListAsync() ?? throw new InvalidOperationException();
     }
 
     public async Task<IEnumerable<News>> GetOnlyActiveNewsAsync()
     {
-        return await _context.News.Where(n => n.IsActive).ToListAsync();
+        return await _context.News
+            .Where(n => n.IsActive)
+            .ToListAsync() ?? throw new InvalidOperationException();
     }
 
     public async Task CreateNewsAsync(News news)
@@ -35,9 +39,11 @@ public class NewsRepository : INewsRepository
 
     public async Task UpdateNewsAsync(News news)
     {
-        var currentNews = await _context.News.Where(n => n.Id == news.Id).FirstOrDefaultAsync();
+        var currentNews = await _context.News
+            .Where(n => n.Id == news.Id)
+            .FirstOrDefaultAsync() ?? throw new InvalidOperationException();
 
-        currentNews!.Title = news.Title;
+        currentNews.Title = news.Title;
         currentNews.Description = news.Description;
         currentNews.PublishedAt = news.PublishedAt;
         currentNews.CreatedAt = news.CreatedAt;
@@ -49,8 +55,11 @@ public class NewsRepository : INewsRepository
 
     public async Task DeleteNewsAsync(Guid newsId)
     {
-        var item = await _context.News.Where(n => n.Id == newsId).FirstOrDefaultAsync();
-        _context.News.Remove(item ?? throw new InvalidOperationException());
+        News item = await _context.News
+            .Where(n => n.Id == newsId)
+            .FirstOrDefaultAsync() ?? throw new InvalidOperationException();
+
+        _context.News.Remove(item);
         await _context.SaveChangesAsync();
     }
 }

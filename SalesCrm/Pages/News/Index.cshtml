@@ -12,33 +12,25 @@
         <div class="card">
             <div class="card-body">
 
-                <!-- Card breadcrumb -->
-                @await Html.PartialAsync("_BreadcrumbPartial", new[] {@ViewData["Title"]!.ToString(), ""})
-                <!-- Card breadcrumb  -->
+                <!-- Breadcrumb -->
+                @await Html.PartialAsync("_BreadcrumbPartial", new[] {@ViewData["Title"], ""})
                 <br/>
 
-                <!-- Card title -->
+                <!-- Title -->
                 <div class="row">
                     <div class="col-md-12">
                         <h2 class="page-title">@ViewData["Title"]</h2>
                     </div>
                 </div>
                 <br/>
-                @* <hr style="opacity:0.5!important"/> *@
-                <!-- Card title -->
 
                 <div class="row">
                     <div class="col-md-4">
                         <form method="get" asp-page="Index" asp-handler="Index">
-                            <div class="form-group">
-                                <label class="form-label">Search keywords:</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control"
-                                           name="keyword" placeholder="Enter keywords..."
-                                           value="@ViewBag.keyword">
-                                    <button class="btn btn-secondary" type="submit">Search</button>
-                                </div>
-                            </div>
+                            @using (Html.BeginForm("Index", "Employee", FormMethod.Get))
+                            {
+                                @await Html.PartialAsync("_SearcherPartial")
+                            }
                         </form>
                     </div>
 
@@ -87,7 +79,7 @@
     </div>
 </div>
 
-@Html.Partial("Shared/Pagination/_Pagination", new PaginationViewModel
+@Html.Partial("/Pages/Shared/Pagination/_Pagination.cshtml", new PaginationViewModel
 {
     ActionName = "Index",
     PageNumber = Model.PageNumber,

@@ -8,7 +8,7 @@ using SalesCrm.Services.Contracts.Services;
 using SalesCrm.Services.Exceptions;
 using SalesCrm.Services.Input;
 using SalesCrm.Utils.Reports;
-using SalesCrm.Views.Components.Pagination;
+using SalesCrm.Views.Shared.Pagination;
 
 namespace SalesCrm.Controllers;
 

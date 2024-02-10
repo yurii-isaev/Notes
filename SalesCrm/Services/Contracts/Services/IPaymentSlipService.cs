@@ -1,5 +1,3 @@
-using SalesCrm.Controllers.ViewModels;
-
 namespace SalesCrm.Services.Contracts.Services;
 
 public interface IPaymentSlipService

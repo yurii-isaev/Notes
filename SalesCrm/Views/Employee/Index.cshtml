@@ -1,6 +1,6 @@
-@using SalesCrm.Views.Components.Pagination
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@model SalesCrm.Views.Components.Pagination.PaginationList<SalesCrm.Controllers.ViewModels.EmployeeViewModel>
+@using SalesCrm.Views.Shared.Pagination
+@model PaginationList<SalesCrm.Controllers.ViewModels.EmployeeViewModel>
 
 @{
     ViewData["List"] = "Employee List";
@@ -13,7 +13,7 @@
             <div class="card-body">
 
                 <!-- Breadcrumb -->
-                @await Html.PartialAsync("_BreadcrumbPartial", new[] {@ViewData["List"]!.ToString(), ""})
+                @await Html.PartialAsync("_BreadcrumbPartial", new[] {@ViewData["List"], ""})
                 <br/>
 
                 <!-- Title -->
@@ -23,8 +23,6 @@
                     </div>
                 </div>
                 <br/>
-                @* <hr style="opacity:0.5!important"/> *@
-                <!-- Card title -->
 
                 <div class="row">
                     <div class="col-md-4">
@@ -112,7 +110,7 @@
     </div>
 </div>
 
-@Html.Partial("../Components/Pagination/_Pagination", new PaginationViewModel
+@Html.Partial("/Views/Shared/Pagination/_Pagination.cshtml", new PaginationViewModel
 {
     ActionName = "Index",
     PageNumber = Model.PageNumber,
@@ -127,7 +125,6 @@
     @await Html.PartialAsync("../Shared/_DeleteConfirmationModal")
 
     <script>
-   
        // Add filters for other fields in the table
        var filters = {
            'Name': '',
@@ -137,7 +134,7 @@
            'City': ''
        };
        
-       var arrowUpSymbol   = "▼";
+       var arrowUpSymbol = "▼";
        var arrowDownSymbol = "▲";
        var table = document.getElementById("employeeTable");
        var rows  = table.rows;

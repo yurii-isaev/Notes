@@ -37,12 +37,12 @@
             <!--- Sidemenu -->
             <ul class="side-nav">
                 <!-- News page-->
-               <li class="side-nav-item">
-                   <a class="side-nav-link" asp-page="/News">
-                       <i class="uil-rss"></i>
-                       <span> News </span>
-                   </a>
-               </li>
+                <li class="side-nav-item">
+                    <a class="side-nav-link" href="/News">
+                        <i class="uil-rss"></i>
+                        <span> News </span>
+                    </a>
+                </li>
                 <!-- Employee controller-->
                 <li class="side-nav-item">
                     <a class="side-nav-link" asp-area="" asp-controller="Employee" asp-action="Index">
@@ -65,16 +65,13 @@
                     </a>
                 </li>
             </ul>
-            <!-- End Sidebar -->
             <div class="clearfix"></div>
         </div>
-        <!-- Sidebar -left -->
     </div>
-    <!-- Left Sidebar End -->
+
     <!-- ============================================================== -->
     <!-- Start Page Content here -->
     <!-- ============================================================== -->
-
     <div class="content-page">
         <!-- Topbar Start -->
         <div class="navbar-custom">
@@ -84,7 +81,8 @@
                     <i class="mdi mdi-menu"></i>
                 </button>
                 <div class="container-fluid">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <a class="navbar-brand">
+                    @* <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"> *@
                         Admin panel
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -114,12 +112,6 @@
                                     Users
                                 </a>
                             </li>
-
-                            @* <li class="nav-item"> *@
-                            @*     <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Privacy"> *@
-                            @*         Privacy *@
-                            @*     </a> *@
-                            @* </li> *@
                         </ul>
                         <partial name="_LoginPartial"/>
                     </div>
@@ -142,13 +134,14 @@
                 <div class="row">
                     <div class="col-md-6">
                         <script> document.write(new Date().getFullYear())</script>
-                        © SalesCrm - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        © SalesCrm - <a href="javascript: void(0)">Privacy</a>
+                        @* <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> *@
                     </div>
                     <div class="col-md-6">
                         <div class="text-md-end footer-links d-none d-md-block">
-                            <a href="javascript: void(0);">About</a>
-                            <a href="javascript: void(0);">Support</a>
-                            <a href="javascript: void(0);">Contact Us</a>
+                            <a href="javascript: void(0)">About</a>
+                            <a href="javascript: void(0)">Support</a>
+                            <a href="javascript: void(0)">Contact Us</a>
                         </div>
                     </div>
                 </div>

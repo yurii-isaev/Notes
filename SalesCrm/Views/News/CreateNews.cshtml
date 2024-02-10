@@ -3,28 +3,31 @@
 
 @{
     ViewData["Title"] = "Create News";
+    ViewData["List"] = "News List";
 }
 
 <div class="col-md-12">
     <div class="card">
         <div class="card-body">
 
-            <!-- Card breadcrumb -->
-            @await Html.PartialAsync("_BreadcrumbPartial", new[] {"News List", @ViewData["Title"]!.ToString()})
-            <!-- Card breadcrumb  -->
+            <!-- Breadcrumb -->
+            @await Html.PartialAsync("_BreadcrumbPartial", new[]
+            {
+                @ViewData["List"],
+                @ViewData["Title"]
+            })
             <br/>
 
-            <!-- Card title -->
+            <!-- Title -->
             <div class="row">
                 <div class="col-md-12">
                     <h2 class="page-title">@ViewData["Title"]</h2>
                 </div>
             </div>
             <br/>
-            @* <hr style="opacity:0.5!important"/> *@
-            <!-- Card title -->
 
-            <form method="post" asp-action="Create">
+            <form method="post">
+                @Html.AntiForgeryToken()
                 <div class="row">
                     <div class="col-md-6 col-12">
                         <div class="mb-3">
@@ -91,12 +94,4 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var dateInput = document.getElementById("publishedAt");
-            var currentDate = new Date();
-            dateInput.value = currentDate.toLocaleDateString();
-        });
-    </script>
 }

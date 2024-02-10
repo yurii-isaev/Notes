@@ -6,19 +6,19 @@ using NToastNotify;
 using SalesCrm.Controllers.ViewModels;
 using SalesCrm.Services.Contracts.Services;
 using SalesCrm.Services.Input;
+using SalesCrm.Utils.Reports;
 
 namespace SalesCrm.Pages.News
 {
+    [Authorize(Roles = "Admin, Manager")]
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
-        private readonly INewsService _newsService;
-        private readonly IMapper _mapper;
-        private readonly IToastNotification _toast;
+        readonly INewsService _newsService;
+        readonly IMapper _mapper;
+        readonly IToastNotification _toast;
 
-        public IndexModel(ILogger<IndexModel> logger, INewsService service, IMapper mapper, IToastNotification toast)
+        public IndexModel(INewsService service, IMapper mapper, IToastNotification toast)
         {
-            _logger = logger;
             _newsService = service;
             _mapper = mapper;
             _toast = toast;
@@ -26,7 +26,6 @@ namespace SalesCrm.Pages.News
 
         [BindProperty(Name = "newsId")] public Guid NewsId { get; set; }
         [BindProperty] public IEnumerable<NewsViewModel> NewsList { get; set; } = null!;
-        
         [BindProperty] public int TotalItemsCount { get; set; }
         [BindProperty] public int PageSize { get; set; }
         [BindProperty] public int PageNumber { get; set; }
@@ -55,7 +54,6 @@ namespace SalesCrm.Pages.News
             IsNextPageAvailable = PageNumber < TotalPages;
         }
 
-        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> OnPost(Guid id)
         {
             try
@@ -65,13 +63,12 @@ namespace SalesCrm.Pages.News
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "Error deleted news");
+                Logger.LogError(ex);
                 _toast.AddErrorToastMessage("Error deleted news");
-                
                 return RedirectToPage("Error", new { errorMessage = ex.Message });
             }
             
-            return Page();
+            return RedirectToPage("Index");
         }
     }
 }

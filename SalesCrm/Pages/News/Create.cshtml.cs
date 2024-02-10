@@ -7,20 +7,20 @@ using NToastNotify;
 using SalesCrm.Controllers.ViewModels;
 using SalesCrm.Services.Contracts.Services;
 using SalesCrm.Services.Input;
+using SalesCrm.Utils.Reports;
 
 namespace SalesCrm.Pages.News;
 
+[Authorize(Roles = "Admin, Manager")]
 public class CreateModel : PageModel
 {
-    private readonly INewsService _newsService;
-    private readonly ILogger<CreateModel> _logger;
-    private readonly IMapper _mapper;
-    private readonly IToastNotification _toast;
+    readonly INewsService _newsService;
+    readonly IMapper _mapper;
+    readonly IToastNotification _toast;
 
-    public CreateModel(INewsService service, ILogger<CreateModel> logger, IMapper mapper, IToastNotification toast)
+    public CreateModel(INewsService service, IMapper mapper, IToastNotification toast)
     {
         _newsService = service;
-        _logger = logger;
         _mapper = mapper;
         _toast = toast;
     }
@@ -30,8 +30,7 @@ public class CreateModel : PageModel
 
     [BindProperty]
     public NewsViewModel News { get; set; } = null!;
-
-    [Authorize(Roles = "Manager")]
+    
     public async Task<IActionResult> OnPostCreateAsync()
     {
         // Registation only
@@ -58,6 +57,7 @@ public class CreateModel : PageModel
             {
                 ModelState.AddModelError("", "Error created news");
                 _toast.AddErrorToastMessage("Error created news");
+                Logger.LogError(ex);
                 
                 return RedirectToPage("Error", new { errorMessage = ex.Message });
             }

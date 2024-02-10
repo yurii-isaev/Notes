@@ -1,4 +1,4 @@
-namespace SalesCrm.Views.Components.Pagination;
+namespace SalesCrm.Views.Shared.Pagination;
 
 public class PaginationList<T> : List<T>
 {

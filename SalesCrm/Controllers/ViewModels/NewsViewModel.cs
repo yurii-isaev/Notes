@@ -1,26 +1,43 @@
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using SalesCrm.Domains.Identities;
 
 namespace SalesCrm.Controllers.ViewModels;
 
 public class NewsViewModel
 {
+    [HiddenInput(DisplayValue = false)]
     public Guid Id { get; set; }
 
     [
-        Required, 
-        StringLength(50, MinimumLength = 2, ErrorMessage = "Invalid Title length")
+        Required,
+        StringLength(50, MinimumLength = 4, ErrorMessage = "Invalid Title length")
     ]
     public string? Title { get; set; }
 
-    [Required(ErrorMessage = "Text is required")]
+    [
+        Required,
+        StringLength(100, MinimumLength = 5, ErrorMessage = "Invalid Title length")
+    ]
     public string? Description { get; set; }
 
-    [Required(ErrorMessage = "Create date is required")]
+    [
+        DisplayName("Created date"),
+        Required
+    ]
     public DateTime CreatedAt { get; set; }
 
+    [
+        DisplayName("Published date"),
+        Required
+    ]
     public DateTime PublishedAt { get; set; }
 
+    [
+        DisplayName("Updated date"),
+        Required
+    ]
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
     [Required]

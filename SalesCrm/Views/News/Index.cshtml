@@ -1,6 +1,6 @@
-@using SalesCrm.Views.Components.Pagination
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@model SalesCrm.Views.Components.Pagination.PaginationList<SalesCrm.Controllers.ViewModels.NewsViewModel>
+@using SalesCrm.Views.Shared.Pagination
+@model PaginationList<SalesCrm.Controllers.ViewModels.NewsViewModel>
 
 @{
     ViewData["Title"] = "News List";
@@ -11,20 +11,17 @@
         <div class="card">
             <div class="card-body">
 
-                <!-- Card breadcrumb -->
-                @await Html.PartialAsync("_BreadcrumbPartial", new[] {@ViewData["Title"]!.ToString(), ""})
-                <!-- Card breadcrumb  -->
+                <!-- Breadcrumb -->
+                @await Html.PartialAsync("_BreadcrumbPartial", new[] {@ViewData["Title"], ""})
                 <br/>
 
-                <!-- Card title -->
+                <!-- Title -->
                 <div class="row">
                     <div class="col-md-12">
                         <h2 class="page-title">@ViewData["Title"]</h2>
                     </div>
                 </div>
                 <br/>
-                @* <hr style="opacity:0.5!important"/> *@
-                <!-- Card title -->
 
                 <div class="row">
                     <div class="col-md-4">
@@ -120,7 +117,6 @@
                             <th colspan="8">Dropdown list data is not available</th>
                         </tr>
                     }
-                    <!-- Table Filters -->
 
                     <!-- Table columns -->
                     <tr>
@@ -134,7 +130,6 @@
                         <th style="text-align:center">Actions</th>
                     </tr>
                 }
-                <!-- Table columns -->
 
                 <!-- Table content -->
                 @foreach (var item in Model)
@@ -154,20 +149,20 @@
                             </button>
 
                             <button class="btn btn-outline-danger button"
-                                    onclick="showConfirmationDialog(event, 'Are you sure you want to delete this news?',
-                                        '@Url.Action("DeleteNews", new {id = item.Id})')">
+                                    onclick="showConfirmationDialog(event,
+                                     'Are you sure you want to delete this news?',
+                                     '@Url.Action("DeleteNews", new {id = item.Id})')">
                                 delete
                             </button>
                         </td>
                     </tr>
                 }
-                <!-- Table content -->
             </table>
         </div>
     </div>
 </div>
 
-@Html.Partial("../Components/Pagination/_Pagination", new PaginationViewModel
+@Html.Partial("/Views/Shared/Pagination/_Pagination.cshtml", new PaginationViewModel
 {
     ActionName = "Index",
     PageNumber = Model.PageNumber,
@@ -192,6 +187,6 @@
     }
     
     .button {
-      padding:0rem 0.9rem
+      padding:0 0.9rem
     }
 </style>
