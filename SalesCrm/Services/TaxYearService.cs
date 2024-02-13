@@ -5,7 +5,6 @@ using SalesCrm.Services.Contracts.Repositories;
 using SalesCrm.Services.Contracts.Services;
 using SalesCrm.Services.Exceptions;
 using SalesCrm.Services.Input;
-using SalesCrm.Utils.Reports;
 
 namespace SalesCrm.Services;
 
@@ -19,69 +18,37 @@ public class TaxYearService : ITaxYearService
         _repository = repository;
         _mapper = mapper;
     }
-    
+
     public async Task<IEnumerable<TaxYearDto>> GetTaxYearList()
     {
-        try
-        {
-            var taxYearList = await _repository.GetTaxYearListAsync();
-            return _mapper.Map<IEnumerable<TaxYearDto>>(taxYearList);
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex);
-            throw;
-        }
+        var taxYearList = await _repository.GetTaxYearListAsync();
+        return _mapper.Map<IEnumerable<TaxYearDto>>(taxYearList);
     }
 
     public async Task CreateTaxYearAsync(TaxYearDto dto)
     {
-        try
+        if (dto.YearOfTax != null)
         {
-            if (dto.YearOfTax != null)
+            if (!_repository.IsTaxYearExists(dto.YearOfTax))
             {
-                if (!_repository.IsTaxYearExists(dto.YearOfTax))
-                {
-                    var taxYear = _mapper.Map<TaxYear>(dto);
-                    await _repository.CreateTaxYearAsync(taxYear);
-                }
-                else
-                {
-                    throw new TaxYearExistsException("Tax Year exists");
-                }
+                var taxYear = _mapper.Map<TaxYear>(dto);
+                await _repository.CreateTaxYearAsync(taxYear);
+            }
+            else
+            {
+                throw new TaxYearExistsException("Tax Year exists");
             }
         }
-        catch (TaxYearExistsException ex)
-        {
-            Logger.LogError(ex);
-            throw;
-        }
     }
-    
+
     public async Task DeleteTaxYearAsync(Guid id)
     {
-        try
-        {
-            await _repository.DeleteTaxYearAsync(id);
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex);
-            throw;
-        }
+        await _repository.DeleteTaxYearAsync(id);
     }
 
     public async Task<IEnumerable<SelectListItem>> GetSelectTaxListAsync()
     {
-        try
-        {
-            return await _repository.GetSelectTaxYearListAsync();
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex);
-            throw;
-        }
+        return await _repository.GetSelectTaxYearListAsync();
     }
 
     public decimal GetTotalTax(decimal totalEarnings)

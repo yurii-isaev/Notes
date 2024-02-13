@@ -1,4 +1,6 @@
-﻿@model SalesCrm.Controllers.ViewModels.TaxYearViewModel
+﻿@using Microsoft.AspNetCore.Mvc.ModelBinding
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model SalesCrm.Controllers.ViewModels.TaxYearViewModel
 
 @{
     ViewData["List"] = "Tax Year list";
@@ -12,32 +14,41 @@
             <!-- Breadcrumb -->
             @await Html.PartialAsync("_BreadcrumbPartial", new[]
             {
-                @ViewData["List"]!.ToString(),
-                @ViewData["Title"]!.ToString()
-            })
-            <br/> <br/>
+                @ViewData["List"],
+                @ViewData["Title"]
+            }) <br/> <br/>
 
             <div class="row">
                 <div class="col-md-4">
-
                     <form method="post">
-                         @Html.AntiForgeryToken()
-                        <!-- Create form -->
+                        @Html.AntiForgeryToken()
                         <div class="form-group">
-                            <label asp-for="YearOfTax" class="control-label">Enter a new tax year</label>
-                            <input asp-for="YearOfTax" class="form-control"/>
+                            <label asp-for="YearOfTax" class="control-label" style="color:#9497d9;font-weight:bold"></label>
+                            <input asp-for="YearOfTax" class="form-control" placeholder="Enter year of tax"/>
                             <span asp-validation-for="YearOfTax" class="text-danger"></span>
-                            @if (ViewData.ModelState.Any(ms => ms.Value!.Errors.Count > 0))
+                            @* @if (ViewData.ModelState.Any(ms => ms.Value!.Errors.Count > 0)) *@
+                            @* { *@
+                            @*     <div class="text-danger"> *@
+                            @*         @foreach (var error in ViewData.ModelState.SelectMany(ms => ms.Value!.Errors)) *@
+                            @*         { *@
+                            @*             <p>@(error.ErrorMessage.TrimEnd('.') + ".")</p> *@
+                            @*         } *@
+                            @*     </div> *@
+                            @* } *@
+                            @if (!ViewData.ModelState.ContainsKey("YearOfTax") ||
+                                 ViewData.ModelState["YearOfTax"]!.ValidationState == ModelValidationState.Valid)
                             {
-                                <div class="text-danger">
-                                    @foreach (var error in ViewData.ModelState.SelectMany(ms => ms.Value!.Errors))
-                                    {
-                                        <p>@(error.ErrorMessage.TrimEnd('.') + ".")</p>
-                                    }
-                                </div>
+                                if (ViewData.ModelState.ContainsKey("YearOfTax"))
+                                {
+                                    <div class="text-danger">
+                                        @foreach (var error in ViewData.ModelState["YearOfTax"]!.Errors)
+                                        {
+                                            <p>@(error.ErrorMessage)</p>
+                                        }
+                                    </div>
+                                }
                             }
                         </div> <br/>
-
                         <!-- Create button -->
                         <div class="row mt-2">
                             <div class="col-3">
@@ -47,7 +58,6 @@
                             </div>
                         </div>
                     </form>
-
                 </div>
             </div>
         </div>

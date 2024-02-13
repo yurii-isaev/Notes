@@ -48,8 +48,11 @@ public class TaxYearRepository : ITaxYearRepository
 
     public async Task DeleteTaxYearAsync(Guid taxYearId)
     {
-        var item = await _context.TaxYears.Where(n => n.Id == taxYearId).FirstOrDefaultAsync();
-        _context.TaxYears.Remove(item ?? throw new InvalidOperationException());
+        var item = await _context.TaxYears
+            .Where(n => n.Id == taxYearId)
+            .FirstOrDefaultAsync() ?? throw new InvalidOperationException();
+        
+        _context.TaxYears.Remove(item);
         await _context.SaveChangesAsync();
     }
 }

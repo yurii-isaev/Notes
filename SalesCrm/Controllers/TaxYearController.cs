@@ -17,12 +17,7 @@ namespace SalesCrm.Controllers
         readonly ITaxYearService _taxService;
         readonly IToastNotification _toast;
 
-        public TaxYearController
-        (
-            IMapper mapper,
-            ITaxYearService taxService,
-            IToastNotification toast
-        )
+        public TaxYearController(IMapper mapper, ITaxYearService taxService, IToastNotification toast)
         {
             _mapper = mapper;
             _taxService = taxService;
@@ -68,18 +63,25 @@ namespace SalesCrm.Controllers
                     await _taxService.CreateTaxYearAsync(dto);
                     _toast.AddSuccessToastMessage("Tax Year successfully created");
                 }
+                else
+                {
+                    return RedirectToAction(nameof(CreateTaxYear));
+                }
             }
             catch (TaxYearExistsException ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                return View("CreateTaxYear");
+                return RedirectToAction(nameof(CreateTaxYear));
             }
             catch (Exception ex)
             {
                 Logger.LogError(ex);
                 return RedirectToAction(nameof(Error));
             }
-
+            
+            // Clear the ModelState before returning the view
+            // ModelState.Clear();
+            
             return RedirectToAction(nameof(Index));
         }
 
