@@ -60,10 +60,10 @@ public class EmployeeRepository : IEmployeeRepository
     
     public async Task<bool> EmployeeNameExistsAsync(string employeeName)
     {
-        // Преобразуем имя в нижний регистр для более надежного сравнения (регистронезависимость)
+        // Convert the name to lowercase for a more reliable comparison (case neutral)
         string lowerEmployeeName = employeeName.ToLower();
 
-        // Проверяем наличие сотрудника с указанным именем в базе данных
+        // Check if there is an employee with the specified name in the database
         bool employeeExists = await _context.Employees
             .AnyAsync(e => e.Name!.ToLower() == lowerEmployeeName);
 

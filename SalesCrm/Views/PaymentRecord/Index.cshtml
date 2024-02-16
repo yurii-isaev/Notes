@@ -9,30 +9,30 @@
         <div class="card">
             <div class="card-body">
 
-                <!-- Breadcrumbs -->
-                @await Html.PartialAsync("_BreadcrumbPartial", new[] { @ViewData["List"]!.ToString(), "" })
-                <br />
+                <!-- Breadcrumb -->
+                @await Html.PartialAsync("_BreadcrumbPartial", new[] {@ViewData["List"], ""})
+                <br/>
 
                 <!-- Title -->
                 <div class="row">
-                    <div class="col-md-12 table-responsive-md">
-                        <h2 class="page-title">@ViewData["List"]</h2>
-                    </div>
-                </div>
-                <br />
+                    <h2 class="page-title">
+                        @ViewData["List"]
+                        <i style="font-size:medium">with Payment slip</i>
+                    </h2>
+                </div> <br/>
 
-                <!-- Name Searcher -->
+                <!-- Searcher -->
                 <div class="row">
                     <div class="col-md-4">
-                        @using (Html.BeginForm("Index", "PaymentSlip", FormMethod.Get))
+                        @using (Html.BeginForm("Index", "PaymentRecord", FormMethod.Get))
                         {
                             @await Html.PartialAsync("_SearcherPartial")
                         }
                     </div>
                     <div class="col-md-7" style="padding-top:30px">
                         <div class="text-md-end">
-                            <a class="btn btn-primary" role="button" asp-action="CreatePaymentSlip">
-                                Create new Payment Record
+                            <a class="btn btn-primary" role="button" asp-action="CreatePaymentRecord">
+                                Create Payment Record
                             </a>
                         </div>
                     </div>
@@ -41,19 +41,29 @@
 
             <table class="table table-striped">
                 <thead>
-                    <tr>
-                        <th>Employee</th>
-                        <th>Pay Date</th>
-                        <th>Pay Month</th>
-                        <th>Tax Year</th>
-                        <th>Total Earnings</th>
-                        <th>Total Deduction</th>
-                        <th>Net Payment</th>
-                        <th>Actions</th>
-                    </tr>
+                <tr>
+                    <th>Employee</th>
+                    <th>Pay Date</th>
+                    <th>Pay Month</th>
+                    <th>Tax Year</th>
+                    <th>Total Earnings</th>
+                    <th>Total Deduction</th>
+                    <th>Net Payment</th>
+                    <th>Actions</th>
+                </tr>
                 </thead>
 
                 <tbody>
+                @if (Model.Count() == 0)
+                {
+                    <tr>
+                        <td style="padding:30px" colspan="100">
+                            The table is empty.
+                        </td>
+                    </tr>
+                }
+                else
+                {
                     @foreach (var item in Model)
                     {
                         <tr>
@@ -66,17 +76,19 @@
                             <td>@item.NetPayment.ToString("C")</td>
                             <td>
                                 <a class="btn btn-outline-primary button"
-                                    href='@Url.Action("GenerateInvoicePdf", new {PaymentRecordId = item.Id})'>
+                                   href='@Url.Action("GenerateInvoicePdf", new {PaymentRecordId = item.Id})'>
                                     pdf
                                 </a>
-                                <button class="btn btn-outline-danger button" onclick="showConfirmationDialog(event,
-                                        'Are you sure you want to delete this Record?',
-                                        '@Url.Action("DeletePaymentRecord", new {id = item.Id})')">
+                                <button class="btn btn-outline-danger button"
+                                        onclick="showConfirmationDialog(event,
+                                    'Are you sure you want to delete this Record?',
+                                    '@Url.Action("DeletePaymentRecord", new {id = item.Id})')">
                                     delete
                                 </button>
                             </td>
                         </tr>
                     }
+                }
                 </tbody>
                 <tfoot></tfoot>
             </table>
@@ -96,19 +108,11 @@
         margin-top: 20px;
     }
 
-    .button {
-        padding: 0 0.9rem
-    }
-
     th,
     td {
         border: 1px solid #dddddd;
         text-align: center;
         padding: 12px;
-    }
-
-    th {
-        background-color: #e9eaf5;
     }
 
     td {
@@ -119,12 +123,7 @@
         white-space: nowrap;
     }
 
-    a {
-        text-decoration: none;
-    }
-
-    a:hover {
-        color: #0319eb;
-        /*text-decoration: underline;*/
+    .button {
+        padding: 0 0.9rem;
     }
 </style>

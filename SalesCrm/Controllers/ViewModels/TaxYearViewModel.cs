@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using SalesCrm.Controllers.Validation;
 
@@ -12,8 +11,6 @@ public class TaxYearViewModel
 
     [
         DisplayName("Year Of Tax"),
-        Required,
-        StringLength(4, MinimumLength = 4, ErrorMessage = "Invalid input year."),
         ValidateDate
     ]
     public string? YearOfTax { get; set; }

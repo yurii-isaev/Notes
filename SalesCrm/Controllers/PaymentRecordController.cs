@@ -15,7 +15,7 @@ using SalesCrm.Utils.Reports;
 namespace SalesCrm.Controllers
 {
     [Authorize(Roles = "Admin, Manager")]
-    public class PaymentSlipController : BaseController
+    public class PaymentRecordController : BaseController
     {
         readonly IEmployeeService _employeeService;
         readonly IMapper _mapper;
@@ -27,7 +27,7 @@ namespace SalesCrm.Controllers
         readonly IHttpStatusCodeDescriptionProvider _httpStatusProvider;
 
 
-        public PaymentSlipController
+        public PaymentRecordController
         (
             IEmployeeService employeeService,
             IMapper mapper,
@@ -50,7 +50,7 @@ namespace SalesCrm.Controllers
         }
 
         [HttpGet]
-        [Route("/payment-slip")]
+        [Route("/payment-record")]
         public async Task<IActionResult> Index(SearchOptions searcher)
         {
             string keyword = ViewBag.keyword = searcher.Keyword!;
@@ -72,18 +72,13 @@ namespace SalesCrm.Controllers
         }
 
         [HttpGet]
-        [Route("/payment-slip/create")]
-        public async Task<IActionResult> CreatePaymentSlip()
+        [Route("/payment-record/create")]
+        public async Task<IActionResult> CreatePaymentRecord()
         {
             try
             {
-                ViewBag.Employees = new SelectList(
-                    await _employeeService.GetEmployeeListAsync(null!), "Id", "Name"
-                );
-                
-                ViewBag.TaxYear = new SelectList(
-                    await _taxYearService.GetTaxYearList(), "Id", "YearOfTax"
-                );
+                ViewBag.Employees = new SelectList(await _employeeService.GetEmployeeListAsync(null!), "Id", "Name");
+                ViewBag.TaxYears = new SelectList(await _taxYearService.GetTaxYearListAsync(), "Id", "YearOfTax");
                 
                 var viewModel = new PaymentRecordViewModel();
                 return await Task.FromResult<IActionResult>(View(viewModel));
@@ -96,7 +91,7 @@ namespace SalesCrm.Controllers
         }
 
         [HttpPost]
-        [Route("/payment-slip/create")]
+        [Route("/payment-record/create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PaymentRecordViewModel viewModel)
         {
@@ -104,19 +99,26 @@ namespace SalesCrm.Controllers
             {
                 try
                 {
-                    var dto = await _employeeService.GetEmployeeByIdAsync(viewModel.EmployeeId) ??
-                              throw new NullReferenceException();
-
+                    var dto = await _employeeService.GetEmployeeByIdAsync(viewModel.EmployeeId);
                     await ComputePaymentRecord(viewModel, dto.InsuranceNumber!);
-
                     var transfer = _mapper.Map<PaymentRecordDto>(viewModel);
                     await _paymentRecordService.CreatePaymentRecord(transfer);
                     _toast.AddSuccessToastMessage("Payment Record created successfully");
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Console.WriteLine(ex);
                     _toast.AddErrorToastMessage("Error creating new Payment Record");
                 }
+            }
+            else
+            {
+                ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .ToList()
+                    .ForEach(error => Logger.LogError(error.ErrorMessage));
+
+                return View("CreatePaymentRecord");
             }
 
             return RedirectToAction(nameof(Index));
@@ -174,7 +176,7 @@ namespace SalesCrm.Controllers
         }
 
         [HttpGet]
-        [Route("/payment-slip/delete/{id}")]
+        [Route("/payment-record/delete/{id}")]
         public async Task<IActionResult> DeletePaymentRecord(Guid id)
         {
             try

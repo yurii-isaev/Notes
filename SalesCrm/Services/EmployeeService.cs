@@ -204,7 +204,7 @@ public class EmployeeService : IEmployeeService
 
     public async Task<decimal> GetUnionFree(Guid id)
     {
-        decimal unionFree;
+        decimal unionFree = 0;
         var dto = await GetEmployeeByIdAsync(id);
         unionFree = (dto.UnionMemberStatus) ? 20m : 0;
         return unionFree;

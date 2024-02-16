@@ -12,7 +12,6 @@ public class PaymentRecord
     public Guid EmployeeId { get; set; }
     public Employee? Employee { get; set; }
 
-    [Required, MaxLength(50)]
     public string? InsuranceNumber { get; set; }
     
     public DateTime PayDate { get; set; }

@@ -19,7 +19,7 @@ public class TaxYearService : ITaxYearService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<TaxYearDto>> GetTaxYearList()
+    public async Task<IEnumerable<TaxYearDto>> GetTaxYearListAsync()
     {
         var taxYearList = await _repository.GetTaxYearListAsync();
         return _mapper.Map<IEnumerable<TaxYearDto>>(taxYearList);
@@ -36,7 +36,7 @@ public class TaxYearService : ITaxYearService
             }
             else
             {
-                throw new TaxYearExistsException("Tax Year exists");
+                throw new TaxYearExistsException("This Tax Year already exists");
             }
         }
     }

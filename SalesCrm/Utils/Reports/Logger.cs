@@ -23,19 +23,26 @@ public class Logger
 
     private const string LogFilePath = "/Utils/Reports/error.log";
 
-    public static void LogError(Exception e)
+    public static void LogError(Exception exception)
     {
         string filePath = Path.Combine(Directory.GetCurrentDirectory() + LogFilePath);
 
         using (StreamWriter file = File.Exists(filePath) ? File.AppendText(filePath) : File.CreateText(filePath))
         {
             file.WriteLine(DateTime.Now.ToString(CultureInfo.InvariantCulture));
-            file.WriteLine(e.Message);
-            file.WriteLine(e.StackTrace);
+            file.WriteLine(exception.Message);
+            file.WriteLine(exception.StackTrace);
         }
 
         Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine(e);
+        Console.WriteLine(exception);
+        Console.ResetColor();
+    }
+
+    public static void LogError(string validationError)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("[Validation Error]: " + validationError);
         Console.ResetColor();
     }
 }

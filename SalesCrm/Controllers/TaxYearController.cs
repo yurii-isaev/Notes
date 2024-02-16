@@ -30,7 +30,7 @@ namespace SalesCrm.Controllers
         {
             try
             {
-                var taxYear = _taxService.GetTaxYearList()
+                var taxYear = _taxService.GetTaxYearListAsync()
                     .Result
                     .Select(tax => _mapper.Map<TaxYearViewModel>(tax));
 
@@ -65,13 +65,13 @@ namespace SalesCrm.Controllers
                 }
                 else
                 {
-                    return RedirectToAction(nameof(CreateTaxYear));
+                    return View("CreateTaxYear");
                 }
             }
             catch (TaxYearExistsException ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                return RedirectToAction(nameof(CreateTaxYear));
+                return View("CreateTaxYear");
             }
             catch (Exception ex)
             {

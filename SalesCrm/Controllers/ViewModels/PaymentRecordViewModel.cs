@@ -1,40 +1,51 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using SalesCrm.Domains.Entities;
 
 namespace SalesCrm.Controllers.ViewModels;
 
 public class PaymentRecordViewModel
 {
+    [HiddenInput(DisplayValue = false)]
     public Guid Id { get; set; }
 
-    [Display(Name = "Employee")]
+    [
+        Display(Name = "Employee"),
+        Required
+    ]
     public Guid EmployeeId { get; set; }
 
     public Employee? Employee { get; set; }
 
     public string? Name { get; set; }
-    
+
     public string? InsuranceNumber { get; set; }
 
     public DateTime PayDate { get; set; } = DateTime.UtcNow;
 
-    [Display(Name = "Pay Month")]
+    [
+        Display(Name = "Pay Month"),
+        Required
+    ]
     public string? PayMonth { get; set; } = DateTime.Today.Month.ToString();
 
-    [Display(Name = "Tax Year")]
+    [
+        Display(Name = "Tax Year"),
+        Required
+    ]
     public Guid TaxYearId { get; set; }
 
     public TaxYear? TaxYear { get; set; }
 
     [
         Display(Name = "Hourly Rate"),
-        Required(ErrorMessage = "The field Hourly Rate is required.")
+        Required
     ]
     public decimal HourlyRate { get; set; }
 
     [
         Display(Name = "Hours Worked"),
-        Required(ErrorMessage = "The field Hours Worked is required.")
+        Required
     ]
     public decimal HoursWorked { get; set; }
 
