@@ -66,7 +66,7 @@ namespace SalesCrm.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Logger.LogError(ex);
                 return RedirectToAction(nameof(Error));
             }
         }
@@ -85,7 +85,7 @@ namespace SalesCrm.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Logger.LogError(ex);
                 return RedirectToAction(nameof(Error));
             }
         }
@@ -107,7 +107,7 @@ namespace SalesCrm.Controllers
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex);
+                    Logger.LogError(ex);
                     _toast.AddErrorToastMessage("Error creating new Payment Record");
                 }
             }

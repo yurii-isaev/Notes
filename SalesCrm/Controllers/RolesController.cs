@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,11 +7,12 @@ using SalesCrm.Controllers.ViewModels;
 using SalesCrm.Services.Contracts.Services;
 using SalesCrm.Services.Exceptions;
 using SalesCrm.Services.Input;
+using SalesCrm.Utils.Reports;
 
 namespace SalesCrm.Controllers;
 
 [Authorize(Roles = "Admin")]
-public class RolesController : Controller
+public class RolesController : BaseController
 {
     readonly IRoleService _roleService;
     readonly IMapper _mapper;
@@ -46,9 +46,10 @@ public class RolesController : Controller
 
             return await Task.FromResult<IActionResult>(View(roleList));
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return RedirectToAction("Error");
+            Logger.LogError(ex);
+            return RedirectToAction(nameof(Error));
         }
     }
 
@@ -115,8 +116,9 @@ public class RolesController : Controller
                 var viewModel = _mapper.Map<RoleViewModel>(role);
                 return await Task.FromResult<IActionResult>(View(viewModel));
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.LogError(ex);
                 return RedirectToAction("Error");
             }
         }
@@ -177,23 +179,13 @@ public class RolesController : Controller
             _toast.AddSuccessToastMessage("Role delete successfully");
             await _roleService.DeleteRoleAsync(id);
         }
-        catch
+        catch (Exception ex)
         {
+            Logger.LogError(ex);
             _toast.AddErrorToastMessage("Error deleting role");
             return RedirectToAction("Error");
         }
 
         return RedirectToAction("Index");
-    }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error(int? statusCode, string? message)
-    {
-        return View(new ErrorViewModel
-        {
-            RequestId  = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
-            StatusCode = statusCode ?? 500,
-            Message    = message ?? "Internal Server Error"
-        });
     }
 }

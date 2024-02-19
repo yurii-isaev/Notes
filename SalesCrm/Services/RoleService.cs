@@ -1,4 +1,3 @@
-using System.Net;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using SalesCrm.Services.Contracts.Services;
@@ -11,28 +10,18 @@ public class RoleService : IRoleService
 {
     readonly RoleManager<IdentityRole> _roleManager;
     readonly IMapper _mapper;
-    readonly ILogger<RoleService> _logger;
 
-    public RoleService(RoleManager<IdentityRole> roleManager, ILogger<RoleService> log, IMapper mapper)
+    public RoleService(RoleManager<IdentityRole> roleManager, IMapper mapper)
     {
         _roleManager = roleManager;
-        _logger = log;
         _mapper = mapper;
     }
 
     public Task<IEnumerable<RoleDto>> GetRolesAsync()
     {
-        try
-        {
-            IQueryable<IdentityRole> list = _roleManager.Roles;
-            var roleList = _mapper.Map<IEnumerable<RoleDto>>(list);
-            return Task.FromResult(roleList);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("An error occurred while getting a role: " + ex.Message);
-            return Task.FromResult<IEnumerable<RoleDto>>(null!);
-        }
+        IQueryable<IdentityRole> list = _roleManager.Roles;
+        var roleList = _mapper.Map<IEnumerable<RoleDto>>(list);
+        return Task.FromResult(roleList);
     }
 
     public async Task CreateRoleAsync(RoleDto dto)
@@ -63,55 +52,34 @@ public class RoleService : IRoleService
     // For role edit view update method
     public async Task UpdateRoleAsync(RoleDto newRole)
     {
-        try
+        if (newRole.Name != null)
         {
-            if (newRole.Name != null)
+            bool roleExists = await _roleManager.RoleExistsAsync(newRole.Name);
+
+            if (!roleExists)
             {
-                bool roleExists = await _roleManager.RoleExistsAsync(newRole.Name);
+                var roleToUpdate = await _roleManager.FindByIdAsync(newRole.Id);
 
-                if (!roleExists)
+                if (roleToUpdate?.Name != null)
                 {
-                    var roleToUpdate = await _roleManager.FindByIdAsync(newRole.Id);
-
-                    if (roleToUpdate?.Name != null)
-                    {
-                        roleToUpdate.Name = newRole.Name;
-                        await _roleManager.UpdateAsync(roleToUpdate);
-                    }
-                }
-                else
-                {
-                    throw new RoleExistsException("Role already exists");
+                    roleToUpdate.Name = newRole.Name;
+                    await _roleManager.UpdateAsync(roleToUpdate);
                 }
             }
-        }
-        catch (RoleExistsException ex)
-        {
-            _logger.LogError("[Update Role]\n" + ex.Message + "\n\n");
-            throw new RoleExistsException(ex.Message);
-        }
-        catch (HttpRequestException ex)
-        {
-            _logger.LogError("[Update Role]\n" + ex.Message + "\n\n");
-            throw new HttpRequestException(ex.Message, ex, HttpStatusCode.InternalServerError);
+            else
+            {
+                throw new RoleExistsException("Role already exists");
+            }
         }
     }
 
     public async Task DeleteRoleAsync(string id)
     {
-        try
-        {
-            var role = await _roleManager.FindByIdAsync(id);
+        var role = await _roleManager.FindByIdAsync(id);
 
-            if (role != null)
-            {
-                await _roleManager.DeleteAsync(role);
-            }
-        }
-        catch (HttpRequestException ex)
+        if (role != null)
         {
-            _logger.LogError("[Delete Role]\n" + ex.Message + "\n\n");
-            throw new HttpRequestException(ex.Message, ex, HttpStatusCode.InternalServerError);
+            await _roleManager.DeleteAsync(role);
         }
     }
 }

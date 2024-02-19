@@ -10,25 +10,19 @@
     <div class="card">
         <div class="card-body">
 
-            <!-- Card breadcrumb -->
-            @await Html.PartialAsync("_BreadcrumbPartial", new[]
-            {
-                @ViewData["List"]!.ToString(),
-                @ViewData["Title"]!.ToString()
-            })
-            <!-- Card breadcrumb  -->
+            <!-- Breadcrumb -->
+            @await Html.PartialAsync("_BreadcrumbPartial", new[] {@ViewData["List"], @ViewData["Title"]})
             <br/>
 
-            <!-- Card title -->
+            <!-- Title -->
             <div class="row">
                 <div class="col-md-12">
                     <h2 class="page-title">@ViewData["Title"]</h2>
                 </div>
-            </div>
-            <br/>
-            <!-- Card title -->
+            </div> <br/>
 
             <form method="post">
+                @Html.AntiForgeryToken()
                 <div class="row">
                     <div class="col-md-6 col-12">
                         <div class="mb-3">
