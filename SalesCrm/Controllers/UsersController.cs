@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,11 +6,12 @@ using SalesCrm.Controllers.Providers;
 using SalesCrm.Controllers.ViewModels;
 using SalesCrm.Services.Contracts.Services;
 using SalesCrm.Services.Input;
+using SalesCrm.Utils.Reports;
 
 namespace SalesCrm.Controllers;
 
 [Authorize(Roles = "Admin")]
-public class UsersController : Controller
+public class UsersController : BaseController
 {
     readonly IMapper _mapper;
     readonly IUserService _userService;
@@ -52,22 +52,22 @@ public class UsersController : Controller
             if (statusCode.HasValue)
             {
                 string statusDescription = _httpStatusProvider.GetStatusDescription(statusCode.Value)!;
-
-                return RedirectToAction("Error", new
-                {
-                    statusCode = statusCode.Value,
-                    message = statusDescription
-                });
+                return RedirectToAction("Error", new {statusCode.Value, statusDescription});
             }
             else
             {
                 return RedirectToAction(nameof(Error));
             }
         }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex);
+            return RedirectToAction(nameof(Error));
+        }
     }
 
-    [Route("/user/edit/{id}")]
     [HttpGet]
+    [Route("/user/edit/{id}")]
     public async Task<IActionResult> EditUser(string id)
     {
         try
@@ -87,26 +87,22 @@ public class UsersController : Controller
             if (statusCode.HasValue)
             {
                 string statusDescription = _httpStatusProvider.GetStatusDescription(statusCode.Value)!;
-
-                return RedirectToAction("Error", new
-                {
-                    statusCode = statusCode.Value,
-                    message = statusDescription
-                });
+                return RedirectToAction("Error", new {statusCode.Value, statusDescription});
             }
             else
             {
                 return RedirectToAction(nameof(Error));
             }
         }
-        catch (Exception ex)
+        catch
         {
-            return BadRequest(ex.Message);
+            return RedirectToAction("Error", new {statusCode = 400, message = "Bad Request"});
         }
     }
 
-    [Route("/user/edit/{id}")]
     [HttpPost]
+    [Route("/user/edit/{id}")]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(UserViewModel viewModel)
     {
         try
@@ -123,17 +119,17 @@ public class UsersController : Controller
             if (statusCode.HasValue)
             {
                 string statusDescription = _httpStatusProvider.GetStatusDescription(statusCode.Value)!;
-
-                return RedirectToAction("Error", new
-                {
-                    statusCode = statusCode.Value,
-                    message = statusDescription
-                });
+                return RedirectToAction("Error", new {statusCode.Value, statusDescription});
             }
             else
             {
                 return RedirectToAction(nameof(Error));
             }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex);
+            return RedirectToAction(nameof(Error));
         }
     }
 
@@ -145,12 +141,12 @@ public class UsersController : Controller
             await _userService.BlockUserAsync(id);
             return RedirectToAction(nameof(Index));
         }
-        catch
+        catch (Exception ex)
         {
+            Logger.LogError(ex);
             return RedirectToAction(nameof(Error));
         }
     }
-
 
     [Route("/users/unblock/{id}")]
     public async Task<IActionResult> UnBlockUser(string id)
@@ -160,20 +156,10 @@ public class UsersController : Controller
             await _userService.UnBlockUserAsync(id);
             return RedirectToAction(nameof(Index));
         }
-        catch
+        catch (Exception ex)
         {
+            Logger.LogError(ex);
             return RedirectToAction(nameof(Error));
         }
-    }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error(int? statusCode, string? message)
-    {
-        return View(new ErrorViewModel
-        {
-            RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
-            StatusCode = statusCode ?? 500,
-            Message = message ?? "Internal Server Error"
-        });
     }
 }

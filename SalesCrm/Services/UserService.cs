@@ -3,7 +3,6 @@ using SalesCrm.Domains.Entities;
 using SalesCrm.Services.Contracts.Repositories;
 using SalesCrm.Services.Contracts.Services;
 using SalesCrm.Services.Input;
-using SalesCrm.Utils.Reports;
 
 namespace SalesCrm.Services;
 
@@ -20,71 +19,29 @@ public class UserService : IUserService
 
     public async Task<IEnumerable<UserDto>> GetUserListAsync()
     {
-        try
-        {
-            var userList = await _repository.GetUserListAsync();
-            var userListDto = _mapper.Map<IEnumerable<UserDto>>(userList);
-            return userListDto;
-        }
-        catch (HttpRequestException ex)
-        {
-            Logger.LogError(ex);
-            throw;
-        }
+        var userList = await _repository.GetUserListAsync();
+        return _mapper.Map<IEnumerable<UserDto>>(userList);
     }
 
     public async Task<UserDto> GetUserByIdAsync(string userId)
     {
-        try
-        {
-            var user = await _repository.GetUserByIdAsync(userId);
-            var dto = _mapper.Map<UserDto>(user);
-            return dto;
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex);
-            throw;
-        }
+        var user = await _repository.GetUserByIdAsync(userId);
+        return _mapper.Map<UserDto>(user);
     }
 
     public async Task UpdateUserAsync(UserDto dto)
     {
-        try
-        {
-            var user = _mapper.Map<UserRole>(dto);
-            await _repository.UpdateUserAsync(user);
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex);
-            throw;
-        }
+        var user = _mapper.Map<UserRole>(dto);
+        await _repository.UpdateUserAsync(user);
     }
 
     public async Task BlockUserAsync(string id)
     {
-        try
-        {
-            await _repository.BlockUsersAsync(id);
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex);
-            throw;
-        }
+        await _repository.BlockUsersAsync(id);
     }
 
     public async Task UnBlockUserAsync(string id)
     {
-        try
-        {
-            await _repository.UnBlockUsersAsync(id);
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex);
-            throw;
-        }
+        await _repository.UnBlockUsersAsync(id);
     }
 }

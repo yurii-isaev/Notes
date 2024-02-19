@@ -12,11 +12,8 @@
         <div class="card-body">
 
             <!-- Breadcrumb -->
-            @await Html.PartialAsync("_BreadcrumbPartial", new[]
-            {
-                @ViewData["List"],
-                @ViewData["Title"]
-            }) <br/>
+            @await Html.PartialAsync("_BreadcrumbPartial", new[] {@ViewData["List"], @ViewData["Title"]})
+            <br/>
 
             <!-- Title -->
             <div class="row">

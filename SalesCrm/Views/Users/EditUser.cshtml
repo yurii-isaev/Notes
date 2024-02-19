@@ -9,15 +9,11 @@
     <div class="card">
         <div class="card-body">
 
-            <!-- Card breadcrumb -->
-            @await Html.PartialAsync("_BreadcrumbPartial", new[]
-            {
-                @ViewData["List"]!.ToString(),
-                @ViewData["Title"]!.ToString()
-            })
+            <!-- Breadcrumb -->
+            @await Html.PartialAsync("_BreadcrumbPartial", new[]{@ViewData["List"], @ViewData["Title"]})
             <br/>
 
-            <!-- Card title -->
+            <!-- Title -->
             <div class="row">
                 <div class="col-md-12">
                     <h2 class="page-title">@ViewData["Title"]</h2>
@@ -25,34 +21,31 @@
             </div>
 
             <form method="post">
+                @Html.AntiForgeryToken()
                 <div class="row">
                     <div class="col-4">
-                        <div class="form-group indent">
+                        <div class="form-group">
                             <label asp-for="UserName" class="form-label"></label>
                             <input asp-for="UserName" class="form-control" placeholder="Enter name"/>
                             <span asp-validation-for="UserName" class="text-danger"></span>
                         </div>
                     </div>
-
                     <div class="col-4">
-                        <div class="form-group indent">
+                        <div class="form-group">
                             <label asp-for="Created" class="form-label"></label>
                             <input asp-for="Created" class="form-control" placeholder="Enter name"/>
                             <span asp-validation-for="Created" class="text-danger"></span>
                         </div>
                     </div>
-
                     <div class="col-4">
-                        <div class="form-group indent">
+                        <div class="form-group">
                             <label asp-for="Email" class="form-label"></label>
                             <input asp-for="Email" class="form-control" placeholder="Enter name"/>
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                     </div>
-
-
                     <div class="col-4">
-                        <div class="form-group indent">
+                        <div class="form-group">
                             <label asp-for="LockoutEnd" class="form-label"></label>
                             <input asp-for="LockoutEnd!.Value.DateTime" class="form-control" placeholder="Enter name"/>
                             <span asp-validation-for="LockoutEnd" class="text-danger"></span>
@@ -61,17 +54,15 @@
 
                     <fieldset>
                         <div class="col-4">
-                            <div class="form-group indent">
+                            <div class="form-group">
                                 <label class="form-label">Change role</label>
-
                                 <div class="role-list">
                                     <!-- Empty checkboxes for all application roles -->
                                     @foreach (var role in Model.ApplicationRoles!)
                                     {
                                         <div class="role-item">
                                             <input type="checkbox" id="@($"role_{role}")"
-                                                   name="roles"
-                                                   value="@role"
+                                                   name="roles" value="@role"
                                                    @(Model.Roles!.Contains(role) ? "checked=\"checked\"" : "")/>
                                             <label for="@($"role_{role}")">
                                                 @role
@@ -85,8 +76,7 @@
                                         {
                                             <div class="role-item">
                                                 <input type="checkbox" id="@($"role_{role}")"
-                                                       name="roles"
-                                                       value="@role"
+                                                       name="roles" value="@role"
                                                        @(Model.Roles.Contains(role) ? "checked=\"checked\"" : "")/>
                                                 <label for="@($"role_{role}")">
                                                     @role
@@ -98,10 +88,9 @@
                             </div>
                         </div>
                     </fieldset>
-                </div>
-                <br/>
+                </div> <br/>
 
-                <!-- Edit button -->
+                <!-- Update button -->
                 <div class="row mt-2">
                     <div class="col-3">
                         <button type="submit" class="btn btn-rounded btn-primary">
@@ -110,7 +99,6 @@
                     </div>
                 </div>
             </form>
-
         </div>
     </div>
 </div>
@@ -136,7 +124,7 @@
         margin-right: 5px;
     }
     
-    .indent {
+    .form-group {
         margin-top: 20px!important;
     }
 </style>

@@ -10,12 +10,12 @@ public class UserViewModel
 
     public List<string>? ApplicationRoles { get; set; }
 
-    [Required(ErrorMessage = "User Name is required")]
+    [Required]
     public string? UserName { get; set; }
 
     public DateTime Created { get; set; }
 
-    [Required(ErrorMessage = "Email is required")]
+    [Required]
     public string? Email { get; set; }
 
     public DateTimeOffset? LockoutEnd { get; set; }
