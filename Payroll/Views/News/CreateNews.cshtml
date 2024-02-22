@@ -1,0 +1,97 @@
+@model Payroll.Controllers.ViewModels.NewsViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Create News";
+    ViewData["List"] = "News List";
+}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-body">
+
+            <!-- Breadcrumb -->
+            @await Html.PartialAsync("_BreadcrumbPartial", new[]
+            {
+                @ViewData["List"],
+                @ViewData["Title"]
+            })
+            <br/>
+
+            <!-- Title -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="page-title">@ViewData["Title"]</h2>
+                </div>
+            </div>
+            <br/>
+
+            <form method="post">
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="Title" class="form-label"></label>
+                                <input asp-for="Title" class="form-control" placeholder="Enter title"/>
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="Description" class="form-label"></label>
+                                <input asp-for="Description" type="text" class="form-control" placeholder="Enter text">
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label class="form-label">Create date</label>
+                                <input asp-for="CreatedAt" class="form-control date"/>
+                                <span asp-validation-for="CreatedAt" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label class="form-label">Published date</label>
+                                <input type="text" class="form-control date" id="publishedAt" disabled/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <label class="form-label">Is active</label>
+                        <input type="checkbox" checked="checked" asp-for="IsActive" disabled>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-3">
+                        <button type="submit" class="btn btn-rounded btn-primary">
+                            Create
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

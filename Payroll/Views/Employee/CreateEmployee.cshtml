@@ -1,0 +1,202 @@
+@using Payroll.Domains.Enums
+@model Payroll.Controllers.ViewModels.EmployeeViewModel
+
+@{
+    ViewData["List"] = "Employee List";
+    ViewData["Title"] = "Create Employee";
+}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-body">
+
+            <!-- Breadcrumbs -->
+            @await Html.PartialAsync("_BreadcrumbPartial", new[]
+            {
+                @ViewData["List"],
+                @ViewData["Title"]
+            })
+            <br/>
+
+            <!-- Title -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="page-title">@ViewData["Title"]</h2>
+                </div>
+            </div>
+
+            <form method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div class="col-4">
+                    <div class="form-group indent">
+                        <img id="preview" src="~/images/employees/user.jpg" alt="Preview" width="200" height="200"
+                             style="margin-bottom:10px"/>
+
+                        <div class="form-group">
+                            <input asp-for="FormFile" class="form-control" onchange="previewImage(event)"/>
+                            <span asp-validation-for="FormFile" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group indent">
+                            <label asp-for="Name" class="form-label"></label>
+                            <input asp-for="Name" class="form-control" placeholder="Enter name"/>
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                            @if (ViewData.ModelState.Any(ms => ms.Value!.Errors.Count > 0))
+                            {
+                                <div class="text-danger">
+                                    @foreach (var error in ViewData.ModelState.SelectMany(ms => ms.Value!.Errors))
+                                    {
+                                        <p>@(error.ErrorMessage.TrimEnd('.') + ".")</p>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group indent">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" placeholder="Enter email"/>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group indent">
+                            <label asp-for="Phone" class="form-label"></label>
+                            <input asp-for="Phone" class="form-control" placeholder="Enter phone"/>
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group indent">
+                            <label asp-for="DateOfBirth" class="form-label"></label>
+                            <input asp-for="DateOfBirth" class="form-control" placeholder="Enter date"/>
+                            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group indent">
+                            <label asp-for="Gender" class="form-label"></label>
+                            <select asp-for="Gender" class="form-control">
+                                <option value="">-- Select option --</option>
+                                <option>Male</option>
+                                <option>Female</option>
+                            </select>
+                            <span asp-validation-for="Gender" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group indent">
+                            <label asp-for="City" class="form-label"></label>
+                            <input asp-for="City" class="form-control" placeholder="Enter city"/>
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group indent">
+                            <label asp-for="Postcode" class="form-label"></label>
+                            <input asp-for="Postcode" class="form-control" placeholder="Enter postcode"/>
+                            <span asp-validation-for="Postcode" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group indent">
+                            <label asp-for="Address" class="form-label"></label>
+                            <textarea asp-for="Address" class="form-control" placeholder="Enter address"></textarea>
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group indent">
+                            <label asp-for="Designation" class="form-label"></label>
+                            <input asp-for="Designation" class="form-control" placeholder="Enter designation"/>
+                            <span asp-validation-for="Designation" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group indent">
+                            <label asp-for="PaymentMethod" class="form-label"></label>
+                            <select asp-for="PaymentMethod" class="form-control"
+                                    asp-items="@Html.GetEnumSelectList<PaymentMethod>()">
+                                <option value="">-- Select option --</option>
+                            </select>
+                            <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group indent">
+                            <label asp-for="StudentLoanStatus" class="form-label"></label>
+                            <select asp-for="StudentLoanStatus" class="form-control">
+                                <option value="">-- Select option --</option>
+                                <option>True</option>
+                                <option>False</option>
+                            </select>
+                            <span asp-validation-for="StudentLoanStatus" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group indent">
+                            <label asp-for="UnionMemberStatus" class="form-label"></label>
+                            <select asp-for="UnionMemberStatus" class="form-control">
+                                <option value="">-- Select option --</option>
+                                <option>True</option>
+                                <option>False</option>
+                            </select>
+                            <span asp-validation-for="UnionMemberStatus" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group indent">
+                            <label asp-for="InsuranceNumber" class="form-label"></label>
+                            <input asp-for="InsuranceNumber" class="form-control" placeholder="Enter number"/>
+                            <span asp-validation-for="InsuranceNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <!-- Create button -->
+                <div class="row mt-2">
+                    <div class="col-3">
+                        <button type="submit" class="btn btn-rounded btn-primary">
+                            Create
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .indent {
+        margin-top: 20px !important;
+    }
+
+    label.form-label {
+        color: #9497d9;
+        font-weight: bold;
+    }
+</style>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        function previewImage(event) {
+            var input = event.target;
+            var preview = document.getElementById('preview');
+            var reader = new FileReader();
+
+            reader.onload = function () {
+                preview.src = reader.result;
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    </script>
+}

@@ -1,0 +1,63 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Payroll.Controllers.ViewModels.RoleViewModel
+
+@{
+    ViewData["List"] = "Roles list";
+    ViewData["Title"] = "Create role";
+}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-body">
+
+            <!-- Breadcrumb -->
+            @await Html.PartialAsync("_BreadcrumbPartial", new[] {@ViewData["List"], @ViewData["Title"]})
+            <br/>
+
+            <!-- Title -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="page-title">@ViewData["Title"]</h2>
+                </div>
+            </div> <br/>
+
+            <form method="post">
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="Name" class="form-label"></label>
+                                <input asp-for="Name" class="form-control" placeholder="Enter role name"/>
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                                @if (ViewData.ModelState.Any(ms => ms.Value!.Errors.Count > 0))
+                                {
+                                    <div class="text-danger">
+                                        @foreach (var error in ViewData.ModelState.SelectMany(ms => ms.Value!.Errors))
+                                        {
+                                            <p>@(error.ErrorMessage.TrimEnd('.') + ".")</p>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-3">
+                            <button type="submit" class="btn btn-rounded btn-primary">
+                                Create
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
