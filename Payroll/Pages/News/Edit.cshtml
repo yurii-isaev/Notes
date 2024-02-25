@@ -13,9 +13,9 @@
             <!-- Breadcrumb -->
             @await Html.PartialAsync("_BreadcrumbPartial", new[]
             {
-                @ViewData["List"],
-                @ViewData["Title"]
-            }) <br/>
+                "Manager", @ViewData["List"], @ViewData["Title"]
+            })
+            <br/>
 
             <!-- Title -->
             <div class="row">

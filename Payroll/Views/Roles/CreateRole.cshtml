@@ -11,7 +11,10 @@
         <div class="card-body">
 
             <!-- Breadcrumb -->
-            @await Html.PartialAsync("_BreadcrumbPartial", new[] {@ViewData["List"], @ViewData["Title"]})
+            @await Html.PartialAsync("_BreadcrumbPartial", new[]
+            {
+                "Admin", @ViewData["List"], @ViewData["Title"]
+            })
             <br/>
 
             <!-- Title -->
@@ -21,6 +24,7 @@
                 </div>
             </div> <br/>
 
+             <!-- Form -->
             <form method="post">
                 @Html.AntiForgeryToken()
                 <div class="row">

@@ -1,20 +1,20 @@
 @model object?[]
 
 <nav aria-label="breadcrumb">
-    <ol class="breadcrumb" style="margin:0!important;padding:1px">
+    <ol class="breadcrumb">
         <li class="breadcrumb-item">
-            <a asp-controller="News" asp-action="Index">
-                Home
+            <a asp-controller="PaymentRecord" asp-action="Index">
+                 @Model[0]
             </a>
         </li>
         <li class="breadcrumb-item">
             <a asp-action="Index">
-                @Model[0]
+                @Model[1]
             </a>
         </li>
         <li class="breadcrumb-item active">
             <a aria-current="page">
-                @Model[1]
+                @Model[2]
             </a>
         </li>
     </ol>
@@ -33,5 +33,9 @@
     a:hover {
         color: #0319eb;
         /*text-decoration: underline;*/
+    }
+    .breadcrumb {
+        margin: 0 !important;
+        padding: 1px;
     }
 </style>

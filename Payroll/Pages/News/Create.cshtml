@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Create News";
+    ViewData["List"] = "News List";
 }
 
 <div class="col-md-12">
@@ -12,17 +13,16 @@
             <!-- Breadcrumb -->
             @await Html.PartialAsync("_BreadcrumbPartial", new[]
             {
-                @ViewData["List"],
-                @ViewData["Title"]
-            }) <br/>
+                "Manager", @ViewData["List"], @ViewData["Title"]
+            })
+            <br/>
 
             <!-- Title -->
             <div class="row">
                 <div class="col-md-12">
                     <h2 class="page-title">@ViewData["Title"]</h2>
                 </div>
-            </div>
-            <br/>
+            </div> <br/>
 
             <form method="post" asp-page-handler="Create">
                 <div class="row">

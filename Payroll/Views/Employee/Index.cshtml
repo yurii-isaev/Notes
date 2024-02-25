@@ -1,6 +1,6 @@
-@using Microsoft.AspNetCore.Mvc.TagHelpers
 @using Payroll.Views.Shared.Pagination
-@model PaginationList<Payroll.Controllers.ViewModels.EmployeeViewModel>
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Payroll.Views.Shared.Pagination.PaginationList<Payroll.Controllers.ViewModels.EmployeeViewModel>
 
 @{
     ViewData["List"] = "Employee List";
@@ -13,8 +13,11 @@
             <div class="card-body">
 
                 <!-- Breadcrumb -->
-                @await Html.PartialAsync("_BreadcrumbPartial", new[] {@ViewData["List"], ""})
-                <br/>
+                @await Html.PartialAsync("_BreadcrumbPartial", new[]
+                         {
+                "Manager", @ViewData["List"], null
+                })
+                <br />
 
                 <!-- Title -->
                 <div class="row">
@@ -22,7 +25,7 @@
                         <h2 class="page-title">@ViewData["List"]</h2>
                     </div>
                 </div>
-                <br/>
+                <br />
 
                 <div class="row">
                     <div class="col-md-4">
@@ -42,70 +45,72 @@
                 </div>
             </div>
 
-            <table id="employeeTable" class="table table-striped">
-                <thead>
-                <tr>
-                    <th onclick="sortTable('Name')" id="nameHeader" title="@ViewData["Sort"]">
-                        Name
-                        <span id="nameFilter" class="filter-icon">&#x25BC;</span>
-                    </th>
+            <!-- Table -->
+            <div class="table-responsive">
+                <table id="employeeTable" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable('Name')" id="nameHeader" title="@ViewData["Sort"]">
+                                Name
+                                <span id="nameFilter" class="filter-icon">&#x25BC;</span>
+                            </th>
 
-                    <th onclick="sortTable('Gender')" id="genderHeader" title="@ViewData["Sort"]">
-                        Gender
-                        <span id="genderFilter" class="filter-icon">&#x25BC;</span>
-                    </th>
+                            <th onclick="sortTable('Gender')" id="genderHeader" title="@ViewData["Sort"]">
+                                Gender
+                                <span id="genderFilter" class="filter-icon">&#x25BC;</span>
+                            </th>
 
-                    <th>Photo</th>
+                            <th>Photo</th>
 
-                    <th onclick="sortDateTable('dataJoined')" id="dataJoinedHeader" title="@ViewData["Sort"]">
-                        Data Joined
-                        <span id="dataJoinedFilter" class="filter-icon">&#x25BC;</span>
-                    </th>
+                            <th onclick="sortDateTable('dataJoined')" id="dataJoinedHeader" title="@ViewData["Sort"]">
+                                Data Joined
+                                <span id="dataJoinedFilter" class="filter-icon">&#x25BC;</span>
+                            </th>
 
-                    <th onclick="sortTable('Designation')" id="designationHeader" title="@ViewData["Sort"]">
-                        Designation
-                        <span id="designationFilter" class="filter-icon">&#x25BC;</span>
-                    </th>
+                            <th onclick="sortTable('Designation')" id="designationHeader" title="@ViewData["Sort"]">
+                                Designation
+                                <span id="designationFilter" class="filter-icon">&#x25BC;</span>
+                            </th>
 
-                    <th onclick="sortTable('City')" id="cityHeader" title="@ViewData["Sort"]">
-                        City
-                        <span id="cityFilter" class="filter-icon">&#x25BC;</span>
-                    </th>
+                            <th onclick="sortTable('City')" id="cityHeader" title="@ViewData["Sort"]">
+                                City
+                                <span id="cityFilter" class="filter-icon">&#x25BC;</span>
+                            </th>
 
-                    <th style="text-align:center">Actions</th>
-                </tr>
-                </thead>
-                
-                <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>@item.Name</td>
-                        <td>@item.Gender</td>
-                        <td>
-                            <img alt="Image" src="@Url.Content(item.ImageName)" width="40" height="40"
-                                 style="border-radius:10px"/>
-                        </td>
-                        <td>@item.DateJoined</td>
-                        <td>@item.Designation</td>
-                        <td>@item.City</td>
-                        <td style="text-align:center">
-                            <button class="btn btn-outline-primary button"
-                                    onclick="location.href='@Url.Action("edit", new {id = item.Id, imageName = item.ImageName})'">
-                                edit
-                            </button>
-                            <button class="btn btn-outline-danger button"
-                                    onclick="showConfirmationDialog(event,
+                            <th style="text-align:center">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>@item.Gender</td>
+                                <td>
+                                    <img alt="Image" src="@Url.Content(item.ImageName)" width="40" height="40"
+                                        style="border-radius:10px" />
+                                </td>
+                                <td>@item.DateJoined</td>
+                                <td>@item.Designation</td>
+                                <td>@item.City</td>
+                                <td style="text-align:center">
+                                    <button class="btn btn-outline-primary button"
+                                        onclick="location.href='@Url.Action("edit", new {id = item.Id, imageName = item.ImageName})'">
+                                        edit
+                                    </button>
+                                    <button class="btn btn-outline-danger button" onclick="showConfirmationDialog(event,
                                      'Are you sure you want to delete this employee ?',
                                     '@Url.Action("DeleteEmployee", new {id = item.Id})')">
-                                delete
-                            </button>
-                        </td>
-                    </tr>
-                }
-                </tbody>
-                <tfoot></tfoot>
-            </table>
+                                        delete
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -125,41 +130,41 @@
     @await Html.PartialAsync("../Shared/_DeleteConfirmationModal")
 
     <script>
-       // Add filters for other fields in the table
-       var filters = {
-           'Name': '',
-           'Gender': '',
-           'Date Joined': '',
-           'Designation': '',
-           'City': ''
-       };
-       
-       var arrowUpSymbol = "▼";
-       var arrowDownSymbol = "▲";
-       var table = document.getElementById("employeeTable");
-       var rows  = table.rows;
-            
+        // Add filters for other fields in the table
+        var filters = {
+            'Name': '',
+            'Gender': '',
+            'Date Joined': '',
+            'Designation': '',
+            'City': ''
+        };
+
+        var arrowUpSymbol = "▼";
+        var arrowDownSymbol = "▲";
+        var table = document.getElementById("employeeTable");
+        var rows = table.rows;
+
         function sortDateTable(columnName) {
             // Clear All Filters in Column Headers
             var filterElements = document.querySelectorAll("th span[id$='Filter']");
             for (var i = 0; i < filterElements.length; i++) {
                 filterElements[i].innerHTML = '';
             }
-        
+
             // Define Sort Direction
             var sortOrder = arrowDownSymbol;
             if (columnName === table.getAttribute("data-sort-column") && table.getAttribute("data-sort-order") === arrowDownSymbol) {
                 sortOrder = arrowUpSymbol;
             }
-        
+
             // Set Filter in Column Header
             var filterElement = document.getElementById(columnName + "Filter");
             filterElement.innerHTML = sortOrder;
-        
+
             // Save information about the current filter and sorting in table attributes
             table.setAttribute("data-sort-column", columnName);
             table.setAttribute("data-sort-order", sortOrder);
-        
+
             // Sorting Table Rows
             var sortIndex = filterElement.parentNode.cellIndex;
             var sortArray = [];
@@ -168,8 +173,8 @@
                 var cellValue = row.cells[sortIndex].textContent || row.cells[sortIndex].innerText;
                 sortArray.push([cellValue, row]);
             }
-        
-            sortArray.sort(function(a, b) {
+
+            sortArray.sort(function (a, b) {
                 if (!isNaN(Date.parse(a[0])) && !isNaN(Date.parse(b[0]))) {
                     // Compare dates if both values are valid dates
                     var dateA = new Date(a[0]);
@@ -180,87 +185,98 @@
                     return a[0].localeCompare(b[0]);
                 }
             });
-        
+
             if (sortOrder === arrowUpSymbol) {
                 sortArray.reverse();
             }
-        
+
             for (var i = 0; i < sortArray.length; i++) {
                 table.tBodies[0].appendChild(sortArray[i][1]);
             }
         }
-      
-       function sortTable(columnName) {
+
+        function sortTable(columnName) {
             // Clear All Filters in Column Headers
-           var filterElements = document.querySelectorAll("th span[id$='Filter']");
-           for (var i = 0; i < filterElements.length; i++) {
-               filterElements[i].innerHTML = '';
-           }
-                    
-           // Define Sort Direction
-           var sortOrder = arrowUpSymbol;
-           if (columnName === table.getAttribute("data-sort-column") && table.getAttribute("data-sort-order") === arrowUpSymbol) {
-               sortOrder = arrowDownSymbol;
-           }
-                    
-           // Set Filter in Column Header
-           var filterElement = document.getElementById(columnName.toLowerCase() + "Filter");
-           filterElement.innerHTML = sortOrder;
-                    
-           // Save information about the current filter and sorting in table attributes
-           table.setAttribute("data-sort-column", columnName);
-           table.setAttribute("data-sort-order", sortOrder);
-                    
-           // Updating Filters
-           filters[columnName] = sortOrder === arrowUpSymbol ? 'asc' : 'desc';
-                    
-           // Sorting Table Rows
-           var sortIndex = filterElement.parentNode.cellIndex;
-           var sortArray = [];
-           
-           for (var i = 1; i < rows.length; i++) {
-               var row = rows[i];
-               var cellValue = row.cells[sortIndex].textContent || row.cells[sortIndex].innerText;
-               sortArray.push([cellValue, row]);
-           }
-                    
-           sortArray.sort(function(a, b) {
-               if (!isNaN(Date.parse(a[0])) && !isNaN(Date.parse(b[0]))) {
-                   // Compare dates if both values are valid dates
-                   var dateA = new Date(a[0]);
-                   var dateB = new Date(b[0]);
-                   return dateB - dateA;
-               } else {
-                   // Compare as strings if either value is not a valid date
-                   return a[0].localeCompare(b[0]);
-               }
-           });
-                    
-           if (filters[columnName] === 'desc') {
-               sortArray.reverse();
-           }
-                    
-           for (var i = 0; i < sortArray.length; i++) {
-               table.tBodies[0].appendChild(sortArray[i][1]);
-           }
-       }
-   </script>
+            var filterElements = document.querySelectorAll("th span[id$='Filter']");
+            for (var i = 0; i < filterElements.length; i++) {
+                filterElements[i].innerHTML = '';
+            }
+
+            // Define Sort Direction
+            var sortOrder = arrowUpSymbol;
+            if (columnName === table.getAttribute("data-sort-column") && table.getAttribute("data-sort-order") === arrowUpSymbol) {
+                sortOrder = arrowDownSymbol;
+            }
+
+            // Set Filter in Column Header
+            var filterElement = document.getElementById(columnName.toLowerCase() + "Filter");
+            filterElement.innerHTML = sortOrder;
+
+            // Save information about the current filter and sorting in table attributes
+            table.setAttribute("data-sort-column", columnName);
+            table.setAttribute("data-sort-order", sortOrder);
+
+            // Updating Filters
+            filters[columnName] = sortOrder === arrowUpSymbol ? 'asc' : 'desc';
+
+            // Sorting Table Rows
+            var sortIndex = filterElement.parentNode.cellIndex;
+            var sortArray = [];
+
+            for (var i = 1; i < rows.length; i++) {
+                var row = rows[i];
+                var cellValue = row.cells[sortIndex].textContent || row.cells[sortIndex].innerText;
+                sortArray.push([cellValue, row]);
+            }
+
+            sortArray.sort(function (a, b) {
+                if (!isNaN(Date.parse(a[0])) && !isNaN(Date.parse(b[0]))) {
+                    // Compare dates if both values are valid dates
+                    var dateA = new Date(a[0]);
+                    var dateB = new Date(b[0]);
+                    return dateB - dateA;
+                } else {
+                    // Compare as strings if either value is not a valid date
+                    return a[0].localeCompare(b[0]);
+                }
+            });
+
+            if (filters[columnName] === 'desc') {
+                sortArray.reverse();
+            }
+
+            for (var i = 0; i < sortArray.length; i++) {
+                table.tBodies[0].appendChild(sortArray[i][1]);
+            }
+        }
+    </script>
 }
 
 <style>
-    .filter-icon {
-       color: #9497d9;
-    }
-          
     th:hover .filter-icon {
-       display: inline-block;
+        display: inline-block;
     }
-      
+
     th:hover {
-       cursor: pointer;
+        cursor: pointer;
     }
-    
+
+    th,
+    td {
+        border: 1px solid #dddddd;
+        text-align: center;
+        padding: 12px;
+    }
+
     .button {
-       padding:0rem 0.9rem
+        padding: 0 0.9rem
+    }
+
+    .filter-icon {
+        color: #9497d9;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
     }
 </style>

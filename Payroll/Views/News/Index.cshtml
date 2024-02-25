@@ -1,6 +1,6 @@
-@using Microsoft.AspNetCore.Mvc.TagHelpers
 @using Payroll.Views.Shared.Pagination
-@model PaginationList<Payroll.Controllers.ViewModels.NewsViewModel>
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Payroll.Views.Shared.Pagination.PaginationList<Payroll.Controllers.ViewModels.NewsViewModel>
 
 @{
     ViewData["Title"] = "News List";
@@ -12,7 +12,10 @@
             <div class="card-body">
 
                 <!-- Breadcrumb -->
-                @await Html.PartialAsync("_BreadcrumbPartial", new[] {@ViewData["Title"], ""})
+                @await Html.PartialAsync("_BreadcrumbPartial", new[]
+                {
+                    "Admin", @ViewData["Title"], null
+                })
                 <br/>
 
                 <!-- Title -->
@@ -20,10 +23,10 @@
                     <div class="col-md-12">
                         <h2 class="page-title">@ViewData["Title"]</h2>
                     </div>
-                </div>
-                <br/>
+                </div> <br/>
 
                 <div class="row">
+                    <!-- Searcher -->
                     <div class="col-md-4">
                         @using (Html.BeginForm("Index", "News", FormMethod.Get))
                         {
@@ -31,6 +34,7 @@
                         }
                     </div>
 
+                    <!-- Create button -->
                     <div class="col-md-6" style="padding-top:30px">
                         <div class="text-md-end">
                             <a asp-action="Create" class="btn btn-primary">
@@ -41,123 +45,121 @@
                 </div>
             </div> <br/>
 
-            <table class="table">
-                @using (Html.BeginForm("Index", "News", FormMethod.Get))
-                {
-                    <!-- Table Filters -->
-                    @if (ViewBag.UniqueTitle != null &&
-                         ViewBag.UniqueAuthor != null &&
-                         ViewBag.UniqueCreateDate != null &&
-                         ViewBag.UniquePublishDate != null &&
-                         ViewBag.UniqueUpdateDate != null &&
-                         ViewBag.UniqueActivity != null)
+            <!-- Table -->
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    @using (Html.BeginForm("Index", "News", FormMethod.Get))
+                    {
+                        <!-- Table Filters -->
+                        @if (ViewBag.UniqueTitle != null &&
+                             ViewBag.UniqueAuthor != null &&
+                             ViewBag.UniqueCreateDate != null &&
+                             ViewBag.UniquePublishDate != null &&
+                             ViewBag.UniqueUpdateDate != null &&
+                             ViewBag.UniqueActivity != null)
+                        {
+                            <tr>
+                                <th>
+                                    @Html.DropDownList("SelectedTitle",
+                                        new SelectList(ViewBag.UniqueTitle, "Value", "Text", ViewBag.SelectedTitle),
+                                        "All",
+                                        new {onchange = "form.submit()"})
+                                </th>
+
+                                <th>
+
+                                <th>
+                                    @Html.DropDownList("SelectedAuthor",
+                                        new SelectList(ViewBag.UniqueAuthor, "Value", "Text", ViewBag.SelectedAuthor),
+                                        "All",
+                                        new {onchange = "form.submit()"})
+                                </th>
+
+                                <th>
+                                    @Html.DropDownList("SelectedCreateDate",
+                                        new SelectList(ViewBag.UniqueCreateDate, "Value", "Text", ViewBag.SelectedCreateDate),
+                                        "All",
+                                        new {onchange = "form.submit()"})
+                                </th>
+
+                                <th>
+                                    @Html.DropDownList("SelectedPublishDate",
+                                        new SelectList(ViewBag.UniquePublishDate, "Value", "Text", ViewBag.SelectedPublishDate),
+                                        "All",
+                                        new {onchange = "form.submit()"})
+                                </th>
+
+                                <th>
+                                    @Html.DropDownList("SelectedUpdateDate",
+                                        new SelectList(ViewBag.UniqueUpdateDate, "Value", "Text", ViewBag.SelectedUpdateDate),
+                                        "All",
+                                        new {onchange = "form.submit()"})
+                                </th>
+
+                                <th>
+                                    @Html.DropDownList("SelectedActivity",
+                                        new SelectList(ViewBag.UniqueActivity, "Value", "Text", ViewBag.SelectedActivity),
+                                        "All",
+                                        new {onchange = "form.submit()"})
+                                </th>
+                            </tr>
+                        }
+                       
+                        <!-- Table columns -->
+                        <tr>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Author</th>
+                            <th>Create date</th>
+                            <th>Publish date</th>
+                            <th>Update date</th>
+                            <th>Activity</th>
+                            <th style="text-align:center">Actions</th>
+                        </tr>
+                    }
+                    </thead>
+
+                    <tbody>
+                    @if (Model.Count() == 0)
                     {
                         <tr>
-                            <th>
-                                @Html.DropDownList("SelectedTitle",
-                                    new SelectList(ViewBag.UniqueTitle, "Value", "Text", ViewBag.SelectedTitle),
-                                    "All", new
-                                    {
-                                        onchange = "form.submit()"
-                                    })
-                            </th>
-
-                            <th>
-
-                            <th>
-                                @Html.DropDownList("SelectedAuthor",
-                                    new SelectList(ViewBag.UniqueAuthor, "Value", "Text", ViewBag.SelectedAuthor),
-                                    "All", new
-                                    {
-                                        onchange = "form.submit()"
-                                    })
-                            </th>
-
-                            <th>
-                                @Html.DropDownList("SelectedCreateDate",
-                                    new SelectList(ViewBag.UniqueCreateDate, "Value", "Text", ViewBag.SelectedCreateDate),
-                                    "All", new
-                                    {
-                                        onchange = "form.submit()"
-                                    })
-                            </th>
-
-                            <th>
-                                @Html.DropDownList("SelectedPublishDate",
-                                    new SelectList(ViewBag.UniquePublishDate, "Value", "Text", ViewBag.SelectedPublishDate),
-                                    "All", new
-                                    {
-                                        onchange = "form.submit()"
-                                    })
-                            </th>
-
-                            <th>
-                                @Html.DropDownList("SelectedUpdateDate",
-                                    new SelectList(ViewBag.UniqueUpdateDate, "Value", "Text", ViewBag.SelectedUpdateDate),
-                                    "All", new
-                                    {
-                                        onchange = "form.submit()"
-                                    })
-                            </th>
-
-                            <th>
-                                @Html.DropDownList("SelectedActivity",
-                                    new SelectList(ViewBag.UniqueActivity, "Value", "Text", ViewBag.SelectedActivity),
-                                    "All", new
-                                    {
-                                        onchange = "form.submit()"
-                                    })
-                            </th>
+                            <td style="padding:30px" colspan="100">
+                                The table is empty.
+                            </td>
                         </tr>
                     }
                     else
                     {
-                        // Handling Null Values or Missing Elements
-                        <tr>
-                            <th colspan="8">Dropdown list data is not available</th>
-                        </tr>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Title</td>
+                                <td>@item.Description</td>
+                                <td>@item.Author!.UserName</td>
+                                <td>@item.CreatedAt.ToString("dd.MM.yyyy")</td>
+                                <td>@item.PublishedAt.ToString("dd.MM.yyyy")</td>
+                                <td>@item.UpdatedAt.ToString("dd.MM.yyyy")</td>
+                                <td>@item.IsActive.ToString().ToLower()</td>
+                                <td style="text-align:center">
+                                    <button class="btn btn-outline-primary button"
+                                            onclick="location.href='@Url.Action("EditNews", new {id = item.Id})'">
+                                        edit
+                                    </button>
+                                    <button class="btn btn-outline-danger button"
+                                            onclick="showConfirmationDialog(event,
+                                    'Are you sure you want to delete this news?',
+                                    '@Url.Action("DeleteNews", new {id = item.Id})')">
+                                        delete
+                                    </button>
+                                </td>
+                            </tr>
+                        }
                     }
-
-                    <!-- Table columns -->
-                    <tr>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Author</th>
-                        <th>Create date</th>
-                        <th>Publish date</th>
-                        <th>Update date</th>
-                        <th>Activity</th>
-                        <th style="text-align:center">Actions</th>
-                    </tr>
-                }
-
-                <!-- Table content -->
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>@item.Title</td>
-                        <td>@item.Description</td>
-                        <td>@item.Author!.UserName</td>
-                        <td>@item.CreatedAt.ToString("dd.MM.yyyy")</td>
-                        <td>@item.PublishedAt.ToString("dd.MM.yyyy")</td>
-                        <td>@item.UpdatedAt.ToString("dd.MM.yyyy")</td>
-                        <td>@item.IsActive.ToString().ToLower()</td>
-                        <td style="text-align:center">
-                            <button class="btn btn-outline-primary button"
-                                    onclick="location.href='@Url.Action("EditNews", new {id = item.Id})'">
-                                edit
-                            </button>
-
-                            <button class="btn btn-outline-danger button"
-                                    onclick="showConfirmationDialog(event,
-                                     'Are you sure you want to delete this news?',
-                                     '@Url.Action("DeleteNews", new {id = item.Id})')">
-                                delete
-                            </button>
-                        </td>
-                    </tr>
-                }
-            </table>
+                    </tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -179,14 +181,26 @@
 
 <style>
     table {
-      padding: 10px;
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+               
+    td, th {
+         padding: 10px;
+    }
+               
+    th, td {
+        border: 1px solid #dddddd;
+        text-align: center;
+        padding: 12px;
     }
     
-    td, th {
-      padding: 10px;
+    .table-responsive {
+        overflow-x: auto;
     }
     
     .button {
-      padding:0 0.9rem
+        padding: 0 0.9rem
     }
 </style>

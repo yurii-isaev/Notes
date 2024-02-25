@@ -13,18 +13,18 @@
             <!-- Breadcrumb -->
             @await Html.PartialAsync("_BreadcrumbPartial", new[]
             {
-                @ViewData["List"],
-                @ViewData["Title"]
-            }) <br/>
+                "Admin", @ViewData["List"], @ViewData["Title"]
+            })
+            <br/>
 
             <!-- Title -->
             <div class="row">
                 <div class="col-md-12">
                     <h2 class="page-title">@ViewData["Title"]</h2>
                 </div>
-            </div>
-            <br/>
+            </div> <br/>
 
+            <!-- Form -->
             <form method="post">
                 @Html.AntiForgeryToken()
                 <div class="row">

@@ -13,8 +13,7 @@
             <!-- Breadcrumb -->
             @await Html.PartialAsync("_BreadcrumbPartial", new[]
             {
-                @ViewData["List"],
-                @ViewData["Title"]
+                "Admin", @ViewData["List"], @ViewData["Title"]
             })
             <br/>
 
@@ -26,6 +25,7 @@
             </div>
             <br/>
 
+             <!-- Form -->
             <form method="post">
                 @Html.AntiForgeryToken()
                 <div class="row">

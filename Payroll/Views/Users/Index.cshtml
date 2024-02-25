@@ -10,8 +10,11 @@
             <div class="card-body">
 
                 <!-- Breadcrumb -->
-                @await Html.PartialAsync("_BreadcrumbPartial", new[] {@ViewData["Title"], ""})
-                <br/>
+                @await Html.PartialAsync("_BreadcrumbPartial", new[]
+                         {
+                "Admin", @ViewData["Title"], null
+                })
+                <br />
 
                 <!-- Title -->
                 <div class="row">
@@ -19,53 +22,55 @@
                         <h2 class="page-title">@ViewData["Title"]</h2>
                     </div>
                 </div>
+            </div>
 
-                <!-- Table -->
+            <!-- Table -->
+            <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
-                    <tr>
-                        <th>Role</th>
-                        <th>Login</th>
-                        <th>Created</th>
-                        <th>LockoutEnd</th>
-                        <th>Actions</th>
-                    </tr>
+                        <tr>
+                            <th>Role</th>
+                            <th>Login</th>
+                            <th>Created</th>
+                            <th>LockoutEnd</th>
+                            <th>Actions</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    @if (Model.Count() == 0)
-                    {
-                        <tr>
-                            <td style="padding:30px" colspan="100">
-                                The table is empty.
-                            </td>
-                        </tr>
-                    }
-                    else
-                    {
-                        @foreach (var item in Model)
+                        @if (Model.Count() == 0)
                         {
                             <tr>
-                                <td>@string.Join(", ", item.Roles!)</td>
-                                <td>@item.UserName</td>
-                                <td>@item.Created.ToString("dd.MM.yyyy")</td>
-                                <td>@item.LockoutEnd?.ToString("dd.MM.yyyy HH:mm")</td>
-                                <td>
-                                    <a class="btn btn-outline-primary button" value="@item.Id"
-                                       asp-action="BlockUser" asp-route-id="@item.Id">
-                                        block
-                                    </a>
-                                    <a class="btn btn-outline-danger button" value="@item.Id"
-                                       asp-action="UnBlockUser" asp-route-id="@item.Id">
-                                        unblock
-                                    </a>
-                                    <a class="btn btn-outline-info button" value="@item.Id"
-                                       asp-action="EditUser" asp-route-id="@item.Id">
-                                        edit
-                                    </a>
+                                <td style="padding:30px" colspan="100">
+                                    The table is empty.
                                 </td>
                             </tr>
                         }
-                    }
+                        else
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@string.Join(", ", item.Roles!)</td>
+                                    <td>@item.UserName</td>
+                                    <td>@item.Created.ToString("dd.MM.yyyy")</td>
+                                    <td>@item.LockoutEnd?.ToString("dd.MM.yyyy HH:mm")</td>
+                                    <td>
+                                        <a class="btn btn-outline-primary button" value="@item.Id" asp-action="BlockUser"
+                                            asp-route-id="@item.Id">
+                                            block
+                                        </a>
+                                        <a class="btn btn-outline-danger button" value="@item.Id" asp-action="UnBlockUser"
+                                            asp-route-id="@item.Id">
+                                            unblock
+                                        </a>
+                                        <a class="btn btn-outline-info button" value="@item.Id" asp-action="EditUser"
+                                            asp-route-id="@item.Id">
+                                            edit
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
                     </tbody>
                     <tfoot></tfoot>
                 </table>
@@ -76,9 +81,7 @@
 
 <style>
     table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
+        padding: 10px;
     }
 
     th,
@@ -88,15 +91,11 @@
         padding: 12px;
     }
 
-    td {
-        max-width: 200px;
-        /* Limit the maximum width of cells */
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+    .table-responsive {
+        overflow-x: auto;
     }
 
     .button {
-        padding: 0 0.9rem;
+        padding: 0 0.9rem
     }
 </style>

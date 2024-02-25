@@ -30,8 +30,9 @@ public class CreateModel : PageModel
 
     [BindProperty]
     public NewsViewModel News { get; set; } = null!;
-    
-    public async Task<IActionResult> OnPostCreateAsync()
+
+
+    public async Task<IActionResult> OnPostAsync()
     {
         // Registation only
         var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -63,6 +64,6 @@ public class CreateModel : PageModel
             }
         }
 
-        return RedirectToPage("/News");
+        return RedirectToPage("/news");
     }
 }

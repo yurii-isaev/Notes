@@ -30,6 +30,7 @@ public class EditModel : PageModel
     [BindProperty]
     public NewsViewModel News { get; set; } = null!;
 
+    
     public async Task<IActionResult> OnGetAsync(Guid newsId)
     {
         try
@@ -52,6 +53,7 @@ public class EditModel : PageModel
         
         return Page();
     }
+    
     
     public async Task<IActionResult> OnPostAsync()
     {
