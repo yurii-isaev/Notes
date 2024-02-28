@@ -25,6 +25,7 @@ namespace Payroll.Controllers
         readonly IToastNotification _toast;
         readonly InvoiceService _invoiceService;
         readonly IHttpStatusCodeDescriptionProvider _httpStatusProvider;
+        readonly IDeductionService _deductionService;
 
 
         public PaymentRecordController
@@ -36,7 +37,8 @@ namespace Payroll.Controllers
             IToastNotification toast,
             IPaymentSlipService paymentSlipService,
             InvoiceService invoiceService,
-            IHttpStatusCodeDescriptionProvider httpStatusProvider
+            IHttpStatusCodeDescriptionProvider httpStatusProvider,
+            IDeductionService deductionService
         )
         {
             _employeeService = employeeService;
@@ -47,6 +49,7 @@ namespace Payroll.Controllers
             _paymentSlipService = paymentSlipService;
             _invoiceService = invoiceService;
             _httpStatusProvider = httpStatusProvider;
+            _deductionService = deductionService;
         }
 
         [HttpGet]
@@ -54,7 +57,7 @@ namespace Payroll.Controllers
         public async Task<IActionResult> Index(SearchOptions searcher)
         {
             string keyword = ViewBag.keyword = searcher.Keyword!;
-            
+
             try
             {
                 var paymentRecordList = _paymentRecordService.GetPaymentRecordListAsync(keyword)
@@ -79,7 +82,7 @@ namespace Payroll.Controllers
             {
                 ViewBag.Employees = new SelectList(await _employeeService.GetEmployeeListAsync(null!), "Id", "Name");
                 ViewBag.TaxYears = new SelectList(await _taxYearService.GetTaxYearListAsync(), "Id", "YearOfTax");
-                
+
                 var viewModel = new PaymentRecordViewModel();
                 return await Task.FromResult<IActionResult>(View(viewModel));
             }
@@ -100,9 +103,11 @@ namespace Payroll.Controllers
                 try
                 {
                     var dto = await _employeeService.GetEmployeeByIdAsync(viewModel.EmployeeId);
-                    await ComputePaymentRecord(viewModel, dto.InsuranceNumber!);
+                    await ComputePaymentRecord(viewModel, dto);
+
                     var transfer = _mapper.Map<PaymentRecordDto>(viewModel);
                     await _paymentRecordService.CreatePaymentRecord(transfer);
+
                     _toast.AddSuccessToastMessage("Payment Record created successfully");
                 }
                 catch (Exception ex)
@@ -124,20 +129,24 @@ namespace Payroll.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task ComputePaymentRecord(PaymentRecordViewModel vm, string insuranceNumber)
+        private async Task ComputePaymentRecord(PaymentRecordViewModel vm, EmployeeDto dto)
         {
-            vm.InsuranceNumber = insuranceNumber;
-            vm.OvertimeHours = _paymentSlipService.GetOvertimeHorse(vm.HoursWorked, vm.ContractualHours);
+            vm.InsuranceNumber = dto.InsuranceNumber;
+            vm.OvertimeHours = await _paymentSlipService.GetOvertimeHours(vm.HoursWorked, vm.ContractualHours);
 
+            // Earnings
             vm.ContractualEarnings =
-                _paymentSlipService.GetContractualEarnings(vm.HoursWorked, vm.ContractualHours, vm.HourlyRate);
+                await _paymentSlipService.GetContractualEarning(vm.HoursWorked, vm.ContractualHours, vm.HourlyRate);
+            decimal overtimeRate = await _paymentSlipService.GetOvertimeRate(vm.HourlyRate);
+            vm.OvertimeEarnings = await _paymentSlipService.GetOvertimeEarning(vm.OvertimeHours, overtimeRate);
+            vm.TotalEarnings = await _paymentSlipService.GetTotalEarning(vm.OvertimeEarnings, vm.ContractualEarnings);
 
-            decimal overtimeRate = _paymentSlipService.GetOvertimeRate(vm.HourlyRate);
-            vm.OvertimeEarnings = _paymentSlipService.GetOvertimeEarning(vm.OvertimeHours, overtimeRate);
-            vm.TotalEarnings = _paymentSlipService.GetTotalEarning(vm.OvertimeEarnings, vm.ContractualEarnings);
-            vm.UnionFree = await _employeeService.GetUnionFree(vm.EmployeeId);
-            vm.Tax = _taxYearService.GetTotalTax(vm.TotalEarnings);
-            vm.TotalDeduction = await _paymentSlipService.GetTotalDeductionAsync(vm.UnionFree, vm.Tax);
+            // Deduction
+            vm.UnionFree = await _deductionService.GetUnionFree(dto.UnionMemberStatus);
+            vm.Tax = await _deductionService.GetTaxDeduction(vm.TotalEarnings);
+            vm.TotalDeduction = await _deductionService.GetTotalDeductionAsync(vm.UnionFree, vm.Tax);
+
+            // Total net payment
             vm.NetPayment = await _paymentSlipService.GetNetPaymentAsync(vm.TotalEarnings, vm.TotalDeduction);
         }
 
@@ -162,11 +171,7 @@ namespace Payroll.Controllers
                 {
                     string statusDescription = _httpStatusProvider.GetStatusDescription(statusCode.Value)!;
 
-                    return RedirectToAction("Error", new
-                    {
-                        statusCode = statusCode.Value,
-                        message = statusDescription
-                    });
+                    return RedirectToAction("Error", new {statusCode.Value, statusDescription});
                 }
                 else
                 {

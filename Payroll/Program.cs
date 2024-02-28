@@ -51,6 +51,7 @@ public class Program
         services.AddTransient<IPaymentRecordRepository, PaymentRecordRepository>();
         
         services.AddTransient<IPaymentSlipService, PaymentSlipService>();
+        services.AddTransient<IDeductionService, DeductionService>();
         
         services.AddTransient<InvoiceService>();
 

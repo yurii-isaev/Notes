@@ -21,6 +21,7 @@ public class PaymentRecordViewModel
 
     public string? InsuranceNumber { get; set; }
 
+    [Display(Name = "Pay Date")]
     public DateTime PayDate { get; set; } = DateTime.UtcNow;
 
     [
@@ -37,6 +38,8 @@ public class PaymentRecordViewModel
 
     public TaxYear? TaxYear { get; set; }
 
+    public string? TaxCode { get; set; } = "103";
+
     [
         Display(Name = "Hourly Rate"),
         Required
@@ -49,7 +52,7 @@ public class PaymentRecordViewModel
     ]
     public decimal HoursWorked { get; set; }
 
-    public decimal ContractualHours { get; set; } = 150;
+    public decimal ContractualHours { get; set; } = 35;
 
     public decimal OvertimeHours { get; set; }
 
@@ -61,9 +64,12 @@ public class PaymentRecordViewModel
 
     public decimal UnionFree { get; set; }
 
+    [Display(Name = "Total Earnings")]
     public decimal TotalEarnings { get; set; }
 
+    [Display(Name = "Total Deduction")]
     public decimal TotalDeduction { get; set; }
 
+    [Display(Name = "Net Payment")]
     public decimal NetPayment { get; set; }
 }

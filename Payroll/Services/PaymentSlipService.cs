@@ -4,56 +4,51 @@ namespace Payroll.Services;
 
 public class PaymentSlipService : IPaymentSlipService
 {
-    public decimal GetContractualEarnings(decimal hoursWorked, decimal contractualHours, decimal hourlyRate)
+    public Task<decimal> GetContractualEarning(decimal hoursWorked, decimal contractualHours, decimal hourlyRate)
     {
-        decimal contractualEarnings = 0;
+        decimal contractualEarning = 0;
 
         if (hoursWorked < contractualHours)
         {
-            contractualEarnings = hourlyRate * hoursWorked;
+            contractualEarning = hourlyRate * hoursWorked;
         }
         else
         {
-            contractualEarnings = hourlyRate * contractualHours;
+            contractualEarning = hourlyRate * contractualHours;
         }
 
-        return contractualEarnings;
+        return Task.FromResult(contractualEarning);
     }
 
-    public decimal GetOvertimeHorse(decimal hoursWorked, decimal contractualHours)
+    public Task<decimal> GetOvertimeHours(decimal hoursWorked, decimal contractualHours)
     {
         decimal overtimeHours = 0;
 
         if (hoursWorked <= contractualHours)
         {
-            overtimeHours = 0.0m;
+            overtimeHours = 0.00m;
         }
         else if (hoursWorked > contractualHours)
         {
             overtimeHours = hoursWorked - contractualHours;
         }
 
-        return overtimeHours;
+        return Task.FromResult(overtimeHours);
     }
 
-    public decimal GetOvertimeEarning(decimal overtimeHours, decimal overtimeRate)
+    public Task<decimal> GetOvertimeEarning(decimal overtimeHours, decimal overtimeRate)
     {
-        return (overtimeHours * overtimeRate);
+        return Task.FromResult((overtimeHours * overtimeRate));
     }
 
-    public decimal GetOvertimeRate(decimal hourlyRate)
+    public Task<decimal> GetOvertimeRate(decimal hourlyRate)
     {
-        return (1.5m * hourlyRate);
+        return Task.FromResult((1.5m * hourlyRate));
     }
 
-    public decimal GetTotalEarning(decimal overtimeEarnings, decimal contractualEarnings)
+    public Task<decimal> GetTotalEarning(decimal overtimeEarnings, decimal contractualEarnings)
     {
-        return (overtimeEarnings + contractualEarnings);
-    }
-
-    public Task<decimal> GetTotalDeductionAsync(decimal unionFree, decimal tax)
-    {
-        return Task.FromResult(unionFree + tax);
+        return Task.FromResult((overtimeEarnings + contractualEarnings));
     }
 
     public Task<decimal> GetNetPaymentAsync(decimal totalEarnings, decimal totalDeduction)

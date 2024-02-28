@@ -13,6 +13,4 @@ public interface IEmployeeService
     Task UpdateEmployeeAsync(EmployeeDto employeeDto);
 
     Task DeleteEmployeeByIdAsync(Guid employeeId);
-
-    Task<decimal> GetUnionFree(Guid id);
 }

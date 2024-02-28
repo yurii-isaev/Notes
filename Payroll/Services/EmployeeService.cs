@@ -1,5 +1,6 @@
 using AutoMapper;
 using Payroll.Domains.Entities;
+using Payroll.Domains.Enums;
 using Payroll.Services.Contracts;
 using Payroll.Services.Contracts.Services;
 using Payroll.Services.Exceptions;
@@ -209,14 +210,6 @@ public class EmployeeService : IEmployeeService
         }
 
         await _repository.DeleteEmployeeAsync(employeeId);
-    }
-
-    public async Task<decimal> GetUnionFree(Guid id)
-    {
-        decimal unionFree = 0;
-        var dto = await GetEmployeeByIdAsync(id);
-        unionFree = (dto.UnionMemberStatus) ? 20m : 0;
-        return unionFree;
     }
 
     private async Task DeletePhotoFromStorage(string photoNamePath)
