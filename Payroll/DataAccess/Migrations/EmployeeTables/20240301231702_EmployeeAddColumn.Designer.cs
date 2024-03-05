@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Payroll.DataAccess;
@@ -11,9 +12,11 @@ using Payroll.DataAccess;
 namespace Payroll.DataAccess.Migrations.EmployeeTables
 {
     [DbContext(typeof(EmployeeDbContext))]
-    partial class EmployeeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240301231702_EmployeeAddColumn")]
+    partial class EmployeeAddColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,9 +103,7 @@ namespace Payroll.DataAccess.Migrations.EmployeeTables
                         .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("InsuranceNumber")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
                     b.Property<decimal>("NetPayment")
                         .HasColumnType("money");

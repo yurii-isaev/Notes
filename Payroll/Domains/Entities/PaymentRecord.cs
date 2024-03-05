@@ -35,6 +35,9 @@ public class PaymentRecord
     
     [Column(TypeName = "decimal(18, 2)")]
     public decimal OvertimeHours { get; set; }
+    
+    [Column(TypeName = "money")]
+    public decimal OvertimeRate { get; set; }
 
     [Column(TypeName = "money")]
     public decimal ContractualEarnings { get; set; }

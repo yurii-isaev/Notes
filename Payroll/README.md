@@ -17,15 +17,15 @@
 # dotnet ef migrations remove --context NewsDbContext -f
 
 # dotnet ef migrations add Employee --context EmployeeDbContext --output-dir DataAccess/Migrations/EmployeeTables
-# dotnet ef database update --context EmployeeDbContext
+# dotnet ef database update --context EmployeeDbContext -f
 # dotnet ef migrations remove --context EmployeeDbContext -f
 ```
 
 ## Commands dotnet-ef for Add Column to News(migrations)
 ```
+# Add Column to News table EmployeeDbContextModelSnapshot
 # dotnet ef migrations add NewsAddColumn --context NewsDbContext --output-dir DataAccess/Migrations/NewsTables
-# ADD SQL-script
-# Migrations check
+# dotnet ef migrations remove --context EmployeeDbContext -f
 # dotnet ef database update NewsAddColumn --context NewsDbContext --verbose
 ```
 
