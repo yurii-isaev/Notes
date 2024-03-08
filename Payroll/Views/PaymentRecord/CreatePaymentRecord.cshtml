@@ -2,128 +2,100 @@
 @model Payroll.Controllers.ViewModels.PaymentRecordViewModel
 
 @{
-    ViewData["List"] = "Payment Record List";
-    ViewData["Title"] = "Create Payment Record";
+   ViewData["List"] = "Payment Record List";
+   ViewData["Title"] = "Create Payment Record";
 }
 
 <div class="col-md-12">
-    <div class="card">
-        <div class="card-body">
+   <div class="card">
+      <div class="card-body">
 
-            <!-- Breadcrumb -->
-            @await Html.PartialAsync("_BreadcrumbPartial", new[]
-            {
-                "Manager", @ViewData["List"], @ViewData["Title"]
-            })
-            <br/>
+         <!-- Breadcrumb -->
+         @await Html.PartialAsync("_BreadcrumbPartial", new[]
+         {
+            "Manager", @ViewData["List"], @ViewData["Title"]
+         })
+         <br/>
 
-            <!-- Title -->
+         <!-- Title -->
+         <div class="row">
+            <div class="col-md-12">
+               <h2 class="page-title">@ViewData["Title"]</h2>
+            </div>
+         </div> <br/>
+
+         <!-- Form -->
+         <form method="post">
+            @Html.AntiForgeryToken()
             <div class="row">
-                <div class="col-md-12">
-                    <h2 class="page-title">@ViewData["Title"]</h2>
-                </div>
+               <div class="form-group col-md-6">
+                  <label asp-for="EmployeeId" class="form-label"></label>
+                  <select asp-for="EmployeeId" asp-items="@ViewBag.Employees" class="form-control">
+                     <option value="">-- select option --</option>
+                  </select>
+                  <span asp-validation-for="EmployeeId" class="text-danger"></span>
+               </div> <br/>
+            </div>
+            <div class="row">
+               <div class="form-group col-md-4">
+                  <label asp-for="TaxYearId" class="form-label"></label>
+                  <select asp-for="TaxYearId" asp-items="@ViewBag.TaxYears" class="form-control">
+                     <option value="">-- select option --</option>
+                  </select>
+                  <span asp-validation-for="TaxYearId" class="text-danger"></span>
+               </div>
+               <div class="form-group col-md-4">
+                  <label asp-for="PayMonth" class="form-label"></label>
+                  <select asp-for="PayMonth" class="form-control">
+                     <option value="">-- select option --</option>
+                     @foreach (var month in Enum.GetValues(typeof(Month)))
+                     {
+                        <option value="@month">@month</option>
+                     }
+                  </select>
+                  <span asp-validation-for="PayMonth" class="text-danger"></span>
+               </div>
+            </div>
+            <div class="row">
+               <div class="form-group col-md-4">
+                  <label asp-for="HourlyRate" class="form-label"></label>
+                  <input asp-for="HourlyRate" class="form-control"/>
+                  <span asp-validation-for="HourlyRate" class="text-danger"></span>
+               </div>
+               <div class="form-group col-md-4">
+                  <label asp-for="HoursWorked" class="form-label"></label>
+                  <input asp-for="HoursWorked" class="form-control"/>
+                  <span asp-validation-for="HoursWorked" class="text-danger"></span>
+               </div>
+               <div class="form-group col-md-4">
+                  <label asp-for="ContractualHours" class="form-label"></label>
+                  <input asp-for="ContractualHours" class="form-control"/>
+                  <span asp-validation-for="ContractualHours" class="text-danger"></span>
+               </div>
             </div> <br/>
-
-            <!-- Form -->
-            <form method="post">
-                @Html.AntiForgeryToken()
-                <div class="row">
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label asp-for="EmployeeId" class="form-label"></label>
-                            <select asp-for="EmployeeId" asp-items="@ViewBag.Employees" class="form-control">
-                                <option value="">-- Please select employee --</option>
-                            </select>
-                            <span asp-validation-for="EmployeeId" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label asp-for="TaxYearId" class="form-label"></label>
-                            <select asp-for="TaxYearId" asp-items="@ViewBag.TaxYears" class="form-control">
-                                <option value="">-- Select Tax Year --</option>
-                            </select>
-                            <span asp-validation-for="TaxYearId" class="text-danger"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label asp-for="PayMonth" class="form-label"></label>
-                            <select asp-for="PayMonth" class="form-control">
-                                <option value="">-- Select Month --</option>
-                                @foreach (var month in Enum.GetValues(typeof(Month)))
-                                {
-                                    <option value="@month">@month</option>
-                                }
-                            </select>
-                            <span asp-validation-for="PayMonth" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label asp-for="HourlyRate" class="form-label"></label>
-                            <input asp-for="HourlyRate" class="form-control"/>
-                            <span asp-validation-for="HourlyRate" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label asp-for="HoursWorked" class="form-label"></label>
-                            <input asp-for="HoursWorked" class="form-control"/>
-                            <span asp-validation-for="HoursWorked" class="text-danger"></span>
-                        </div>
-                    </div>
-                    
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label asp-for="ContractualHours" class="form-label"></label>
-                            <input asp-for="ContractualHours" class="form-control"/>
-                            <span asp-validation-for="ContractualHours" class="text-danger"></span>
-                        </div>
-                    </div>
-                </div> <br/>
-                <!-- Create button -->
-                <div class="row mt-2">
-                    <div class="col-3">
-                        <button type="submit" class="btn btn-rounded btn-primary">
-                            Create
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+            <!-- Create button -->
+            <div class="row">
+               <div class="col-md-6">
+                  <button type="submit" class="btn btn-rounded btn-primary">Create</button>
+               </div>
+            </div>
+         </form>
+      </div>
+   </div>
 </div>
 
-<style>
-    .form-group {
-        margin-top: 20px !important;
-    }
-
-    label.form-label {
-        color: #727cf5;
-        font-weight: bold;
-    }
-</style>
-
 @section Scripts {
-
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-
-    @* <script> *@
-    @*     document.getElementById("paymentRecordForm").addEventListener("submit", function(event) { *@
-    @*         var employeeSelect = document.getElementById("employeeSelect"); *@
-    @*         var employeeSelectError = document.getElementById("employeeSelectError"); *@
-    @*         if (!employeeSelect.value) { *@
-    @*             event.preventDefault(); *@
-    @*             employeeSelectError.textContent = "Please select an Employee."; *@
-    @*         } else { *@
-    @*             employeeSelectError.textContent = ""; *@
-    @*         } *@
-    @*     }); *@
-    @* </script> *@
+   @{
+      await Html.RenderPartialAsync("_ValidationScriptsPartial");
+   }
 }
+
+<style>
+   .form-group {
+       margin-top: 20px !important;
+   }
+   label.form-label {
+       color: #727cf5;
+       font-weight: bold;
+   }
+</style>
