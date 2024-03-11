@@ -1,105 +1,105 @@
 @model Payroll.Controllers.ViewModels.NewsViewModel
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
-    ViewData["Title"] = "Create News";
-    ViewData["List"] = "News List";
+   ViewData["Title"] = "Edit News";
+   ViewData["List"] = "News List";
 }
 
 <div class="col-md-12">
-    <div class="card">
-        <div class="card-body">
+   <div class="card">
+      <div class="card-body">
 
-            <!-- Breadcrumb -->
-            @await Html.PartialAsync("_BreadcrumbPartial", new[]
-            {
-                "Admin", @ViewData["List"], @ViewData["Title"]
-            })
-            <br/>
+         <!-- Breadcrumb -->
+         @await Html.PartialAsync("_BreadcrumbPartial", new[]
+                 {
+         "Admin", @ViewData["List"], @ViewData["Title"]
+         })
+         <br />
 
-            <!-- Title -->
+         <!-- Title -->
+         <div class="row">
+            <div class="col-md-12">
+               <h2 class="page-title">@ViewData["Title"]</h2>
+            </div>
+         </div> <br />
+
+         <!-- Form -->
+         <form method="post">
+            @Html.AntiForgeryToken()
             <div class="row">
-                <div class="col-md-12">
-                    <h2 class="page-title">@ViewData["Title"]</h2>
-                </div>
-            </div> <br/>
+               <div class="col-md-6 col-10">
+                  <div class="form-group">
+                     <label asp-for="Title" class="form-label"></label>
+                     <input asp-for="Title" class="form-control" type="text" />
+                     <span asp-validation-for="Title" class="text-danger"></span>
+                  </div>
+               </div>
+            </div> <br />
+            <div class="row">
+               <div class="col-md-6 col-10">
+                  <div class="form-group">
+                     <label asp-for="Description" class="form-label"></label>
+                     <textarea asp-for="Description" type="text" class="form-control"
+                        placeholder="Enter text"></textarea>
+                     <span asp-validation-for="Description" class="text-danger"></span>
+                  </div>
+               </div>
+            </div> <br />
 
-            <!-- Form -->
-            <form method="post">
-                @Html.AntiForgeryToken()
-                <div class="row">
-                    <div class="col-md-6 col-12">
-                        <div class="mb-3">
-                            <div class="form-group">
-                                <label asp-for="Title" class="form-label"></label>
-                                <input asp-for="Title" class="form-control" type="text"/>
-                                <span asp-validation-for="Title" class="text-danger"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 col-12">
-                        <div class="mb-3">
-                            <div class="form-group">
-                                <label asp-for="Description" class="form-label"></label>
-                                <input asp-for="Description" class="form-control" type="text"/>
-                                <span asp-validation-for="Description" class="text-danger"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 col-12">
-                        <div class="mb-3">
-                            <div class="form-group">
-                                <label asp-for="CreatedAt" class="form-label"></label>
-                                <input asp-for="CreatedAt" class="form-control date"/>
-                                <span asp-validation-for="CreatedAt" class="text-danger"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 col-12">
-                        <div class="mb-3">
-                            <div class="form-group">
-                                <label asp-for="PublishedAt" class="form-label"></label>
-                                <input asp-for="PublishedAt" class="form-control date"/>
-                                <span asp-validation-for="PublishedAt" class="text-danger"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 col-12">
-                        <div class="mb-3">
-                            <div class="form-group">
-                                <label asp-for="UpdatedAt" class="form-label"></label>
-                                <input type="text" class="form-control date" id="updatedAt" disabled/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Activity</label>
-                    <input asp-for="IsActive" type="checkbox" checked="checked">
-                </div>
-                <div class="row mt-2">
-                    <div class="col-3">
-                        <button type="submit" class="btn btn-rounded btn-primary">
-                            Update
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+            <div class="row">
+               <div class="col-md-6 col-10">
+                  <div class="form-group">
+                     <label asp-for="CreatedAt" class="form-label"></label>
+                     <input asp-for="CreatedAt" type="date" class="form-control" />
+                     <span asp-validation-for="CreatedAt" class="text-danger"></span>
+                  </div>
+               </div>
+            </div> <br />
+            <div class="row">
+               <div class="col-md-6 col-10">
+                  <div class="form-group">
+                     <label asp-for="PublishedAt" class="form-label"></label>
+                     <input asp-for="PublishedAt" type="date" class="form-control" />
+                     <span asp-validation-for="PublishedAt" class="text-danger"></span>
+                  </div>
+               </div>
+            </div> <br />
+            <div class="row">
+               <div class="col-md-6 col-10">
+                  <div class="form-group">
+                     <label asp-for="UpdatedAt" class="form-label"></label>
+                     <input type="text" class="form-control" id="updatedAt" disabled />
+                  </div>
+               </div>
+            </div> <br />
+            <div class="mb-3">
+               <label class="form-label">Activity</label>
+               <input asp-for="IsActive" type="checkbox" checked="checked">
+            </div>
+
+            <div class="row">
+               <div class="col-md-6">
+                  <button type="submit" class="btn btn-rounded btn-primary">
+                     Update
+                  </button>
+               </div>
+            </div>
+         </form>
+      </div>
+   </div>
 </div>
 
 @section Scripts
 {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+   @{
+      await Html.RenderPartialAsync("_ValidationScriptsPartial");
+   }
+
+   <script>
+      document.addEventListener("DOMContentLoaded", function () {
+         var currentDate = new Date();
+         var updateDateInput = document.getElementById("updatedAt");
+         updateDateInput.value = currentDate.toLocaleDateString();
+      });
+   </script>
 }

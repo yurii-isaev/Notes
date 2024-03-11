@@ -4,120 +4,119 @@
 @model IndexModel
 
 @{
-    ViewData["Title"] = "News page";
+   ViewData["Title"] = "News page";
 }
 
 <div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-body">
+   <div class="col-md-12">
+      <div class="card">
+         <div class="card-body">
 
-                <!-- Breadcrumb -->
-                @await Html.PartialAsync("_BreadcrumbPartial", new[]
-                {
-                    "Manager", @ViewData["Title"], null
-                })
-                <br/>
+            <!-- Breadcrumb -->
+            @await Html.PartialAsync("_BreadcrumbPartial", new[]
+            {
+               "Manager", @ViewData["Title"], null
+            })
+            <br/>
 
-                <!-- Title -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <h2 class="page-title">@ViewData["Title"]</h2>
-                    </div>
-                </div> <br/>
-
-                <div class="row">
-                    <!-- Searcher -->
-                    <div class="col-md-4">
-                        <form method="get" asp-page="Index" asp-handler="Index">
-                            @using (Html.BeginForm("Index", "Employee", FormMethod.Get))
-                            {
-                                @await Html.PartialAsync("_SearcherPartial")
-                            }
-                        </form>
-                    </div>
-
-                    <!-- Create button -->
-                    <div class="col-md-6" style="padding-top:30px">
-                        <div class="text-md-end">
-                            <a asp-page="Create" class="btn btn-primary">
-                                Create news
-                            </a>
-                        </div>
-                    </div>
-                </div>
+            <!-- Title -->
+            <div class="row">
+               <div class="col-md-12">
+                  <h2 class="page-title">@ViewData["Title"]</h2>
+               </div>
             </div> <br/>
 
             <div class="row">
-                @foreach (var item in Model.NewsList)
-                {
-                    <div class="col-sm-6 col-lg-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">@item.Title</h5>
-                                <p class="card-text">@item.Description</p>
-                                <p class="card-text">@item.PublishedAt</p>
+               <!-- Searcher -->
+               <div class="col-md-4">
+                  <form method="get" asp-page="Index" asp-handler="Index">
+                     @using (Html.BeginForm("Index", "Employee", FormMethod.Get))
+                     {
+                        @await Html.PartialAsync("_SearcherPartial")
+                     }
+                  </form>
+               </div>
 
-                                <div class="btn-group">
-                                    <a class="btn btn-outline-primary button"
-                                       asp-page="Edit" asp-route-newsId="@item.Id">
-                                        <i class="fa fa-edit" aria-hidden="true"></i>
-                                        edit
-                                    </a>
-
-                                    <form formmethod="post" asp-page-handler="Index" asp-route-id="@item.Id"
-                                          onclick="confirm('Are you sure you want to delete this?')">
-                                        <button type="submit" class="btn btn-outline-danger button">
-                                            <i class="fa fa-trash" aria-hidden="true"></i>
-                                            delete
-                                        </button>
-                                    </form>               
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
+               <!-- Create button -->
+               <div class="col-md-6" style="padding-top:30px">
+                  <div class="text-md-end">
+                     <a asp-page="Create" class="btn btn-primary">
+                        Create news
+                     </a>
+                  </div>
+               </div>
             </div>
-        </div>
-    </div>
+         </div> <br/>
+
+         <div class="row">
+            @foreach (var item in Model.NewsList)
+            {
+               <div class="col-sm-6 col-lg-3">
+                  <div class="card">
+                     <div class="card-body">
+                        <h5 class="card-title">@item.Title</h5>
+                        <p class="card-text">@item.Description</p>
+                        <p class="card-text">@item.PublishedAt</p>
+
+                        <div class="btn-group">
+                           <a class="btn btn-outline-primary button" asp-page="Edit" asp-route-newsId="@item.Id">
+                              <i class="fa fa-edit" aria-hidden="true"></i>
+                              edit
+                           </a>
+                           <form formmethod="post" asp-page-handler="Index" asp-route-id="@item.Id"
+                                 onclick="return confirm('Are you sure you want to delete this?')">
+                              <button type="submit" class="btn btn-outline-danger button">
+                                 <i class="fa fa-trash" aria-hidden="true"></i>
+                                 delete
+                              </button>
+                           </form>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            }
+         </div>
+      </div>
+   </div>
 </div>
 
 @Html.Partial("/Pages/Shared/Pagination/_Pagination.cshtml", new PaginationViewModel
 {
-    ActionName = "Index",
-    PageNumber = Model.PageNumber,
-    PageSize = Model.PageSize,
-    IsPreviousPageAvailable = Model.IsPreviousPageAvailable,
-    IsNextPageAvailable = Model.IsNextPageAvailable,
-    TotalPages = Model.TotalPages
+   ActionName = "Index",
+   PageNumber = Model.PageNumber,
+   PageSize = Model.PageSize,
+   IsPreviousPageAvailable = Model.IsPreviousPageAvailable,
+   IsNextPageAvailable = Model.IsNextPageAvailable,
+   TotalPages = Model.TotalPages
 })
 
 @section Scripts
 {
-    @await Html.PartialAsync("../Shared/_DeleteConfirmationModal")
+   @await Html.PartialAsync("../Shared/_DeleteConfirmationModal")
 }
 
 <style>
-    table {
+   table {
       padding: 10px;
-    }
-    
-    td, th {
+   }
+
+   td,
+   th {
       padding: 10px;
-    }
-    
-    .btn-group {
-        display: flex;
-        justify-content: space-between;
-    }
-        
-    .btn-group .btn {
-        flex-grow: 1;
-        margin: 0 5px;
-    }
-    
-    .button {
-      padding:0.1rem 0.9rem;
+   }
+
+   .btn-group {
+      display: flex;
+      justify-content: space-between;
+   }
+
+   .btn-group .btn {
+      flex-grow: 1;
+      margin: 0 5px;
+   }
+
+   .button {
+      padding: 0.1rem 0.9rem;
       width: 100px;
-    }
+   }
 </style>
