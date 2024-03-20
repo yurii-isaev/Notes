@@ -25,13 +25,14 @@
             </div> <br/>
 
             <div class="row">
-               <!-- Searcher -->
                <div class="col-md-4">
-                  @using (Html.BeginForm("Index", "News", FormMethod.Get))
-                  {
-                     @await Html.PartialAsync("_SearcherPartial")
-                  }
-               </div>
+                  <form method="get" action="/admin/news">
+                     @using (Html.BeginForm("Index", "News", FormMethod.Get))
+                     {
+                        @await Html.PartialAsync("_SearcherPartial")
+                     }
+                     </form>
+                  </div>
 
                <!-- Create button -->
                <div class="col-md-6" style="padding-top:30px">
@@ -51,12 +52,9 @@
                @using (Html.BeginForm("Index", "News", FormMethod.Get))
                {
                   <!-- Table Filters -->
-                  @if (ViewBag.UniqueTitle != null &&
-                       ViewBag.UniqueAuthor != null &&
-                       ViewBag.UniqueCreateDate != null &&
-                       ViewBag.UniquePublishDate != null &&
-                       ViewBag.UniqueUpdateDate != null &&
-                       ViewBag.UniqueActivity != null)
+                  @if (ViewBag.UniqueTitle != null && ViewBag.UniqueAuthor != null &&
+                       ViewBag.UniqueCreateDate != null && ViewBag.UniquePublishDate != null &&
+                       ViewBag.UniqueUpdateDate != null && ViewBag.UniqueActivity != null)
                   {
                      <tr>
                         <th>

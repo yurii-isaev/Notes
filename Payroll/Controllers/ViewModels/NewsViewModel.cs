@@ -18,7 +18,7 @@ public class NewsViewModel
 
     [
         Required,
-        StringLength(100, MinimumLength = 5, ErrorMessage = "Invalid Title length")
+        StringLength(100, MinimumLength = 5, ErrorMessage = "Invalid Description length")
     ]
     public string? Description { get; set; }
 
