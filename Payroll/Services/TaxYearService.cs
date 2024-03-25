@@ -10,44 +10,44 @@ namespace Payroll.Services;
 
 public class TaxYearService : ITaxYearService
 {
-    readonly IMapper _mapper;
-    readonly ITaxYearRepository _repository;
+  readonly IMapper _mapper;
+  readonly ITaxYearRepository _repository;
 
-    public TaxYearService(ITaxYearRepository repository, IMapper mapper)
-    {
-        _repository = repository;
-        _mapper = mapper;
-    }
+  public TaxYearService(ITaxYearRepository repository, IMapper mapper)
+  {
+    _repository = repository;
+    _mapper = mapper;
+  }
 
-    public async Task<IEnumerable<TaxYearDto>> GetTaxYearListAsync()
-    {
-        var taxYearList = await _repository.GetTaxYearListAsync();
-        return _mapper.Map<IEnumerable<TaxYearDto>>(taxYearList);
-    }
+  public async Task<IEnumerable<TaxYearDto>> GetTaxYearListAsync()
+  {
+    var taxYearList = await _repository.GetTaxYearListAsync();
+    return _mapper.Map<IEnumerable<TaxYearDto>>(taxYearList);
+  }
 
-    public async Task CreateTaxYearAsync(TaxYearDto dto)
+  public async Task CreateTaxYearAsync(TaxYearDto dto)
+  {
+    if (dto.YearOfTax != null)
     {
-        if (dto.YearOfTax != null)
-        {
-            if (!_repository.IsTaxYearExists(dto.YearOfTax))
-            {
-                var taxYear = _mapper.Map<TaxYear>(dto);
-                await _repository.CreateTaxYearAsync(taxYear);
-            }
-            else
-            {
-                throw new TaxYearExistsException("This Tax Year already exists");
-            }
-        }
+      if (!_repository.IsTaxYearExists(dto.YearOfTax))
+      {
+        var taxYear = _mapper.Map<TaxYear>(dto);
+        await _repository.CreateTaxYearAsync(taxYear);
+      }
+      else
+      {
+        throw new TaxYearExistsException("This Tax Year already exists");
+      }
     }
+  }
 
-    public async Task DeleteTaxYearAsync(Guid id)
-    {
-        await _repository.DeleteTaxYearAsync(id);
-    }
+  public async Task DeleteTaxYearAsync(Guid id)
+  {
+    await _repository.DeleteTaxYearAsync(id);
+  }
 
-    public async Task<IEnumerable<SelectListItem>> GetSelectTaxListAsync()
-    {
-        return await _repository.GetSelectTaxYearListAsync();
-    }
+  public async Task<IEnumerable<SelectListItem>> GetSelectTaxListAsync()
+  {
+    return await _repository.GetSelectTaxYearListAsync();
+  }
 }

@@ -5,11 +5,11 @@ namespace Payroll.Services.Contracts.Services;
 
 public interface ITaxYearService
 {
-    Task CreateTaxYearAsync(TaxYearDto dto);
-    
-    Task<IEnumerable<TaxYearDto>> GetTaxYearListAsync();
-    
-    Task<IEnumerable<SelectListItem>> GetSelectTaxListAsync();
+  Task CreateTaxYearAsync(TaxYearDto dto);
 
-    Task DeleteTaxYearAsync(Guid id);
+  Task<IEnumerable<TaxYearDto>> GetTaxYearListAsync();
+
+  Task<IEnumerable<SelectListItem>> GetSelectTaxListAsync();
+
+  Task DeleteTaxYearAsync(Guid id);
 }

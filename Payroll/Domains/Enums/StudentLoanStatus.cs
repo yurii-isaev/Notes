@@ -4,9 +4,9 @@ namespace Payroll.Domains.Enums;
 
 public enum StudentLoanStatus
 {
-    [Description("True")]
-    True,
-    
-    [Description("False")]
-    False
+  [Description("True")]
+  True,
+
+  [Description("False")]
+  False
 }

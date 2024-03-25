@@ -6,39 +6,39 @@ namespace Payroll.DataAccess;
 
 public class NewsDbContext : DbContext
 {
-    public NewsDbContext(DbContextOptions<NewsDbContext> options) : base(options)
-    {
-        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-    }
+  public NewsDbContext(DbContextOptions<NewsDbContext> options) : base(options)
+  {
+    AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+  }
 
-    public DbSet<News> News => Set<News>();
+  public DbSet<News> News => Set<News>();
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
+  protected override void OnModelCreating(ModelBuilder modelBuilder)
+  {
+    base.OnModelCreating(modelBuilder);
 
-        modelBuilder
-            .Entity<User>()
-            .ToTable("AspNetUsers");
+    modelBuilder
+      .Entity<User>()
+      .ToTable("AspNetUsers");
 
-        modelBuilder
-            .Entity<News>()
-            .Property(e => e.PublishedAt)
-            .HasDefaultValueSql("now()");
+    modelBuilder
+      .Entity<News>()
+      .Property(e => e.PublishedAt)
+      .HasDefaultValueSql("now()");
 
-        modelBuilder
-            .Entity<News>()
-            .Property(e => e.CreatedAt)
-            .HasDefaultValueSql("now()");
+    modelBuilder
+      .Entity<News>()
+      .Property(e => e.CreatedAt)
+      .HasDefaultValueSql("now()");
 
-        modelBuilder
-            .Entity<News>()
-            .Property(e => e.UpdatedAt)
-            .HasDefaultValueSql("now()");
-        
-        modelBuilder
-            .Entity<News>()
-            .Property(e => e.IsActive)
-            .HasDefaultValue(true);
-    }
+    modelBuilder
+      .Entity<News>()
+      .Property(e => e.UpdatedAt)
+      .HasDefaultValueSql("now()");
+
+    modelBuilder
+      .Entity<News>()
+      .Property(e => e.IsActive)
+      .HasDefaultValue(true);
+  }
 }

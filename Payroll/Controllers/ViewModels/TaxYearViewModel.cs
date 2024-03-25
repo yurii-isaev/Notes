@@ -6,12 +6,12 @@ namespace Payroll.Controllers.ViewModels;
 
 public class TaxYearViewModel
 {
-    [HiddenInput(DisplayValue = false)]
-    public Guid Id { get; set; }
+  [HiddenInput(DisplayValue = false)]
+  public Guid Id { get; set; }
 
-    [
-        DisplayName("Year Of Tax"),
-        ValidateDate
-    ]
-    public string? YearOfTax { get; set; }
+  [
+    DisplayName("Year Of Tax"),
+    ValidateDate
+  ]
+  public string? YearOfTax { get; set; }
 }

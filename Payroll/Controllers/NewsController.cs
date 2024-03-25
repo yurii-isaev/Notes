@@ -41,7 +41,7 @@ public class NewsController : BaseController
       // Фильтрация по ключевому слову
       if (!string.IsNullOrEmpty(keyword))
       {
-        newsList = newsList.Where(n => n.Title.Contains(keyword, StringComparison.OrdinalIgnoreCase)).ToList();
+        newsList = newsList.Where(n => n.Title!.Contains(keyword, StringComparison.OrdinalIgnoreCase)).ToList();
       }
 
       // Unrefactorable code !!

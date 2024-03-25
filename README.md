@@ -37,7 +37,7 @@ This is not a library. Now it's just a sample project. <br />
 `Authentication`: Asp.net core Identity  
 `App`:  Asp.net core 7 mvc  
 `Database`: PostgreSQL  
-`Persistent`:  Entity-framework  
+`Persistence`:  Entity-framework  
 `UI Design`: Hyper Bootstrap Template  / custom  
 `Validation`:  Asp.net DataAnnotations (system lib)  
 

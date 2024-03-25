@@ -5,7 +5,7 @@ namespace Payroll.Services.Objects;
 
 public class EmployeeDto : Employee
 {
-    public IFormFile? FormFile { get; set; }
-    
-    public new PaymentMethod PaymentMethod { get; set; }
+  public IFormFile? FormFile { get; set; }
+
+  public new PaymentMethod PaymentMethod { get; set; }
 }
